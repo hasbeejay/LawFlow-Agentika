@@ -17,33 +17,36 @@ async def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.
 
     # --- Tier 1: Groq Cloud API ---
     if GROQ_API_KEY:
-        try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
-                res = await client.post(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {GROQ_API_KEY}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": "llama-3.3-70b-versatile",
-                        "messages": [
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": user_prompt}
-                        ],
-                        "temperature": temperature,
-                        "response_format": {"type": "json_object"} if "JSON" in system_prompt else None
-                    }
-                )
-                if res.status_code == 200:
-                    data = res.json()
-                    content = data["choices"][0]["message"]["content"]
-                    logger.info("Successfully received LLM response from Groq.")
-                    return content
-                else:
-                    logger.warning(f"Groq API returned status {res.status_code}: {res.text}. Falling back to Tier 2.")
-        except Exception as e:
-            logger.warning(f"Groq API call failed ({e}). Falling back to Tier 2.")
+        models_to_try = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "allam-2-7b"]
+        for model in models_to_try:
+            try:
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    res = await client.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers={
+                            "Authorization": f"Bearer {GROQ_API_KEY}",
+                            "Content-Type": "application/json"
+                        },
+                        json={
+                            "model": model,
+                            "messages": [
+                                {"role": "system", "content": system_prompt},
+                                {"role": "user", "content": user_prompt}
+                            ],
+                            "temperature": temperature,
+                            "response_format": {"type": "json_object"} if "JSON" in system_prompt else None
+                        }
+                    )
+                    if res.status_code == 200:
+                        data = res.json()
+                        content = data["choices"][0]["message"]["content"]
+                        logger.info(f"Successfully received LLM response from Groq ({model}).")
+                        return content
+                    else:
+                        logger.warning(f"Groq API model {model} returned {res.status_code}. Trying next model...")
+            except Exception as e:
+                logger.warning(f"Groq API call failed for {model} ({e}).")
+
 
     # --- Tier 2: Google Gemini Flash API ---
     if GEMINI_API_KEY:

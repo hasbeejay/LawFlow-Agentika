@@ -38,6 +38,44 @@ async def dispatch_live_sms_twilio(to_phone: str, message: str) -> Dict[str, Any
         logger.warning(f"Twilio dispatch exception: {e}")
         return {"status": "error", "error": str(e)}
 
+import smtplib
+import asyncio
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from backend.config import SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, ALERT_EMAIL
+
+async def dispatch_live_email(to_email: str, subject: str, message: str) -> Dict[str, Any]:
+    """
+    Dispatches a real-time email notification via SMTP (Gmail / Custom SMTP) if configured.
+    """
+    recipient = to_email or ALERT_EMAIL
+    if not (SMTP_USER and SMTP_PASSWORD):
+        logger.info(f"Email notification simulated for {recipient}: {subject}")
+        return {"status": "simulated", "recipient": recipient, "note": "SMTP credentials not provided in .env"}
+
+    def _send():
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"⚖️ [LawFlow Court Notice] {subject}"
+            msg["From"] = f"LawFlow Judicial Registry <{SMTP_USER}>"
+            msg["To"] = recipient
+
+            part = MIMEText(message, "plain")
+            msg.attach(part)
+
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
+                server.starttls()
+                server.login(SMTP_USER, SMTP_PASSWORD)
+                server.sendmail(SMTP_USER, [recipient], msg.as_string())
+            logger.info(f"Real email successfully dispatched to {recipient}!")
+            return {"status": "sent", "recipient": recipient}
+        except Exception as e:
+            logger.warning(f"Email dispatch failed: {e}")
+            return {"status": "failed", "error": str(e)}
+
+    return await asyncio.to_thread(_send)
+
+
 def generate_notice_and_token(case_id: str, respondent_name: str, respondent_phone: str, hearing_date: str, courtroom: str, national_id_last4: str) -> Dict[str, Any]:
     """
     Micro-Agent 4: Notice & Token Generation Agent

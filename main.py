@@ -17,7 +17,7 @@ from backend.mcp_tools import MCP_TOOL_REGISTRY, execute_mcp_tool
 from backend.agents.precedent_agent import analyze_precedent
 from backend.agents.calendar_agent import select_optimal_schedule
 from backend.agents.judge_agent import match_judge
-from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio
+from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio, dispatch_live_email
 from backend.agents.safety_escalation_agent import generate_safety_separation_notice, compile_police_packet
 
 logging.basicConfig(level=logging.INFO)
@@ -276,8 +276,9 @@ async def approve_gate_1(case_id: str):
         case["respondent_phone"], sms_msg, v_link, "SUMMONS_DISPATCH", now, 0
     ))
 
-    # Real-world Live SMS Dispatch (Twilio)
+    # Real-world Live SMS Dispatch (Twilio) & Email (Gmail / SMTP)
     await dispatch_live_sms_twilio(case["respondent_phone"], sms_msg)
+    await dispatch_live_email(None, f"Official Judicial Summons - {case['title']} ({case['id']})", sms_msg)
 
     # If Dual Party: Agent 5 safety dispatch
     if case["is_dual_party"] and case.get("complainant_phone"):
@@ -380,6 +381,7 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
                 "POLICE_ESCALATION_WARNING", now, hours
             ))
             await dispatch_live_sms_twilio(case["respondent_phone"], msg_72)
+            await dispatch_live_email(None, f"🚨 FINAL NOTICE (72H DEFAULT) - Case {case_id}", msg_72)
 
         elif hours >= 48:
             current_status = "NOTICE_RESENT_48H"
@@ -398,9 +400,11 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
                 "48H_REMINDER", now, hours
             ))
             await dispatch_live_sms_twilio(case["respondent_phone"], msg_48)
+            await dispatch_live_email(None, f"⚠️ URGENT REMINDER (48H) - Case {case_id}", msg_48)
 
         else:
             c.execute("UPDATE cases SET simulated_hours = ?, updated_at = ? WHERE id = ?", (hours, now, case_id))
+
 
     conn.commit()
     conn.close()

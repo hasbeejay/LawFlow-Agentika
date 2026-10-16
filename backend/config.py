@@ -15,3 +15,11 @@ TWILIO_PHONE_NUMBER = os.environ.get("TWILIO_PHONE_NUMBER", "").strip()
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "lawflow-default-secret-salt-2026")
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000").rstrip("/")
+
+# Email / Gmail Dispatch Configuration
+SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com").strip()
+SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
+SMTP_USER = os.environ.get("SMTP_USER", "").strip()
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "").strip()
+ALERT_EMAIL = os.environ.get("ALERT_EMAIL", "hasbeejayleo@gmail.com").strip()
+

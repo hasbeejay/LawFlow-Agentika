@@ -6,15 +6,15 @@
 ---
 
 ## Section 1: Team Details
-* **Team Name:** [Your Team Name, e.g., LexTech / Alpha / LawFlow Team]
+* **Team Name:** Ctrl Alt Elite
 * **Member 1 (Primary):**
-  * Full Name: [Your Full Name]
-  * Email: [Your Email]
-  * Registered Discord Username: [Your Discord ID, e.g., YourName [Participant/TeamName]]
+  * Full Name: Haseeb Jalil
+  * Email: hasbeejayleo@gmail.com
+  * Registered Discord Username: hasbeejay [Participant/Ctrl Alt Elite]
 * **Member 2 (Teammate):**
-  * Full Name: [Teammate Full Name]
-  * Email: [Teammate Email]
-  * Registered Discord Username: [Teammate Discord ID]
+  * Full Name: Ansab saddique
+  * Email: [Ansab Email]
+  * Registered Discord Username: [Ansab Discord ID]
 * **Team WhatsApp Contact Number:** [+92 3XX XXXXXXX]
 
 ---
@@ -30,18 +30,19 @@
   2. **Gate 2 (Police Bench Warrant Authorization):** If a respondent fails to respond after 72 hours, the AI compiles a digital Bench Warrant packet, but only a human Clerk can authorize its formal referral to law enforcement.
 * **What You Built With:**  
   * **Framework & Code:** Custom Python 3.11 + FastAPI + SQLite state engine + HTML5/CSS3 glassmorphic SPA with 60fps neural canvas visualizer.
-  * **AI Models:** Groq Cloud (`llama-3.3-70b-versatile` / `llama-3.1-8b-instant`) with automatic fallback to Google Gemini 1.5 Flash and a deterministic offline legal reasoning matrix.
-  * **APIs & Protocols:** Model Context Protocol (MCP) v1.0 (6 codified legal tools), Web Speech API (Text-to-Speech), Virtual Telephony SMS dispatch engine.
+  * **AI Models:** Groq Cloud (`openai/gpt-oss-120b` / `qwen/qwen3.8-27b`) with automatic fallback to Google Gemini 1.5 Flash and a deterministic offline legal reasoning matrix.
+  * **APIs & Protocols:** Model Context Protocol (MCP) v1.0 (6 codified legal tools), Web Speech API (Text-to-Speech), Virtual Telephony SMS & Real-Time Email dispatch engine.
 
 ---
 
 ## Section 3: Required Links
 * **Live Alternate Clouds Deployment Link:** `https://[your-service-subdomain].clouds.alternatefutures.ai` *(Keep running until closing ceremony!)*
-* **GitHub Repository Link:** `https://github.com/[your-username]/LawFlow-Agentika`
+* **GitHub Repository Link:** `https://github.com/hasbeejay/LawFlow-Agentika`
 * **Demo Video Link (2–3 minutes):** `[Unlisted YouTube URL or Public Google Drive link]`
 * **LinkedIn Original Post Link (Teammate 1):** `https://linkedin.com/posts/...`
 * **LinkedIn Reshare Link (Teammate 2):** `https://linkedin.com/posts/...`
 * **X / Twitter Post Link (Optional):** `[Optional link]`
+
 
 ---
 
