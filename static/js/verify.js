@@ -1,16 +1,18 @@
 // LawFlow Respondent Secure Portal Controller
-// Includes 2FA Verification, Multilingual Engine (English/Urdu/Spanish), and Text-to-Speech Accessibility
+// Includes 2FA Verification, Multilingual Engine (English/Urdu/Spanish),
+// Text-to-Speech Accessibility, and AI Respondent Case Summarizer & Rights Agent
 
 const VerifyPortal = {
     token: null,
     caseData: null,
+    aiSummary: null,
     currentLang: 'en',
 
     translations: {
         en: {
             title: "Judicial Summons & Appearance Verification",
-            subtitle: "Capital Territory Judicial Adjudication System",
-            badge: "Official Legal Notice",
+            subtitle: "Capital Territory Judicial Adjudication System • Official Dispatch: 241908@students.au.edu.pk",
+            badge: "Official Judicial Notice",
             caseId: "Case Reference",
             hearingDate: "Scheduled Hearing Date",
             courtroom: "Courtroom & Location",
@@ -19,16 +21,15 @@ const VerifyPortal = {
             authLabel: "Last 4 Digits of National ID / CNIC",
             terms: "I acknowledge receipt of this official summons and agree to appear at the designated hearing.",
             confirmBtn: "Confirm Court Appearance ⚡",
-            hardshipBtn: "Request Hardship Reschedule",
-            speechBtn: "Listen to Summons (Audio)",
+            speechBtn: "Listen to Notice",
             confirmedTitle: "Appearance Successfully Confirmed",
-            confirmedDesc: "Your attendance has been formally logged in the judicial docket. Please bring valid photo identification.",
-            directions: "Directions & Safety Protocol",
-            directionsDesc: "Main Judicial Complex, Sector G-10/4, Islamabad. Arrive 15 minutes prior to docket call."
+            confirmedDesc: "Your attendance has been formally logged in the judicial docket. Please arrive 15 minutes prior to docket call with photo identification.",
+            directions: "Courthouse Location & Safety Protocol",
+            directionsDesc: "Main Judicial Complex, Sector G-10/4, Islamabad. Free parking available at South Gate."
         },
         ur: {
             title: "عدالتی سمن اور پیشی کی تصدیق",
-            subtitle: "عدالتی کارروائی اور خودکار پیشی نظام",
+            subtitle: "عدالتی کارروائی اور خودکار پیشی نظام • سرکاری ترسیل: 241908@students.au.edu.pk",
             badge: "سرکاری عدالتی نوٹس",
             caseId: "مقدمہ نمبر",
             hearingDate: "مقررہ تاریخ پیشی",
@@ -38,8 +39,7 @@ const VerifyPortal = {
             authLabel: "قومی شناختی کارڈ کے آخری ۴ ہندسے",
             terms: "میں اس عدالتی سمن کی وصولی کی تصدیق کرتا ہوں اور مقررہ تاریخ پر پیش ہونے کا پابند ہوں۔",
             confirmBtn: "عدالتی پیشی کی تصدیق کریں ⚡",
-            hardshipBtn: "تاریخ میں تبدیلی کی درخواست",
-            speechBtn: "سمن کی آڈیو سنیں (سنیں)",
+            speechBtn: "نوٹس کی آڈیو سنیں",
             confirmedTitle: "پیشی کی کامیابی سے تصدیق ہو گئی",
             confirmedDesc: "آپ کی حاضری عدالتی ریکارڈ میں درج ہو چکی ہے۔ براہ کرم اصل شناختی کارڈ ہمراہ لائیں۔",
             directions: "عدالتی راستہ اور رہنمائی",
@@ -47,7 +47,7 @@ const VerifyPortal = {
         },
         es: {
             title: "Citación Judicial y Confirmación de Comparecencia",
-            subtitle: "Sistema Judicial Automatizado",
+            subtitle: "Sistema Judicial Automatizado • Correo Oficial: 241908@students.au.edu.pk",
             badge: "Aviso Legal Oficial",
             caseId: "Referencia del Caso",
             hearingDate: "Fecha de Audiencia",
@@ -57,25 +57,43 @@ const VerifyPortal = {
             authLabel: "Últimos 4 Dígitos de Identificación",
             terms: "Reconozco haber recibido esta citación oficial y me comprometo a comparecer.",
             confirmBtn: "Confirmar Comparecencia ⚡",
-            hardshipBtn: "Solicitar Aplazamiento por Dificultad",
-            speechBtn: "Escuchar Citación (Audio)",
+            speechBtn: "Escuchar Aviso (Audio)",
             confirmedTitle: "Comparecencia Confirmada Exitosamente",
             confirmedDesc: "Su asistencia ha sido registrada formalmente. Presente una identificación con foto válida.",
-            directions: "Indicaciones y Protocolo",
+            directions: "Ubicación del Tribunal",
             directionsDesc: "Complejo Judicial Central. Preséntese 15 minutos antes de la hora programada."
         }
     },
 
     async init() {
         const params = new URLSearchParams(window.location.search);
-        VerifyPortal.token = params.get('token');
+        VerifyPortal.token = params.get('token') || params.get('case_id');
 
         if (!VerifyPortal.token) {
-            VerifyPortal.showError('No summons token provided in link. Please use the exact link sent via SMS.');
+            VerifyPortal.showLookup();
             return;
         }
 
-        await VerifyPortal.fetchCase();
+        await VerifyPortal.fetchCase(VerifyPortal.token);
+    },
+
+    showLookup() {
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('error-state').classList.add('hidden');
+        document.getElementById('case-state').classList.add('hidden');
+        document.getElementById('lookup-state').classList.remove('hidden');
+    },
+
+    quickSelectCase(caseId) {
+        document.getElementById('manual-lookup-input').value = caseId;
+        VerifyPortal.fetchCase(caseId);
+    },
+
+    async handleManualLookup(e) {
+        if (e) e.preventDefault();
+        const query = document.getElementById('manual-lookup-input').value.trim();
+        if (!query) return;
+        await VerifyPortal.fetchCase(query);
     },
 
     setLanguage(lang) {
@@ -109,25 +127,80 @@ const VerifyPortal = {
         });
     },
 
-    async fetchCase() {
+    async fetchCase(tokenOrId) {
+        document.getElementById('lookup-state').classList.add('hidden');
+        document.getElementById('error-state').classList.add('hidden');
+        document.getElementById('loading-state').classList.remove('hidden');
+
         try {
-            const res = await fetch(`/api/verify?token=${VerifyPortal.token}`);
+            const res = await fetch(`/api/verify?token=${encodeURIComponent(tokenOrId)}`);
             if (!res.ok) {
-                VerifyPortal.showError('Invalid or expired judicial summons link. If this is an error, contact the clerk office.');
+                VerifyPortal.showError('Invalid or expired judicial summons link or Case ID. If this is an error, please verify your citation reference.');
                 return;
             }
             const data = await res.json();
             VerifyPortal.caseData = data;
+            VerifyPortal.token = data.token || tokenOrId;
             VerifyPortal.renderCase();
+
+            // Fetch AI Case Summary asynchronously
+            VerifyPortal.fetchAiSummary(data.case_id);
         } catch (e) {
             console.error('Fetch error:', e);
             VerifyPortal.showError('Unable to connect to Judicial Registry server.');
         }
     },
 
+    async fetchAiSummary(caseId) {
+        try {
+            const res = await fetch(`/api/cases/${caseId}/respondent-summary`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.status === 'success' && data.summary) {
+                    VerifyPortal.aiSummary = data.summary;
+                    VerifyPortal.renderAiSummary(data.summary);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load AI summary:', e);
+        }
+    },
+
+    renderAiSummary(s) {
+        const explEl = document.getElementById('ai-plain-explanation');
+        const whyEl = document.getElementById('ai-why-confirm');
+        const rightsList = document.getElementById('ai-rights-list');
+        const checklist = document.getElementById('ai-checklist');
+
+        if (explEl && s.plain_english_explanation) {
+            explEl.innerText = s.plain_english_explanation;
+        }
+        if (whyEl && s.why_confirm_now) {
+            whyEl.innerText = s.why_confirm_now;
+        }
+        if (rightsList && Array.isArray(s.your_statutory_rights)) {
+            rightsList.innerHTML = s.your_statutory_rights.map(r => `
+                <div class="flex items-start gap-2 bg-slate-900/50 p-2 rounded border border-slate-800">
+                    <span class="text-blue-400 mt-0.5">⚖️</span>
+                    <span class="text-slate-200">${r}</span>
+                </div>
+            `).join('');
+        }
+        if (checklist && Array.isArray(s.what_to_bring_checklist)) {
+            checklist.innerHTML = s.what_to_bring_checklist.map(item => `
+                <label class="flex items-center gap-2 bg-slate-900/50 p-2 rounded border border-slate-800 cursor-pointer hover:bg-slate-800/40 transition">
+                    <input type="checkbox" class="accent-indigo-500 rounded">
+                    <span class="text-slate-300 text-[11px]">${item}</span>
+                </label>
+            `).join('');
+        }
+    },
+
     renderCase() {
         const d = VerifyPortal.caseData;
         document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('lookup-state').classList.add('hidden');
+        document.getElementById('error-state').classList.add('hidden');
         document.getElementById('case-state').classList.remove('hidden');
 
         document.getElementById('portal-case-id').innerText = d.case_id;
@@ -139,7 +212,12 @@ const VerifyPortal = {
 
         if (d.current_case_status === 'SCHEDULED_CONFIRMED') {
             VerifyPortal.showConfirmedState();
+        } else {
+            document.getElementById('auth-form-card').classList.remove('hidden');
+            document.getElementById('confirmed-card').classList.add('hidden');
         }
+
+        VerifyPortal.applyTranslations();
     },
 
     showConfirmedState() {
@@ -158,7 +236,7 @@ const VerifyPortal = {
         }
 
         btn.disabled = true;
-        btn.innerText = 'Verifying Identity...';
+        btn.innerText = 'Verifying Identity via 2FA Nonce...';
 
         try {
             const res = await fetch('/api/verify/confirm', {
@@ -213,6 +291,7 @@ const VerifyPortal = {
     showError(msg) {
         document.getElementById('loading-state').classList.add('hidden');
         document.getElementById('case-state').classList.add('hidden');
+        document.getElementById('lookup-state').classList.add('hidden');
         const err = document.getElementById('error-state');
         err.classList.remove('hidden');
         document.getElementById('error-msg').innerText = msg;

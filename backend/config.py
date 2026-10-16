@@ -21,5 +21,8 @@ SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com").strip()
 SMTP_PORT = int(os.environ.get("SMTP_PORT", 587))
 SMTP_USER = os.environ.get("SMTP_USER", "").strip()
 SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "").strip()
+# Official Court Email Configuration
+COURT_EMAIL = os.environ.get("COURT_EMAIL", "241908@students.au.edu.pk").strip()
 ALERT_EMAIL = os.environ.get("ALERT_EMAIL", "hasbeejayleo@gmail.com").strip()
+
 

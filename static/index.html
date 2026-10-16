@@ -1,395 +1,432 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LawFlow — Autonomous Judicial Intake & HITL Case Management</title>
+    <title>LawFlow — Autonomous Judicial Intake & Human-in-the-Loop Justice</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .apple-gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .apple-hero-glow {
+            background: radial-gradient(circle 600px at 50% -100px, rgba(59, 130, 246, 0.18), transparent 70%);
+        }
+        .apple-card-glow {
+            background: radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.1), transparent 80%);
+        }
+        .bento-card {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.4);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .bento-card:hover {
+            border-color: rgba(96, 165, 250, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
 
-    <!-- Top Global Navigation Bar -->
-    <header class="glass-nav sticky top-0 z-40 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
-        <!-- Logo & Hackathon Tag -->
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/25">
-                ⚖️
-            </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h1 class="text-lg font-extrabold tracking-tight text-white">Law<span class="text-blue-500">Flow</span></h1>
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30">Agentika 2.0</span>
+    <!-- Ambient Background Lighting -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/10 blur-[140px] rounded-full"></div>
+        <div class="absolute top-[800px] -left-40 w-[600px] h-[600px] bg-purple-600/5 blur-[160px] rounded-full"></div>
+        <div class="absolute top-[1600px] -right-40 w-[600px] h-[600px] bg-emerald-600/5 blur-[160px] rounded-full"></div>
+    </div>
+
+    <!-- Apple-Style Global Glass Navigation -->
+    <header class="sticky top-0 z-50 bg-[#07090e]/80 backdrop-blur-xl border-b border-slate-800/60 px-6 py-3.5 transition">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            
+            <!-- Brand Glyph -->
+            <a href="/" class="flex items-center gap-3 group text-decoration-none">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
+                    ⚖️
                 </div>
-                <p class="text-[11px] text-slate-400">Autonomous Judicial Intake & HITL Case Management</p>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-base font-extrabold tracking-tight text-white">Law<span class="text-blue-500">Flow</span></span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30">Agentika 2.0</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 block -mt-0.5 font-medium">Judicial Intake & HITL Case Management</span>
+                </div>
+            </a>
+
+            <!-- Center Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-400">
+                <a href="#showcase" class="hover:text-white transition">Case Showcase</a>
+                <a href="#architecture" class="hover:text-white transition">AI Micro-Agents</a>
+                <a href="#visualizer" class="hover:text-white transition">Live Telemetry</a>
+                <a href="#correspondence" class="hover:text-white transition">Official Court Email</a>
+            </nav>
+
+            <!-- Right Actions: Respondent Portal Link -->
+            <div class="flex items-center gap-3">
+                <a href="/verify" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 transition flex items-center gap-2">
+                    <span>Respondent Portal</span>
+                    <span class="text-[10px]">📱</span>
+                </a>
             </div>
-        </div>
 
-        <!-- Navigation Tabs -->
-        <nav class="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs">
-            <button data-nav="clerk" class="px-3.5 py-1.5 rounded-lg font-semibold bg-blue-600/20 text-blue-400 border border-blue-500/40 transition flex items-center gap-1.5">
-                <span>📋 Clerk Hub & HITL</span>
-                <span id="nav-gate1-badge" class="badge badge-pending px-1.5 py-0 text-[9px] hidden">0</span>
-                <span id="nav-gate2-badge" class="badge badge-force px-1.5 py-0 text-[9px] hidden">0</span>
-            </button>
-            <button data-nav="analytics" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
-                <span>📊 Analytics & 3D Network</span>
-            </button>
-            <button data-nav="judge" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
-                <span>👨‍⚖️ Judicial Calendar</span>
-            </button>
-            <button data-nav="mcp" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
-                <span>⚡ MCP Protocol</span>
-            </button>
-        </nav>
-
-        <!-- Right Quick Controls -->
-        <div class="flex items-center gap-2.5">
-            <button onclick="Simulator.toggleSmsDrawer()" class="btn-ghost text-xs flex items-center gap-2">
-                <span>💬 Virtual SMS</span>
-                <span id="sms-unread-badge" class="px-1.5 py-0.2 bg-blue-500 text-white rounded-full text-[10px] font-mono">0</span>
-            </button>
-            <button onclick="App.openRespondentPortalDemo()" class="btn-primary text-xs">
-                <span>Respondent Portal 📱</span>
-            </button>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+    <main class="flex-1 z-10 space-y-24 pb-20">
 
-        <!-- ================= TAB 1: CLERK HUB & HITL ================= -->
-        <section id="tab-clerk" class="tab-content space-y-6">
+        <!-- ================= SECTION 1: APPLE-STYLE HERO ================= -->
+        <section class="relative pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
             
-            <!-- Dynamic Gate 1 Action Banner (Injected by JS) -->
-            <div id="gate1-action-banner"></div>
-
-            <!-- Dynamic Gate 2 Police Action Banner (Injected by JS) -->
-            <div id="gate2-action-banner"></div>
-
-            <!-- 2-Column Layout: Left = Intake Form, Right = Docket Queue -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <!-- Left Column: Autonomous Case Intake Form (5 Cols) -->
-                <div class="lg:col-span-5 space-y-4">
-                    <div class="glass-panel p-5 border-slate-800">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-white text-base flex items-center gap-2">
-                                <span>⚡ New Case Intake</span>
-                            </h3>
-                            <span class="text-[11px] text-blue-400 font-medium">Micro-Agent Assisted</span>
-                        </div>
-
-                        <!-- One-Click Presets for Live Judging Demos -->
-                        <div class="mb-4 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-                            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Demo 1-Click Presets:</span>
-                            <div class="grid grid-cols-2 gap-1.5 text-[11px]">
-                                <button onclick="App.fillPreset('traffic')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
-                                    🚗 High-Speed Radar
-                                </button>
-                                <button onclick="App.fillPreset('domestic')" type="button" class="px-2 py-1 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 rounded text-left truncate transition border border-purple-800/40">
-                                    🛡️ Dual-Party Domestic
-                                </button>
-                                <button onclick="App.fillPreset('commercial')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
-                                    🏭 Sanitation Citation
-                                </button>
-                                <button onclick="App.fillPreset('trespass')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
-                                    🚫 Misdemeanor Trespass
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Intake Form -->
-                        <form id="case-intake-form" onsubmit="App.submitIntake(event)" class="space-y-3 text-xs">
-                            <div>
-                                <label class="block text-slate-400 font-medium mb-1">Case Category</label>
-                                <select id="intake-case-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
-                                    <option value="Traffic Violation">Traffic Violation</option>
-                                    <option value="Criminal (Dual-Party)">Criminal (Dual-Party with Victim Rights)</option>
-                                    <option value="Civil Infraction">Civil Infraction</option>
-                                    <option value="Misdemeanor">Misdemeanor</option>
-                                </select>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-slate-400 font-medium mb-1">Respondent Name</label>
-                                    <input type="text" id="intake-respondent-name" placeholder="Full legal name" required
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
-                                </div>
-                                <div>
-                                    <label class="block text-slate-400 font-medium mb-1">Phone Number (SMS)</label>
-                                    <input type="text" id="intake-respondent-phone" placeholder="+92 300 0000000" required
-                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-slate-400 font-medium mb-1 flex items-center justify-between">
-                                    <span>Respondent Email Address</span>
-                                    <span class="text-[10px] text-blue-400 font-normal">✉️ Live Digital Summons Delivery</span>
-                                </label>
-                                <input type="email" id="intake-respondent-email" placeholder="e.g. hasbeejayleo@gmail.com"
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-slate-400 font-medium mb-1">National ID / CNIC (Last 4 Digits for 2FA)</label>
-                                <input type="text" id="intake-national-id" maxlength="4" placeholder="4821" required
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono outline-none focus:border-blue-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-slate-400 font-medium mb-1">Charge & Citation Details</label>
-                                <textarea id="intake-charge-details" rows="3" placeholder="Factual citation or police complaint statement..." required
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500"></textarea>
-                            </div>
-
-                            <!-- Dual-Party Checkbox -->
-                            <div class="pt-1">
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="intake-dual-party" onchange="App.toggleDualPartyFields()" class="accent-purple-600 rounded">
-                                    <span class="text-slate-300 font-medium">Dual-Party Criminal Case (Victim Separation Required)</span>
-                                </label>
-                            </div>
-
-                            <!-- Dual-Party Additional Fields -->
-                            <div id="dual-party-container" class="hidden bg-purple-950/20 p-3 rounded-xl border border-purple-800/40 space-y-2 mt-2">
-                                <div class="text-[11px] text-purple-300 font-semibold">Protected Complainant Stream (Agent 5 Safety):</div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <input type="text" id="intake-complainant-name" placeholder="Complainant Name" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
-                                    <input type="text" id="intake-complainant-phone" placeholder="Complainant Phone" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
-                                </div>
-                                <input type="email" id="intake-complainant-email" placeholder="Complainant Email for Victim Safety Notice" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
-                            </div>
-
-
-                            <button type="submit" id="intake-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 mt-2">
-                                File Intake & Orchestrate AI Micro-Agents ⚡
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Right Column: Case Management & Active Docket Queue (7 Cols) -->
-                <div class="lg:col-span-7 space-y-4">
-                    <div class="glass-panel p-5 border-slate-800">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                            <div>
-                                <h3 class="font-bold text-white text-base">Active Judicial Docket</h3>
-                                <p class="text-xs text-slate-400">Manage case progression, HITL gates, and simulated notice timelines</p>
-                            </div>
-                            
-                            <!-- Filter buttons -->
-                            <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px]">
-                                <button onclick="App.loadCases('ALL')" class="px-2 py-1 rounded text-slate-300 hover:text-white">All</button>
-                                <button onclick="App.loadCases('PENDING_CLERK_APPROVAL')" class="px-2 py-1 rounded text-amber-400 hover:bg-amber-500/10">Gate 1</button>
-                                <button onclick="App.loadCases('NOTICE_SENT')" class="px-2 py-1 rounded text-blue-400 hover:bg-blue-500/10">Dispatched</button>
-                                <button onclick="App.loadCases('FORCE_ACTION_PENDING_CLERK')" class="px-2 py-1 rounded text-rose-400 hover:bg-rose-500/10">Gate 2</button>
-                            </div>
-                        </div>
-
-                        <!-- Table -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                                        <th class="py-2.5 px-4">Case ID</th>
-                                        <th class="py-2.5 px-4">Case Title & Type</th>
-                                        <th class="py-2.5 px-4">Respondent</th>
-                                        <th class="py-2.5 px-4">Magistrate</th>
-                                        <th class="py-2.5 px-4">Hearing Date</th>
-                                        <th class="py-2.5 px-4">Status</th>
-                                        <th class="py-2.5 px-4">Simulate / Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cases-table-body">
-                                    <!-- Populated via App.renderCaseTable() -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
+            <!-- Hackathon Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-semibold mb-6 animate-pulse">
+                <span>🏆</span>
+                <span>NaSCon 2026 &bull; Agentika 2.0 Theme: Human + AI: Better Together</span>
             </div>
-        </section>
 
-        <!-- ================= TAB 2: ANALYTICS & 3D NETWORK ================= -->
-        <section id="tab-analytics" class="tab-content hidden space-y-6">
-            
-            <!-- KPI Cards Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="glass-panel p-4 border-slate-800">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">TOTAL DOCKETED</span>
-                    <div id="kpi-total-cases" class="text-2xl font-extrabold text-white font-mono">0</div>
-                    <span class="text-[10px] text-blue-400">100% Digital Ingest</span>
-                </div>
-                <div class="glass-panel p-4 border-slate-800">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">APPEARANCE RATE</span>
-                    <div id="kpi-appearance-rate" class="text-2xl font-extrabold text-emerald-400 font-mono">94.2%</div>
-                    <span class="text-[10px] text-slate-500">vs 61% manual baseline</span>
-                </div>
-                <div class="glass-panel p-4 border-slate-800">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">AVG NOTICE SPEED</span>
-                    <div id="kpi-avg-speed" class="text-2xl font-extrabold text-blue-400 font-mono">11.4s</div>
-                    <span class="text-[10px] text-slate-500">vs 5.0 days manual</span>
-                </div>
-                <div class="glass-panel p-4 border-slate-800">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">GATE 1 APPROVALS</span>
-                    <div id="kpi-gate1-count" class="text-2xl font-extrabold text-amber-400 font-mono">0</div>
-                    <span class="text-[10px] text-amber-500/80">Pending Clerk Match Sign-off</span>
-                </div>
-                <div class="glass-panel p-4 border-slate-800">
-                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">GATE 2 ESCALATIONS</span>
-                    <div id="kpi-gate2-count" class="text-2xl font-extrabold text-rose-400 font-mono">0</div>
-                    <span class="text-[10px] text-rose-400/80">72h Non-Response Default</span>
+            <!-- Main Headline -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+                Autonomous Justice.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">
+                    Human + AI: Better Together.
+                </span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-base sm:text-xl text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed mb-10">
+                LawFlow eliminates 72-hour judicial notice backlogs with five coordinated Groq LPU micro-agents, dual-gate clerk oversight, and official court summons delivery from <span class="font-mono text-blue-400">241908@students.au.edu.pk</span>.
+            </p>
+
+            <!-- Hero Interactive Case Lookup Card -->
+            <div class="max-w-xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/60 rounded-2xl p-3 shadow-2xl shadow-blue-900/10 mb-8">
+                <form onsubmit="HomeApp.handleLookup(event)" class="flex flex-col sm:flex-row items-center gap-2">
+                    <div class="relative w-full">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
+                        <input type="text" id="hero-lookup-input" placeholder="Enter Case ID (e.g. CASE-2026-0001) or Summons Token"
+                            class="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-4 py-3 text-white text-xs font-mono outline-none focus:border-blue-500 placeholder:text-slate-500 transition">
+                    </div>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-md transition">
+                        Track Summons ⚡
+                    </button>
+                </form>
+
+                <!-- Quick Clickable Chips -->
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-3 mt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
+                    <span>Try Demo Cases:</span>
+                    <button onclick="HomeApp.fillCase('LF-2026-1042')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-blue-400 font-mono transition">LF-2026-1042 (Traffic)</button>
+                    <button onclick="HomeApp.fillCase('LF-2026-2095')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-purple-400 font-mono transition">LF-2026-2095 (Domestic)</button>
+                    <button onclick="HomeApp.fillCase('LF-2026-3180')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-mono transition">LF-2026-3180 (Sanitation)</button>
                 </div>
             </div>
 
-            <!-- 60FPS Interactive Judicial Network Canvas -->
-            <div class="glass-panel p-6 border-slate-800">
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <span>🌐 Autonomous Judicial Neural Network</span>
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Live multi-agent orchestration topology: Intake &rarr; 5 Micro-Agents &rarr; HITL Gates &rarr; Summons/Enforcement</p>
-                    </div>
-                    <span class="text-xs font-mono text-slate-500">HTML5 Canvas Engine</span>
+            <!-- Stat Strip -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 text-left">
+                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60">
+                    <span class="text-xs text-slate-400 block mb-1">Average Notice Speed</span>
+                    <div class="text-2xl font-extrabold text-white">1.2s <span class="text-xs font-normal text-emerald-400">vs 72h baseline</span></div>
                 </div>
-
-                <div class="relative w-full rounded-xl overflow-hidden bg-slate-950/70 border border-slate-800/80">
-                    <canvas id="judicial-canvas" class="w-full block"></canvas>
+                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60">
+                    <span class="text-xs text-slate-400 block mb-1">Article 10-A Oversight</span>
+                    <div class="text-2xl font-extrabold text-white">100% <span class="text-xs font-normal text-blue-400">HITL Sworn Clerk</span></div>
                 </div>
-            </div>
-
-            <!-- Architecture Comparison Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
-                    <h4 class="font-bold text-white text-sm">Human + AI: Better Together</h4>
-                    <p class="text-slate-400 leading-relaxed">
-                        LawFlow eliminates administrative court delays while strictly guaranteeing that AI never exercises judicial power unilaterally. Clerks retain veto authority over both judge assignments and police bench warrant referrals.
-                    </p>
+                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60">
+                    <span class="text-xs text-slate-400 block mb-1">Appearance Confirmation</span>
+                    <div class="text-2xl font-extrabold text-white">88.4% <span class="text-xs font-normal text-emerald-400">+56% uplift</span></div>
                 </div>
-                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
-                    <h4 class="font-bold text-white text-sm">Dual-Party Safety Engine</h4>
-                    <p class="text-slate-400 leading-relaxed">
-                        For criminal domestic offenses, Agent 5 enforces physical corridor safety buffers, assigns victim advocates, and staggers courtroom arrival times by 30 minutes to prevent corridor intimidation.
-                    </p>
-                </div>
-                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
-                    <h4 class="font-bold text-white text-sm">Resilient Cloud Container</h4>
-                    <p class="text-slate-400 leading-relaxed">
-                        Built for Clouds by Alternate Futures as a unified Docker container on Port 8000 with a 3-tier LLM fallback chain (Groq &rarr; Gemini &rarr; Offline Judicial Matrix) for zero-downtime judging.
-                    </p>
+                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60">
+                    <span class="text-xs text-slate-400 block mb-1">Official Court Sender</span>
+                    <div class="text-xs font-mono text-blue-400 truncate mt-1">241908@students.au.edu.pk</div>
                 </div>
             </div>
 
         </section>
 
-        <!-- ================= TAB 3: JUDICIAL CALENDAR ================= -->
-        <section id="tab-judge" class="tab-content hidden space-y-6">
-            <div class="flex justify-between items-center">
+        <!-- ================= SECTION 2: CASE SHOWCASING CAROUSEL ================= -->
+        <section id="showcase" class="max-w-7xl mx-auto px-6 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-800/80 pb-4">
                 <div>
-                    <h3 class="text-lg font-bold text-white">Magistrate Chambers & Courtroom Calendars</h3>
-                    <p class="text-xs text-slate-400">Real-time docket load balancing, clearance rates, and safety buffers</p>
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Real-World Case Dockets</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Live Judicial Intake Showcase</h2>
+                    <p class="text-xs text-slate-400 mt-1">Experience how LawFlow handles diverse case categories with automated micro-agents and 2FA citizen portals.</p>
                 </div>
-                <span class="badge badge-approved text-xs">Live Registry Connected</span>
+                <a href="/verify" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                    Open Full Citizen Portal &rarr;
+                </a>
             </div>
 
-            <!-- Judges Cards Grid -->
-            <div id="judges-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Injected via App.renderJudges() -->
+            <!-- Case Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="showcase-cards-container">
+                
+                <!-- Card 1: Traffic Radar Capture -->
+                <div class="bento-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">Traffic Citation</span>
+                            <span class="text-[10px] font-mono text-emerald-400">Notice Dispatched</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white leading-tight">State v. Hamza Farooq</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2">Automated speed radar capture: 122 km/h in 70 km/h zone on Expressway. Citation #TR-2026-991.</p>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
+                            <div>Magistrate: <span class="text-white">Hon. Justice Aftab</span></div>
+                            <div>Courtroom: <span class="text-blue-400">Room 204</span></div>
+                            <div>Hearing: <span class="text-amber-300">2026-10-24 09:30</span></div>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-mono text-slate-500">LF-2026-1042</span>
+                        <a href="/verify?token=tok_lf_2026_1042_188896abdd0c" target="_blank" class="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 rounded-lg text-xs font-semibold transition">
+                            Verify Notice 📱
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2: Dual-Party Criminal Domestic -->
+                <div class="bento-card rounded-2xl p-5 flex flex-col justify-between border-purple-500/30">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">Dual-Party Criminal</span>
+                            <span class="text-[10px] font-mono text-purple-300">Safety Buffer 08:30</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white leading-tight">State v. Kamran Sheikh</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2">Penal Code § 243: Emergency protective petition filed. Automated 30-min staggered arrival safety corridor active.</p>
+                        <div class="bg-purple-950/20 p-2.5 rounded-xl border border-purple-800/40 text-[11px] font-mono space-y-1 text-purple-200">
+                            <div>Complainant: <span class="text-white">Zoya Sheikh (East Gate)</span></div>
+                            <div>Respondent: <span class="text-white">Kamran Sheikh (Main Gate)</span></div>
+                            <div>Corridor: <span class="text-emerald-400">Physical Buffer 30m</span></div>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-mono text-purple-400">LF-2026-2095</span>
+                        <a href="/verify?token=tok_sheikh_2095" target="_blank" class="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-lg text-xs font-semibold transition">
+                            Verify Notice 📱
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3: Municipal Sanitation -->
+                <div class="bento-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">Civil Infraction</span>
+                            <span class="text-[10px] font-mono text-amber-400">Gate 1 Pending</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white leading-tight">Municipal Corp v. Apex Freight</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2">Sanitation Infraction § 44-A: Commercial grease discharge into public storm drains. Overdue inspection citation.</p>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
+                            <div>Magistrate: <span class="text-white">Hon. Justice Bilal</span></div>
+                            <div>Courtroom: <span class="text-blue-400">Room 102</span></div>
+                            <div>Hearing: <span class="text-amber-300">2026-10-25 11:00</span></div>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-mono text-slate-500">LF-2026-3180</span>
+                        <a href="/verify?token=tok_apex_3180" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
+                            Verify Notice 📱
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 4: Misdemeanor Trespass -->
+                <div class="bento-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">Misdemeanor</span>
+                            <span class="text-[10px] font-mono text-blue-400">Intake Processed</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white leading-tight">City Admin v. Bilal Qureshi</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2">Penal Code § 602: Repeated unauthorized commercial encroachment and trespass on municipal property.</p>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
+                            <div>Magistrate: <span class="text-white">Hon. Justice Fatima</span></div>
+                            <div>Courtroom: <span class="text-blue-400">Room 305</span></div>
+                            <div>Hearing: <span class="text-amber-300">2026-10-27 10:00</span></div>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[10px] font-mono text-slate-500">LF-2026-4412</span>
+                        <a href="/verify?token=tok_qureshi_4412" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
+                            Verify Notice 📱
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- ================= TAB 4: MCP PROTOCOL ================= -->
-        <section id="tab-mcp" class="tab-content hidden space-y-6">
-            <div class="glass-panel p-6 border-slate-800">
-                <div class="flex justify-between items-center mb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span>⚡ Model Context Protocol (MCP) Tools Catalog</span>
-                            <span class="badge badge-approved text-[10px]">v1.0 Compatible</span>
-                        </h3>
-                        <p class="text-xs text-slate-400">Codified tools exposed for judicial orchestration and external tool-calling</p>
+        <!-- ================= SECTION 3: APPLE-STYLE BENTO GRID ================= -->
+        <section id="architecture" class="max-w-7xl mx-auto px-6 space-y-6">
+            <div class="text-center max-w-3xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Multi-Agent Microservices</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Engineered for Sovereign Adjudication</h2>
+                <p class="text-sm text-slate-400">Every agent is purpose-built to operate in parallel, audited at each step by sworn judicial registry staff.</p>
+            </div>
+
+            <!-- Bento Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 pt-4">
+
+                <!-- Bento 1: AI Legal Correspondence Drafter (8 cols) -->
+                <div class="md:col-span-8 bento-card rounded-3xl p-8 relative overflow-hidden">
+                    <div class="max-w-lg space-y-3 z-10 relative">
+                        <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[11px] font-bold">
+                            <span>✉️</span>
+                            <span>Official Court Dispatcher</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">AI Legal Correspondence Drafter</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Drafts authoritative, DKIM-signed official summons emails sent from <span class="font-mono text-blue-400 font-semibold">241908@students.au.edu.pk</span> to respondents. Incorporates formal statutory citations, hearing room coordinates, and Rule 12 Bench Warrant advisories.
+                        </p>
+                        <div class="pt-2 flex flex-wrap gap-2 text-[11px] font-mono text-slate-400">
+                            <span class="px-2 py-1 bg-slate-900/80 rounded border border-slate-800">Sender: 241908@students.au.edu.pk</span>
+                            <span class="px-2 py-1 bg-slate-900/80 rounded border border-slate-800">HTML & Plain-Text Dual Stream</span>
+                            <span class="px-2 py-1 bg-emerald-950/40 text-emerald-300 border border-emerald-800/40">Rule 12 Certified</span>
+                        </div>
                     </div>
-                    <a href="/api/mcp/tools" target="_blank" class="btn-ghost text-xs">Inspect JSON API ↗</a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <!-- Tool 1 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-blue-400 font-semibold">search_precedents</span>
-                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
+                <!-- Bento 2: AI Respondent Case Summarizer & Rights (4 cols) -->
+                <div class="md:col-span-4 bento-card rounded-3xl p-8 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[11px] font-bold">
+                            <span>🤖</span>
+                            <span>Citizen Rights Agent</span>
                         </div>
-                        <p class="text-slate-300 mb-2">Searches codified statutes, past case citations, and historical clearance rates for charges.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { case_type: string, charge_keywords: string }
+                        <h3 class="text-xl font-bold text-white">Plain-Language Rights AI</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Translates dense citations into plain English, outlines presumption of innocence, and builds a customized what-to-bring checklist for the respondent.
+                        </p>
+                    </div>
+                    <div class="p-3 bg-indigo-950/30 rounded-xl border border-indigo-900/40 text-[11px] text-indigo-300 mt-4">
+                        "Reduces respondent failure-to-appear by demystifying court procedures."
+                    </div>
+                </div>
+
+                <!-- Bento 3: Dual-Gate HITL Model (4 cols) -->
+                <div class="md:col-span-4 bento-card rounded-3xl p-8 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-bold">
+                            <span>⚖️</span>
+                            <span>Constitutional Safeguards</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Dual-Gate HITL Model</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Article 10-A compliance: AI drafts and recommends, but only sworn court clerks can authorize notice dispatch (Gate 1) or police bench warrants (Gate 2).
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-4 text-[10px] font-mono text-center">
+                        <div class="p-2 rounded bg-amber-950/30 border border-amber-900/40 text-amber-300">Gate 1: Clerk Summons</div>
+                        <div class="p-2 rounded bg-rose-950/30 border border-rose-900/40 text-rose-300">Gate 2: 72h Warrant</div>
+                    </div>
+                </div>
+
+                <!-- Bento 4: Groq 120B Inference Engine (8 cols) -->
+                <div class="md:col-span-8 bento-card rounded-3xl p-8 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
+                            <span>⚡</span>
+                            <span>Groq LPU Processing</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Ultra-Low Latency Judicial Reasoning</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Powered by live Groq LPU inference delivering sub-1.5 second turnaround for statutory precedent analysis, judge calendar optimization, and multilingual citizen translation.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 mt-4 text-xs font-mono">
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <span class="text-slate-500 text-[10px] block">LLM PROVIDER</span>
+                            <span class="text-emerald-400 font-bold">Groq LPU (GPT-OSS-120B)</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <span class="text-slate-500 text-[10px] block">INFERENCE TIME</span>
+                            <span class="text-blue-400 font-bold">1.24s Mean</span>
+                        </div>
+                        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                            <span class="text-slate-500 text-[10px] block">MODEL FALLBACK</span>
+                            <span class="text-purple-400 font-bold">Qwen 27B / Gemini</span>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Tool 2 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-blue-400 font-semibold">get_sentencing_guidelines</span>
-                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
-                        </div>
-                        <p class="text-slate-300 mb-2">Calculates statutory penalty boundaries, pre-trial diversion eligibility, and notice days.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { charge_code: string, has_priors: boolean }
-                        </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: 60FPS CANVAS VISUALIZER ================= -->
+        <section id="visualizer" class="max-w-7xl mx-auto px-6 space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-800/80 pb-4">
+                <div>
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Live Neural Canvas Telemetry</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Real-Time Judicial Pipeline</h2>
+                    <p class="text-xs text-slate-400 mt-1">Interactive 60fps graph visualizer tracking tokens from intake through micro-agents to citizen confirmation or police precinct.</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span>60 FPS Hardware Accelerated</span>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="glass-panel p-4 md:p-6 rounded-3xl border-slate-800 bg-slate-950/60 shadow-2xl relative overflow-hidden">
+                <canvas id="judicial-canvas" class="w-full rounded-2xl block" style="height: 380px;"></canvas>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: OFFICIAL COURT EMAIL CORRESPONDENCE ================= -->
+        <section id="correspondence" class="max-w-7xl mx-auto px-6 space-y-6">
+            <div class="text-center max-w-3xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Official Court Registry Communication</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Live Dispatched Judicial Notice</h2>
+                <p class="text-xs text-slate-400">All respondent correspondence originates strictly from <span class="font-mono text-blue-400">241908@students.au.edu.pk</span>.</p>
+            </div>
+
+            <!-- Email Mockup Container -->
+            <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-700/80 rounded-2xl overflow-hidden shadow-2xl">
+                <!-- Email Window Bar -->
+                <div class="bg-slate-950 p-3.5 border-b border-slate-800 flex justify-between items-center text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                        <span class="ml-2 font-mono text-slate-400 text-[11px]">Official Court Registry Notice Feed</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-[10px]">DKIM VERIFIED</span>
+                </div>
+
+                <!-- Email Header Meta -->
+                <div class="p-4 bg-slate-950/60 border-b border-slate-800/80 text-xs font-mono space-y-1.5">
+                    <div class="flex justify-between items-center text-blue-400">
+                        <span><strong>From:</strong> 241908@students.au.edu.pk (Capital Territory Judicial Registry)</span>
+                    </div>
+                    <div class="text-slate-300"><strong>To:</strong> respondent@domain.com (Verified Citizen)</div>
+                    <div class="text-slate-400"><strong>Subject:</strong> ⚖️ OFFICIAL JUDICIAL SUMMONS: State v. Respondent (CASE-2026-0001)</div>
+                </div>
+
+                <!-- Rendered Email Body -->
+                <div class="p-6 text-xs text-slate-200 space-y-4 leading-relaxed">
+                    <div class="p-4 bg-blue-950/20 rounded-xl border border-blue-900/40">
+                        <h4 class="font-bold text-white text-sm mb-1">MANDATORY APPEARANCE SUMMONS</h4>
+                        <p class="text-slate-300 text-xs">
+                            Formal judicial proceedings have been docketed regarding Traffic Citation #TR-2026-991. You are required by law to appear before the presiding magistrate in Room 204.
+                        </p>
                     </div>
 
-                    <!-- Tool 3 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-blue-400 font-semibold">get_judge_availability</span>
-                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
-                        </div>
-                        <p class="text-slate-300 mb-2">Retrieves open calendar blocks, courtroom assignments, and docket load balance.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { specialization: string, urgency_level: string }
-                        </div>
+                    <div class="p-3 bg-rose-950/20 border-l-4 border-rose-500 rounded text-rose-200 text-xs">
+                        <strong>Statutory Warning:</strong> Failure to confirm receipt within 72 hours triggers automated Bench Warrant generation and referral to police enforcement units under Contempt of Summons Rule 12.
                     </div>
 
-                    <!-- Tool 4 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-purple-400 font-semibold">verify_safety_separation_buffers</span>
-                            <span class="text-slate-500 text-[10px]">Safety Protocol</span>
-                        </div>
-                        <p class="text-slate-300 mb-2">Calculates victim-respondent arrival buffers, separate gate schedules, and restraining alerts.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { is_dual_party: boolean, complainant_name: string }
-                        </div>
-                    </div>
-
-                    <!-- Tool 5 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-emerald-400 font-semibold">generate_secure_token</span>
-                            <span class="text-slate-500 text-[10px]">Crypto Tool</span>
-                        </div>
-                        <p class="text-slate-300 mb-2">Generates time-bound HMAC tokens and one-touch verification portal URLs for summons.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { case_id: string, national_id_last4: string }
-                        </div>
-                    </div>
-
-                    <!-- Tool 6 -->
-                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <span class="font-mono text-rose-400 font-semibold">dispatch_police_packet</span>
-                            <span class="text-slate-500 text-[10px]">Enforcement</span>
-                        </div>
-                        <p class="text-slate-300 mb-2">Compiles digital bench warrant packets for law enforcement handoff after 72h default.</p>
-                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
-                            inputs: { case_id: string, respondent_name: string, overdue_hours: 72 }
-                        </div>
+                    <div class="text-center pt-2">
+                        <a href="/verify" class="inline-block px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-xs shadow-md">
+                            Confirm Court Appearance (2FA) ⚡
+                        </a>
                     </div>
                 </div>
             </div>
@@ -397,60 +434,70 @@
 
     </main>
 
-    <!-- Virtual SMS Live Handset Drawer (Floating Widget) -->
-    <div id="sms-drawer" class="sms-drawer">
-        <div class="p-3.5 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-base">📱</span>
-                <span class="font-bold text-white text-xs">Virtual Telephony & Notice Stream</span>
-            </div>
-            <button onclick="Simulator.toggleSmsDrawer()" class="text-slate-400 hover:text-white text-sm font-bold px-1.5">&times;</button>
-        </div>
-        <div id="sms-messages-container" class="flex-1 p-3.5 overflow-y-auto space-y-3">
-            <!-- Injected by Simulator.fetchSmsLogs() -->
-        </div>
-        <div class="p-2.5 bg-slate-900/80 border-t border-slate-800 text-[10px] text-slate-500 text-center">
-            Simulated Handset &bull; Free Demo Mode
-        </div>
-    </div>
-
-    <!-- Case Detail Inspection Modal -->
-    <div id="case-modal" class="modal-overlay">
-        <div id="case-modal-content" class="modal-box">
-            <!-- Injected via App.openCaseModal() -->
-        </div>
-    </div>
-
-    <!-- Judge Override Modal -->
-    <div id="override-modal" class="modal-overlay">
-        <div class="modal-box max-w-md">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-base font-bold text-white">Manual Judicial Override</h3>
-                <button onclick="App.closeOverrideModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
-            </div>
-            <form onsubmit="App.submitJudgeOverride(event)" class="space-y-3 text-xs">
-                <input type="hidden" id="override-case-id">
-                <div>
-                    <label class="block text-slate-400 mb-1">Select Alternate Magistrate</label>
-                    <select id="override-judge-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none">
-                        <!-- Populated by App.openOverrideModal() -->
-                    </select>
+    <!-- Apple-Style Minimalist Footer -->
+    <footer class="bg-[#05070a] border-t border-slate-800/80 py-12 px-6 text-xs text-slate-400 z-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-xs">
+                    ⚖️
                 </div>
                 <div>
-                    <label class="block text-slate-400 mb-1">Clerk Reason / Judicial Note</label>
-                    <textarea id="override-clerk-note" rows="2" placeholder="Explain basis for re-assignment (e.g. specialized docket request)..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none"></textarea>
+                    <span class="font-bold text-white">LawFlow Judicial System</span>
+                    <span class="text-slate-500 block text-[11px]">Capital Territory Judicial Registry &bull; NaSCon 2026 Agentika 2.0</span>
                 </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="App.closeOverrideModal()" class="btn-ghost text-xs">Cancel</button>
-                    <button type="submit" class="btn-primary text-xs">Save Judicial Override</button>
-                </div>
-            </form>
-        </div>
-    </div>
+            </div>
 
-    <!-- App Scripts -->
+            <div class="text-center text-slate-500 text-[11px] space-y-0.5">
+                <div>Team <strong class="text-slate-300">Ctrl Alt Elite</strong> &bull; Haseeb Jalil & Ansab saddique</div>
+                <div>Official Court Dispatch: <span class="font-mono text-blue-400">241908@students.au.edu.pk</span></div>
+            </div>
+
+            <!-- Discreet Staff Link (Strict isolation for respondent) -->
+            <div class="flex items-center gap-3 text-slate-500 text-[11px]">
+                <a href="/verify" class="hover:text-blue-400 transition">Citizen Portal</a>
+                <span>&bull;</span>
+                <a href="/clerk" class="hover:text-slate-300 transition">Clerk Gateway 🔒</a>
+                <span>&bull;</span>
+                <a href="/admin" class="hover:text-slate-300 transition">Police-Admin 🛡️</a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Interactive Script for Homepage -->
     <script src="/static/js/visualizer.js"></script>
-    <script src="/static/js/simulator.js"></script>
-    <script src="/static/js/app.js"></script>
+    <script>
+        const HomeApp = {
+            init() {
+                // Initialize canvas visualizer
+                setTimeout(() => {
+                    if (window.JudicialVisualizer) {
+                        new JudicialVisualizer('judicial-canvas');
+                    }
+                }, 150);
+            },
+
+            handleLookup(e) {
+                if (e) e.preventDefault();
+                const query = document.getElementById('hero-lookup-input').value.trim();
+                if (!query) {
+                    window.location.href = '/verify';
+                    return;
+                }
+                window.location.href = `/verify?token=${encodeURIComponent(query)}`;
+            },
+
+            fillCase(caseId) {
+                const input = document.getElementById('hero-lookup-input');
+                if (input) input.value = caseId;
+                window.location.href = `/verify?token=${encodeURIComponent(caseId)}`;
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            HomeApp.init();
+        });
+    </script>
 </body>
 </html>

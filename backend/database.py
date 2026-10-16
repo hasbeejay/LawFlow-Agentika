@@ -56,7 +56,29 @@ def init_db():
         cursor.execute("ALTER TABLE cases ADD COLUMN complainant_email TEXT")
     except Exception:
         pass
+    try:
+        cursor.execute("ALTER TABLE cases ADD COLUMN ai_respondent_summary TEXT")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE cases ADD COLUMN ai_email_draft TEXT")
+    except Exception:
+        pass
 
+    # Users Table (Clerks & Admins)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT NOT NULL,
+        full_name TEXT NOT NULL,
+        department TEXT,
+        is_active INTEGER DEFAULT 1,
+        created_at REAL
+    )
+    """)
 
     # Judges Table
     cursor.execute("""
@@ -89,10 +111,16 @@ def init_db():
 
     conn.commit()
 
+    # Seed Users if empty
+    cursor.execute("SELECT COUNT(*) FROM users")
+    if cursor.fetchone()[0] == 0:
+        seed_users(cursor)
+
     # Seed Judges if empty
     cursor.execute("SELECT COUNT(*) FROM judges")
     if cursor.fetchone()[0] == 0:
         seed_judges(cursor)
+
 
     # Seed Cases if empty
     cursor.execute("SELECT COUNT(*) FROM cases")
@@ -102,7 +130,50 @@ def init_db():
     conn.commit()
     conn.close()
 
+def seed_users(cursor):
+    now = time.time()
+    users = [
+        (
+            "usr_clerk_1",
+            "clerk@lawflow.court",
+            "clerk@lawflow.court",
+            "clerk2026",
+            "CLERK",
+            "Senior Clerk Tariq Mansoor",
+            "Central Judicial Intake & Case Management",
+            1,
+            now
+        ),
+        (
+            "usr_clerk_2",
+            "ayesha.clerk@lawflow.court",
+            "ayesha.clerk@lawflow.court",
+            "clerk2026",
+            "CLERK",
+            "Associate Clerk Ayesha Malik",
+            "High-Security Criminal & Safety Docket",
+            1,
+            now
+        ),
+        (
+            "usr_admin_1",
+            "admin@lawflow.gov",
+            "admin@lawflow.gov",
+            "admin2026",
+            "ADMIN",
+            "Superintendent & Judicial Enforcement Liaison",
+            "Police Headquarters & Judicial Administration",
+            1,
+            now
+        )
+    ]
+    cursor.executemany("""
+    INSERT INTO users (id, username, email, password, role, full_name, department, is_active, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, users)
+
 def seed_judges(cursor):
+
     judges = [
         (
             "j1",

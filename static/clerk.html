@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawFlow — Clerk Management Hub & HITL Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Auth Protection Overlay -->
+    <div id="auth-modal" class="modal-overlay active">
+        <div class="modal-box max-w-md bg-slate-900 border border-slate-700/80 p-6 text-center">
+            <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold shadow-lg shadow-blue-500/20">
+                ⚖️
+            </div>
+            <h2 class="text-xl font-bold text-white mb-1">Clerk Judicial Gateway</h2>
+            <p class="text-xs text-slate-400 mb-6">Restricted to authorized court clerks and registry personnel.</p>
+
+            <form onsubmit="ClerkApp.handleLogin(event)" class="space-y-3.5 text-left text-xs">
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Official Judicial Email</label>
+                    <input type="email" id="login-email" value="clerk@lawflow.court" required
+                        class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-blue-500 font-mono">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-semibold mb-1">Password</label>
+                    <input type="password" id="login-password" value="clerk2026" required
+                        class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-blue-500 font-mono">
+                </div>
+
+                <div class="p-2.5 bg-blue-950/30 rounded-lg border border-blue-900/50 text-[11px] text-blue-300">
+                    <strong>Demo Credentials:</strong><br>
+                    Email: <span class="font-mono text-white">clerk@lawflow.court</span> &bull; Pass: <span class="font-mono text-white">clerk2026</span>
+                </div>
+
+                <button type="submit" id="login-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 font-bold">
+                    Authenticate Session ⚡
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Top Clerk Header -->
+    <header class="glass-nav sticky top-0 z-40 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <a href="/" class="flex items-center gap-2 text-decoration-none">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-md">
+                    ⚖️
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-base font-extrabold text-white">Law<span class="text-blue-500">Flow</span></span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30">Clerk Hub</span>
+                    </div>
+                    <span id="clerk-user-display" class="text-[11px] text-slate-400">Authenticated: Senior Clerk Tariq Mansoor</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation Actions -->
+        <div class="flex items-center gap-3">
+            <button onclick="Simulator.toggleSmsDrawer()" class="btn-ghost text-xs flex items-center gap-2">
+                <span>💬 Notice Feed</span>
+                <span id="sms-unread-badge" class="px-1.5 py-0.2 bg-blue-500 text-white rounded-full text-[10px] font-mono">0</span>
+            </button>
+            <a href="/admin" target="_blank" class="px-3 py-1.5 bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 border border-purple-800/50 rounded-lg text-xs font-semibold transition">
+                Police-Admin 🛡️
+            </a>
+            <button onclick="ClerkApp.logout()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition">
+                Sign Out ↩
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- Gate 1 Action Banner -->
+        <div id="gate1-action-banner"></div>
+
+        <!-- Gate 2 Police Action Banner -->
+        <div id="gate2-action-banner"></div>
+
+        <!-- 2-Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Column: Case Intake Form & AI Email Drafter (5 Cols) -->
+            <div class="lg:col-span-5 space-y-4">
+                <div class="glass-panel p-5 border-slate-800">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-white text-base">⚡ Autonomous Case Filing</h3>
+                        <span class="text-[11px] text-blue-400 font-medium">Groq 120B Assisted</span>
+                    </div>
+
+                    <!-- 1-Click Demo Presets -->
+                    <div class="mb-4 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Demo 1-Click Presets:</span>
+                        <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+                            <button onclick="App.fillPreset('traffic')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                🚗 High-Speed Radar
+                            </button>
+                            <button onclick="App.fillPreset('domestic')" type="button" class="px-2 py-1 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 rounded text-left truncate transition border border-purple-800/40">
+                                🛡️ Dual-Party Domestic
+                            </button>
+                            <button onclick="App.fillPreset('commercial')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                🏭 Sanitation Citation
+                            </button>
+                            <button onclick="App.fillPreset('trespass')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                🚫 Misdemeanor Trespass
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Intake Form -->
+                    <form id="case-intake-form" onsubmit="App.submitIntake(event)" class="space-y-3 text-xs">
+                        <div>
+                            <label class="block text-slate-400 font-medium mb-1">Case Category</label>
+                            <select id="intake-case-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                                <option value="Traffic Violation">Traffic Violation</option>
+                                <option value="Criminal (Dual-Party)">Criminal (Dual-Party with Victim Rights)</option>
+                                <option value="Civil Infraction">Civil Infraction</option>
+                                <option value="Misdemeanor">Misdemeanor</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-400 font-medium mb-1">Respondent Name</label>
+                                <input type="text" id="intake-respondent-name" placeholder="Full legal name" required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 font-medium mb-1">Phone Number (SMS)</label>
+                                <input type="text" id="intake-respondent-phone" placeholder="+92 300 0000000" required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-medium mb-1 flex items-center justify-between">
+                                <span>Respondent Email Address</span>
+                                <span class="text-[10px] text-blue-400 font-normal">✉️ Live Digital Summons Delivery</span>
+                            </label>
+                            <input type="email" id="intake-respondent-email" placeholder="e.g. hasbeejayleo@gmail.com"
+                                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-medium mb-1">National ID / CNIC (Last 4 Digits for 2FA)</label>
+                            <input type="text" id="intake-national-id" maxlength="4" placeholder="4821" required
+                                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono outline-none focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 font-medium mb-1">Charge & Citation Details</label>
+                            <textarea id="intake-charge-details" rows="3" placeholder="Factual citation statement..." required
+                                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500"></textarea>
+                        </div>
+
+                        <!-- Dual-Party Checkbox -->
+                        <div class="pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="intake-dual-party" onchange="App.toggleDualPartyFields()" class="accent-purple-600 rounded">
+                                <span class="text-slate-300 font-medium">Dual-Party Criminal (Safety Corridor Required)</span>
+                            </label>
+                        </div>
+
+                        <div id="dual-party-container" class="hidden bg-purple-950/20 p-3 rounded-xl border border-purple-800/40 space-y-2 mt-2">
+                            <div class="text-[11px] text-purple-300 font-semibold">Protected Complainant Stream (Agent 5 Safety):</div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" id="intake-complainant-name" placeholder="Complainant Name" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
+                                <input type="text" id="intake-complainant-phone" placeholder="Complainant Phone" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
+                            </div>
+                            <input type="email" id="intake-complainant-email" placeholder="Complainant Email for Victim Safety Notice" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
+                        </div>
+
+                        <button type="submit" id="intake-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 mt-2 font-bold">
+                            File Intake & Orchestrate AI Micro-Agents ⚡
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Active Docket Queue & Time Machine (7 Cols) -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="glass-panel p-5 border-slate-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                        <div>
+                            <h3 class="font-bold text-white text-base">Active Judicial Docket</h3>
+                            <p class="text-xs text-slate-400">Review AI Precedents, execute Gate 1 approvals, and simulate notice timelines</p>
+                        </div>
+                        
+                        <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px]">
+                            <button onclick="App.loadCases('ALL')" class="px-2 py-1 rounded text-slate-300 hover:text-white">All</button>
+                            <button onclick="App.loadCases('PENDING_CLERK_APPROVAL')" class="px-2 py-1 rounded text-amber-400 hover:bg-amber-500/10 font-semibold">Gate 1</button>
+                            <button onclick="App.loadCases('NOTICE_SENT')" class="px-2 py-1 rounded text-blue-400 hover:bg-blue-500/10">Dispatched</button>
+                            <button onclick="App.loadCases('FORCE_ACTION_PENDING_CLERK')" class="px-2 py-1 rounded text-rose-400 hover:bg-rose-500/10 font-semibold">Gate 2</button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                    <th class="py-2.5 px-3">Case ID</th>
+                                    <th class="py-2.5 px-3">Case Title</th>
+                                    <th class="py-2.5 px-3">Respondent & Email</th>
+                                    <th class="py-2.5 px-3">Magistrate</th>
+                                    <th class="py-2.5 px-3">Status</th>
+                                    <th class="py-2.5 px-3">Simulate / Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cases-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- AI Email Preview Modal -->
+    <div id="email-preview-modal" class="modal-overlay">
+        <div class="modal-box max-w-2xl bg-slate-900 border border-blue-500/50 p-6">
+            <div class="flex justify-between items-start mb-3 border-b border-slate-800 pb-3">
+                <div>
+                    <span class="badge badge-approved text-[10px] mb-1">AI Legal Correspondence Drafter Agent</span>
+                    <h3 id="email-preview-subject" class="text-base font-bold text-white">Official Summons Email Preview</h3>
+                    <p class="text-xs text-blue-400 font-mono">From: 241908@students.au.edu.pk (Official Court Registry)</p>
+                </div>
+                <button onclick="ClerkApp.closeEmailPreviewModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            
+            <div id="email-preview-body" class="bg-slate-950 p-4 rounded-xl border border-slate-800 max-h-[60vh] overflow-y-auto text-xs leading-relaxed">
+                <!-- Injected dynamically -->
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-slate-800">
+                <button onclick="ClerkApp.closeEmailPreviewModal()" class="btn-ghost text-xs">Close Preview</button>
+                <button id="email-preview-dispatch-btn" class="btn-primary text-xs">Approve & Send Live Email ⚡</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Modal -->
+    <div id="case-modal" class="modal-overlay">
+        <div id="case-modal-content" class="modal-box"></div>
+    </div>
+
+    <!-- Override Modal -->
+    <div id="override-modal" class="modal-overlay">
+        <div class="modal-box max-w-md">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-base font-bold text-white">Manual Judicial Override</h3>
+                <button onclick="App.closeOverrideModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <form onsubmit="App.submitJudgeOverride(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="override-case-id">
+                <div>
+                    <label class="block text-slate-400 mb-1">Select Alternate Magistrate</label>
+                    <select id="override-judge-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Clerk Reason / Judicial Note</label>
+                    <textarea id="override-clerk-note" rows="2" placeholder="Basis for judicial re-assignment..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="App.closeOverrideModal()" class="btn-ghost text-xs">Cancel</button>
+                    <button type="submit" class="btn-primary text-xs">Save Judicial Override</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Virtual Handset Drawer -->
+    <div id="sms-drawer" class="sms-drawer">
+        <div class="p-3.5 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-base">📱</span>
+                <span class="font-bold text-white text-xs">Live Telephony & Email Feed</span>
+            </div>
+            <button onclick="Simulator.toggleSmsDrawer()" class="text-slate-400 hover:text-white text-sm font-bold px-1.5">&times;</button>
+        </div>
+        <div id="sms-messages-container" class="flex-1 p-3.5 overflow-y-auto space-y-3"></div>
+        <div class="p-2.5 bg-slate-900/80 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+            Sender: 241908@students.au.edu.pk &bull; Live Handset
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/simulator.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/clerk.js"></script>
+</body>
+</html>

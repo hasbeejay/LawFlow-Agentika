@@ -11,7 +11,7 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from backend.config import PORT, HOST, BASE_URL
+from backend.config import PORT, HOST, BASE_URL, COURT_EMAIL
 from backend.database import init_db, get_connection
 from backend.mcp_tools import MCP_TOOL_REGISTRY, execute_mcp_tool
 from backend.agents.precedent_agent import analyze_precedent
@@ -19,6 +19,9 @@ from backend.agents.calendar_agent import select_optimal_schedule
 from backend.agents.judge_agent import match_judge
 from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio, dispatch_live_email, generate_summons_email_html
 from backend.agents.safety_escalation_agent import generate_safety_separation_notice, compile_police_packet
+from backend.agents.correspondence_agent import draft_official_court_email
+from backend.agents.respondent_summary_agent import summarize_case_for_respondent
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("lawflow.api")
@@ -72,6 +75,17 @@ class RescheduleRequest(BaseModel):
 class ConcludeHearingRequest(BaseModel):
     verdict: str  # "RESOLVED_DISMISSED", "RESOLVED_PENALTY_PAID", "DEFERRED_COMPLIANCE"
     clerk_verdict_notes: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class CreateClerkRequest(BaseModel):
+    full_name: str
+    email: str
+    department: str
+    password: str = "clerk2026"
+
 
 # ----------------- API Endpoints -----------------
 
@@ -513,11 +527,11 @@ def conclude_case(case_id: str, payload: ConcludeHearingRequest):
 def get_verification_payload(token: str = Query(...)):
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT * FROM cases WHERE token = ?", (token,))
+    c.execute("SELECT * FROM cases WHERE token = ? OR id = ?", (token, token))
     row = c.fetchone()
     conn.close()
     if not row:
-        raise HTTPException(status_code=404, detail="Invalid or expired summons token.")
+        raise HTTPException(status_code=404, detail="Invalid or expired summons token or Case ID.")
 
     case = dict(row)
     if case.get("precedent_brief"):
@@ -527,6 +541,7 @@ def get_verification_payload(token: str = Query(...)):
     return {
         "status": "valid",
         "case_id": case["id"],
+        "token": case["token"],
         "case_title": case["title"],
         "respondent_name": case["respondent_name"],
         "case_type": case["case_type"],
@@ -633,11 +648,127 @@ def get_telephony_logs(limit: int = 30):
     conn.close()
     return {"status": "success", "logs": rows}
 
+# ----------------- Auth & Admin Panel Endpoints -----------------
+
+@app.post("/api/auth/login")
+def login(payload: LoginRequest):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE (email = ? OR username = ?) AND password = ? AND is_active = 1", (payload.email.strip(), payload.email.strip(), payload.password.strip()))
+    user = c.fetchone()
+    conn.close()
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid judicial credentials or account deactivated.")
+    u_dict = dict(user)
+    del u_dict["password"]
+    return {"status": "success", "user": u_dict}
+
+@app.get("/api/admin/clerks")
+def list_clerks():
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT id, username, email, role, full_name, department, is_active, created_at FROM users WHERE role = 'CLERK' ORDER BY created_at DESC")
+    clerks = [dict(r) for r in c.fetchall()]
+    conn.close()
+    return {"status": "success", "clerks": clerks}
+
+@app.post("/api/admin/clerks")
+def create_clerk(payload: CreateClerkRequest):
+    conn = get_connection()
+    c = conn.cursor()
+    clerk_id = f"usr_{uuid.uuid4().hex[:8]}"
+    now = time.time()
+    try:
+        c.execute("""
+        INSERT INTO users (id, username, email, password, role, full_name, department, is_active, created_at)
+        VALUES (?, ?, ?, ?, 'CLERK', ?, ?, 1, ?)
+        """, (clerk_id, payload.email.strip(), payload.email.strip(), payload.password, payload.full_name.strip(), payload.department.strip(), now))
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        raise HTTPException(status_code=400, detail=f"User already exists or database error: {e}")
+    conn.close()
+    return {"status": "success", "message": f"Court Clerk account for {payload.full_name} created successfully.", "clerk_id": clerk_id}
+
+@app.post("/api/admin/clerks/{clerk_id}/toggle-status")
+def toggle_clerk_status(clerk_id: str):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT is_active, full_name FROM users WHERE id = ?", (clerk_id,))
+    row = c.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Clerk not found")
+    new_status = 0 if row["is_active"] == 1 else 1
+    c.execute("UPDATE users SET is_active = ? WHERE id = ?", (new_status, clerk_id))
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": f"Clerk {row['full_name']} status updated to {'Active' if new_status else 'Deactivated'}.", "is_active": new_status}
+
+@app.get("/api/admin/warrants")
+def list_police_warrants():
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM cases WHERE status IN ('FORCE_ACTION_PENDING_CLERK', 'POLICE_REFERRAL_DISPATCHED') ORDER BY updated_at DESC")
+    cases = [dict(r) for r in c.fetchall()]
+    conn.close()
+    for item in cases:
+        if item.get("police_packet"):
+            item["police_packet"] = json.loads(item["police_packet"])
+    return {"status": "success", "warrants_count": len(cases), "cases": cases}
+
+# ----------------- AI Agents Endpoints -----------------
+
+@app.post("/api/cases/{case_id}/ai-email-preview")
+async def preview_ai_email(case_id: str):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM cases WHERE id = ?", (case_id,))
+    row = c.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Case not found")
+    case = dict(row)
+    v_link = f"{BASE_URL}/verify?token={case['token']}"
+    email_draft = await draft_official_court_email(
+        case["id"], case["case_type"], case["title"], case["respondent_name"],
+        case["charge_details"], case["hearing_date"], case["courtroom"], v_link
+    )
+    return {"status": "success", "email_draft": email_draft}
+
+@app.get("/api/cases/{case_id}/respondent-summary")
+async def get_respondent_summary(case_id: str):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT * FROM cases WHERE id = ?", (case_id,))
+    row = c.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Case not found")
+    case = dict(row)
+    summary = await summarize_case_for_respondent(
+        case["id"], case["case_type"], case["charge_details"],
+        case["hearing_date"], case["courtroom"], bool(case["is_dual_party"])
+    )
+    return {"status": "success", "summary": summary}
+
 # ----------------- Static SPA Delivery -----------------
 
 # Mount static assets
 if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/clerk", response_class=FileResponse)
+def serve_clerk_page():
+    if os.path.exists("static/clerk.html"):
+        return FileResponse("static/clerk.html")
+    return FileResponse("static/index.html")
+
+@app.get("/admin", response_class=FileResponse)
+def serve_admin_page():
+    if os.path.exists("static/admin.html"):
+        return FileResponse("static/admin.html")
+    return FileResponse("static/index.html")
 
 @app.get("/verify", response_class=FileResponse)
 def serve_verify_page():
@@ -651,3 +782,4 @@ def serve_spa(full_path: str):
     if os.path.exists("static/index.html"):
         return FileResponse("static/index.html")
     return HTMLResponse("<h1>LawFlow Running</h1><p>API is healthy at /api/health</p>")
+
