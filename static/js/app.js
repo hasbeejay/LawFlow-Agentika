@@ -657,6 +657,15 @@ const App = {
         }
     },
 
+    openRespondentPortalDemo() {
+        const activeCase = App.cases.find(c => c.status !== 'PENDING_CLERK_APPROVAL') || App.cases[0];
+        if (activeCase && activeCase.token) {
+            window.open(`/verify?token=${activeCase.token}`, '_blank');
+        } else {
+            window.open('/verify', '_blank');
+        }
+    },
+
     showToast(message, type = 'info') {
         const toast = document.createElement('div');
         toast.className = `fixed top-6 right-6 z-50 px-4 py-3 rounded-xl border backdrop-blur-xl shadow-2xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 translate-y-[-20px] opacity-0`;

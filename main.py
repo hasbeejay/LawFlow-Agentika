@@ -17,7 +17,7 @@ from backend.mcp_tools import MCP_TOOL_REGISTRY, execute_mcp_tool
 from backend.agents.precedent_agent import analyze_precedent
 from backend.agents.calendar_agent import select_optimal_schedule
 from backend.agents.judge_agent import match_judge
-from backend.agents.notice_agent import generate_notice_and_token
+from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio
 from backend.agents.safety_escalation_agent import generate_safety_separation_notice, compile_police_packet
 
 logging.basicConfig(level=logging.INFO)
@@ -234,7 +234,7 @@ async def intake_case(payload: CaseIntakeRequest):
     }
 
 @app.post("/api/cases/{case_id}/approve")
-def approve_gate_1(case_id: str):
+async def approve_gate_1(case_id: str):
     """
     HUMAN-IN-THE-LOOP GATE 1:
     Clerk reviews the AI recommendation, approves the judge and hearing date,
@@ -276,6 +276,9 @@ def approve_gate_1(case_id: str):
         case["respondent_phone"], sms_msg, v_link, "SUMMONS_DISPATCH", now, 0
     ))
 
+    # Real-world Live SMS Dispatch (Twilio)
+    await dispatch_live_sms_twilio(case["respondent_phone"], sms_msg)
+
     # If Dual Party: Agent 5 safety dispatch
     if case["is_dual_party"] and case.get("complainant_phone"):
         safety_notice = generate_safety_separation_notice(
@@ -289,9 +292,11 @@ def approve_gate_1(case_id: str):
             str(uuid.uuid4())[:8], case_id, f"{case['complainant_name']} (Complainant)",
             case["complainant_phone"], safety_notice["message"], None, "VICTIM_SAFETY_NOTICE", now, 0
         ))
+        await dispatch_live_sms_twilio(case["complainant_phone"], safety_notice["message"])
 
     conn.commit()
     conn.close()
+
 
     return {
         "status": "success",
@@ -331,7 +336,7 @@ def override_judge(case_id: str, payload: OverrideJudgeRequest):
     return {"status": "success", "message": f"Case {case_id} reassigned to {j_dict['name']}."}
 
 @app.post("/api/cases/{case_id}/simulate-time")
-def simulate_time(case_id: str, hours: int = Query(..., description="Simulated hours elapsed: 0, 24, 48, 72")):
+async def simulate_time(case_id: str, hours: int = Query(..., description="Simulated hours elapsed: 0, 24, 48, 72")):
     """
     Simulated Fast-Forward Time Engine:
     Allows judges to experience state transitions live:
@@ -364,17 +369,17 @@ def simulate_time(case_id: str, hours: int = Query(..., description="Simulated h
             WHERE id = ?
             """, (current_status, hours, json.dumps(police_packet), now, case_id))
 
+            msg_72 = f"FINAL JUDICIAL NOTICE: 72 hours have elapsed without appearance confirmation for Case {case_id}. Police referral and bench warrant escalation initiated."
             # Log 72h final warning SMS
             c.execute("""
             INSERT INTO sms_logs (id, case_id, recipient, phone, message, token_link, dispatch_type, timestamp, simulated_hour)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 str(uuid.uuid4())[:8], case_id, f"{case['respondent_name']} (Respondent)",
-                case["respondent_phone"],
-                f"FINAL JUDICIAL NOTICE: 72 hours have elapsed without appearance confirmation for Case {case_id}. Police referral and bench warrant escalation initiated.",
-                f"{BASE_URL}/verify?token={case['token']}",
+                case["respondent_phone"], msg_72, f"{BASE_URL}/verify?token={case['token']}",
                 "POLICE_ESCALATION_WARNING", now, hours
             ))
+            await dispatch_live_sms_twilio(case["respondent_phone"], msg_72)
 
         elif hours >= 48:
             current_status = "NOTICE_RESENT_48H"
@@ -383,16 +388,16 @@ def simulate_time(case_id: str, hours: int = Query(..., description="Simulated h
             clerk_notes = '48h Reminder Dispatched. 24h statutory window remains.' WHERE id = ?
             """, (current_status, hours, now, case_id))
 
+            msg_48 = f"URGENT COURT WARNING (48H): You have not acknowledged summons for Case {case_id}. Avoid contempt by confirming today: {BASE_URL}/verify?token={case['token']}"
             c.execute("""
             INSERT INTO sms_logs (id, case_id, recipient, phone, message, token_link, dispatch_type, timestamp, simulated_hour)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 str(uuid.uuid4())[:8], case_id, f"{case['respondent_name']} (Respondent)",
-                case["respondent_phone"],
-                f"URGENT COURT WARNING (48H): You have not acknowledged summons for Case {case_id}. Avoid contempt by confirming today: {BASE_URL}/verify?token={case['token']}",
-                f"{BASE_URL}/verify?token={case['token']}",
+                case["respondent_phone"], msg_48, f"{BASE_URL}/verify?token={case['token']}",
                 "48H_REMINDER", now, hours
             ))
+            await dispatch_live_sms_twilio(case["respondent_phone"], msg_48)
 
         else:
             c.execute("UPDATE cases SET simulated_hours = ?, updated_at = ? WHERE id = ?", (hours, now, case_id))
