@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Database (keep fresh on deployment or auto-create)
+lawflow.db-journal
+
+# Secrets & Environment (Strict Disqualification Rule: Never commit real keys)
+.env
+.env.local
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/

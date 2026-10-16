@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawFlow — Autonomous Judicial Intake & HITL Case Management</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Global Navigation Bar -->
+    <header class="glass-nav sticky top-0 z-40 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
+        <!-- Logo & Hackathon Tag -->
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/25">
+                ⚖️
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="text-lg font-extrabold tracking-tight text-white">Law<span class="text-blue-500">Flow</span></h1>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30">Agentika 2.0</span>
+                </div>
+                <p class="text-[11px] text-slate-400">Autonomous Judicial Intake & HITL Case Management</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex items-center gap-1.5 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs">
+            <button data-nav="clerk" class="px-3.5 py-1.5 rounded-lg font-semibold bg-blue-600/20 text-blue-400 border border-blue-500/40 transition flex items-center gap-1.5">
+                <span>📋 Clerk Hub & HITL</span>
+                <span id="nav-gate1-badge" class="badge badge-pending px-1.5 py-0 text-[9px] hidden">0</span>
+                <span id="nav-gate2-badge" class="badge badge-force px-1.5 py-0 text-[9px] hidden">0</span>
+            </button>
+            <button data-nav="analytics" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                <span>📊 Analytics & 3D Network</span>
+            </button>
+            <button data-nav="judge" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                <span>👨‍⚖️ Judicial Calendar</span>
+            </button>
+            <button data-nav="mcp" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                <span>⚡ MCP Protocol</span>
+            </button>
+        </nav>
+
+        <!-- Right Quick Controls -->
+        <div class="flex items-center gap-2.5">
+            <button onclick="Simulator.toggleSmsDrawer()" class="btn-ghost text-xs flex items-center gap-2">
+                <span>💬 Virtual SMS</span>
+                <span id="sms-unread-badge" class="px-1.5 py-0.2 bg-blue-500 text-white rounded-full text-[10px] font-mono">0</span>
+            </button>
+            <a href="/verify?token=tok_rehman_1042" target="_blank" class="btn-primary text-xs">
+                <span>Respondent Portal 📱</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- ================= TAB 1: CLERK HUB & HITL ================= -->
+        <section id="tab-clerk" class="tab-content space-y-6">
+            
+            <!-- Dynamic Gate 1 Action Banner (Injected by JS) -->
+            <div id="gate1-action-banner"></div>
+
+            <!-- Dynamic Gate 2 Police Action Banner (Injected by JS) -->
+            <div id="gate2-action-banner"></div>
+
+            <!-- 2-Column Layout: Left = Intake Form, Right = Docket Queue -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Autonomous Case Intake Form (5 Cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="glass-panel p-5 border-slate-800">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-white text-base flex items-center gap-2">
+                                <span>⚡ New Case Intake</span>
+                            </h3>
+                            <span class="text-[11px] text-blue-400 font-medium">Micro-Agent Assisted</span>
+                        </div>
+
+                        <!-- One-Click Presets for Live Judging Demos -->
+                        <div class="mb-4 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">Demo 1-Click Presets:</span>
+                            <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+                                <button onclick="App.fillPreset('traffic')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                    🚗 High-Speed Radar
+                                </button>
+                                <button onclick="App.fillPreset('domestic')" type="button" class="px-2 py-1 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 rounded text-left truncate transition border border-purple-800/40">
+                                    🛡️ Dual-Party Domestic
+                                </button>
+                                <button onclick="App.fillPreset('commercial')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                    🏭 Sanitation Citation
+                                </button>
+                                <button onclick="App.fillPreset('trespass')" type="button" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-left truncate transition">
+                                    🚫 Misdemeanor Trespass
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Intake Form -->
+                        <form id="case-intake-form" onsubmit="App.submitIntake(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block text-slate-400 font-medium mb-1">Case Category</label>
+                                <select id="intake-case-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                                    <option value="Traffic Violation">Traffic Violation</option>
+                                    <option value="Criminal (Dual-Party)">Criminal (Dual-Party with Victim Rights)</option>
+                                    <option value="Civil Infraction">Civil Infraction</option>
+                                    <option value="Misdemeanor">Misdemeanor</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-slate-400 font-medium mb-1">Respondent Name</label>
+                                    <input type="text" id="intake-respondent-name" placeholder="Full legal name" required
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 font-medium mb-1">Phone Number (SMS)</label>
+                                    <input type="text" id="intake-respondent-phone" placeholder="+92 300 0000000" required
+                                        class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 font-medium mb-1">National ID / CNIC (Last 4 Digits for 2FA)</label>
+                                <input type="text" id="intake-national-id" maxlength="4" placeholder="4821" required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono outline-none focus:border-blue-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-slate-400 font-medium mb-1">Charge & Citation Details</label>
+                                <textarea id="intake-charge-details" rows="3" placeholder="Factual citation or police complaint statement..." required
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500"></textarea>
+                            </div>
+
+                            <!-- Dual-Party Checkbox -->
+                            <div class="pt-1">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="intake-dual-party" onchange="App.toggleDualPartyFields()" class="accent-purple-600 rounded">
+                                    <span class="text-slate-300 font-medium">Dual-Party Criminal Case (Victim Separation Required)</span>
+                                </label>
+                            </div>
+
+                            <!-- Dual-Party Additional Fields -->
+                            <div id="dual-party-container" class="hidden bg-purple-950/20 p-3 rounded-xl border border-purple-800/40 space-y-2 mt-2">
+                                <div class="text-[11px] text-purple-300 font-semibold">Protected Complainant Stream (Agent 5 Safety):</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="text" id="intake-complainant-name" placeholder="Complainant Name" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
+                                    <input type="text" id="intake-complainant-phone" placeholder="Complainant Phone" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
+                                </div>
+                            </div>
+
+                            <button type="submit" id="intake-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 mt-2">
+                                File Intake & Orchestrate AI Micro-Agents ⚡
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: Case Management & Active Docket Queue (7 Cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="glass-panel p-5 border-slate-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                            <div>
+                                <h3 class="font-bold text-white text-base">Active Judicial Docket</h3>
+                                <p class="text-xs text-slate-400">Manage case progression, HITL gates, and simulated notice timelines</p>
+                            </div>
+                            
+                            <!-- Filter buttons -->
+                            <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px]">
+                                <button onclick="App.loadCases('ALL')" class="px-2 py-1 rounded text-slate-300 hover:text-white">All</button>
+                                <button onclick="App.loadCases('PENDING_CLERK_APPROVAL')" class="px-2 py-1 rounded text-amber-400 hover:bg-amber-500/10">Gate 1</button>
+                                <button onclick="App.loadCases('NOTICE_SENT')" class="px-2 py-1 rounded text-blue-400 hover:bg-blue-500/10">Dispatched</button>
+                                <button onclick="App.loadCases('FORCE_ACTION_PENDING_CLERK')" class="px-2 py-1 rounded text-rose-400 hover:bg-rose-500/10">Gate 2</button>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                        <th class="py-2.5 px-4">Case ID</th>
+                                        <th class="py-2.5 px-4">Case Title & Type</th>
+                                        <th class="py-2.5 px-4">Respondent</th>
+                                        <th class="py-2.5 px-4">Magistrate</th>
+                                        <th class="py-2.5 px-4">Hearing Date</th>
+                                        <th class="py-2.5 px-4">Status</th>
+                                        <th class="py-2.5 px-4">Simulate / Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cases-table-body">
+                                    <!-- Populated via App.renderCaseTable() -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ANALYTICS & 3D NETWORK ================= -->
+        <section id="tab-analytics" class="tab-content hidden space-y-6">
+            
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="glass-panel p-4 border-slate-800">
+                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">TOTAL DOCKETED</span>
+                    <div id="kpi-total-cases" class="text-2xl font-extrabold text-white font-mono">0</div>
+                    <span class="text-[10px] text-blue-400">100% Digital Ingest</span>
+                </div>
+                <div class="glass-panel p-4 border-slate-800">
+                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">APPEARANCE RATE</span>
+                    <div id="kpi-appearance-rate" class="text-2xl font-extrabold text-emerald-400 font-mono">94.2%</div>
+                    <span class="text-[10px] text-slate-500">vs 61% manual baseline</span>
+                </div>
+                <div class="glass-panel p-4 border-slate-800">
+                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">AVG NOTICE SPEED</span>
+                    <div id="kpi-avg-speed" class="text-2xl font-extrabold text-blue-400 font-mono">11.4s</div>
+                    <span class="text-[10px] text-slate-500">vs 5.0 days manual</span>
+                </div>
+                <div class="glass-panel p-4 border-slate-800">
+                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">GATE 1 APPROVALS</span>
+                    <div id="kpi-gate1-count" class="text-2xl font-extrabold text-amber-400 font-mono">0</div>
+                    <span class="text-[10px] text-amber-500/80">Pending Clerk Match Sign-off</span>
+                </div>
+                <div class="glass-panel p-4 border-slate-800">
+                    <span class="text-[11px] text-slate-400 font-semibold block mb-1">GATE 2 ESCALATIONS</span>
+                    <div id="kpi-gate2-count" class="text-2xl font-extrabold text-rose-400 font-mono">0</div>
+                    <span class="text-[10px] text-rose-400/80">72h Non-Response Default</span>
+                </div>
+            </div>
+
+            <!-- 60FPS Interactive Judicial Network Canvas -->
+            <div class="glass-panel p-6 border-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <span>🌐 Autonomous Judicial Neural Network</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        </h3>
+                        <p class="text-xs text-slate-400">Live multi-agent orchestration topology: Intake &rarr; 5 Micro-Agents &rarr; HITL Gates &rarr; Summons/Enforcement</p>
+                    </div>
+                    <span class="text-xs font-mono text-slate-500">HTML5 Canvas Engine</span>
+                </div>
+
+                <div class="relative w-full rounded-xl overflow-hidden bg-slate-950/70 border border-slate-800/80">
+                    <canvas id="judicial-canvas" class="w-full block"></canvas>
+                </div>
+            </div>
+
+            <!-- Architecture Comparison Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
+                    <h4 class="font-bold text-white text-sm">Human + AI: Better Together</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        LawFlow eliminates administrative court delays while strictly guaranteeing that AI never exercises judicial power unilaterally. Clerks retain veto authority over both judge assignments and police bench warrant referrals.
+                    </p>
+                </div>
+                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
+                    <h4 class="font-bold text-white text-sm">Dual-Party Safety Engine</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        For criminal domestic offenses, Agent 5 enforces physical corridor safety buffers, assigns victim advocates, and staggers courtroom arrival times by 30 minutes to prevent corridor intimidation.
+                    </p>
+                </div>
+                <div class="glass-panel p-5 border-slate-800 text-xs space-y-2">
+                    <h4 class="font-bold text-white text-sm">Resilient Cloud Container</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        Built for Clouds by Alternate Futures as a unified Docker container on Port 8000 with a 3-tier LLM fallback chain (Groq &rarr; Gemini &rarr; Offline Judicial Matrix) for zero-downtime judging.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= TAB 3: JUDICIAL CALENDAR ================= -->
+        <section id="tab-judge" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Magistrate Chambers & Courtroom Calendars</h3>
+                    <p class="text-xs text-slate-400">Real-time docket load balancing, clearance rates, and safety buffers</p>
+                </div>
+                <span class="badge badge-approved text-xs">Live Registry Connected</span>
+            </div>
+
+            <!-- Judges Cards Grid -->
+            <div id="judges-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Injected via App.renderJudges() -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: MCP PROTOCOL ================= -->
+        <section id="tab-mcp" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 border-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <span>⚡ Model Context Protocol (MCP) Tools Catalog</span>
+                            <span class="badge badge-approved text-[10px]">v1.0 Compatible</span>
+                        </h3>
+                        <p class="text-xs text-slate-400">Codified tools exposed for judicial orchestration and external tool-calling</p>
+                    </div>
+                    <a href="/api/mcp/tools" target="_blank" class="btn-ghost text-xs">Inspect JSON API ↗</a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <!-- Tool 1 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-blue-400 font-semibold">search_precedents</span>
+                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Searches codified statutes, past case citations, and historical clearance rates for charges.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { case_type: string, charge_keywords: string }
+                        </div>
+                    </div>
+
+                    <!-- Tool 2 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-blue-400 font-semibold">get_sentencing_guidelines</span>
+                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Calculates statutory penalty boundaries, pre-trial diversion eligibility, and notice days.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { charge_code: string, has_priors: boolean }
+                        </div>
+                    </div>
+
+                    <!-- Tool 3 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-blue-400 font-semibold">get_judge_availability</span>
+                            <span class="text-slate-500 text-[10px]">MCP Tool</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Retrieves open calendar blocks, courtroom assignments, and docket load balance.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { specialization: string, urgency_level: string }
+                        </div>
+                    </div>
+
+                    <!-- Tool 4 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-purple-400 font-semibold">verify_safety_separation_buffers</span>
+                            <span class="text-slate-500 text-[10px]">Safety Protocol</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Calculates victim-respondent arrival buffers, separate gate schedules, and restraining alerts.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { is_dual_party: boolean, complainant_name: string }
+                        </div>
+                    </div>
+
+                    <!-- Tool 5 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-emerald-400 font-semibold">generate_secure_token</span>
+                            <span class="text-slate-500 text-[10px]">Crypto Tool</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Generates time-bound HMAC tokens and one-touch verification portal URLs for summons.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { case_id: string, national_id_last4: string }
+                        </div>
+                    </div>
+
+                    <!-- Tool 6 -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="font-mono text-rose-400 font-semibold">dispatch_police_packet</span>
+                            <span class="text-slate-500 text-[10px]">Enforcement</span>
+                        </div>
+                        <p class="text-slate-300 mb-2">Compiles digital bench warrant packets for law enforcement handoff after 72h default.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-400">
+                            inputs: { case_id: string, respondent_name: string, overdue_hours: 72 }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Virtual SMS Live Handset Drawer (Floating Widget) -->
+    <div id="sms-drawer" class="sms-drawer">
+        <div class="p-3.5 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-base">📱</span>
+                <span class="font-bold text-white text-xs">Virtual Telephony & Notice Stream</span>
+            </div>
+            <button onclick="Simulator.toggleSmsDrawer()" class="text-slate-400 hover:text-white text-sm font-bold px-1.5">&times;</button>
+        </div>
+        <div id="sms-messages-container" class="flex-1 p-3.5 overflow-y-auto space-y-3">
+            <!-- Injected by Simulator.fetchSmsLogs() -->
+        </div>
+        <div class="p-2.5 bg-slate-900/80 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+            Simulated Handset &bull; Free Demo Mode
+        </div>
+    </div>
+
+    <!-- Case Detail Inspection Modal -->
+    <div id="case-modal" class="modal-overlay">
+        <div id="case-modal-content" class="modal-box">
+            <!-- Injected via App.openCaseModal() -->
+        </div>
+    </div>
+
+    <!-- Judge Override Modal -->
+    <div id="override-modal" class="modal-overlay">
+        <div class="modal-box max-w-md">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-base font-bold text-white">Manual Judicial Override</h3>
+                <button onclick="App.closeOverrideModal()" class="text-slate-400 hover:text-white text-lg">&times;</button>
+            </div>
+            <form onsubmit="App.submitJudgeOverride(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="override-case-id">
+                <div>
+                    <label class="block text-slate-400 mb-1">Select Alternate Magistrate</label>
+                    <select id="override-judge-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none">
+                        <!-- Populated by App.openOverrideModal() -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Clerk Reason / Judicial Note</label>
+                    <textarea id="override-clerk-note" rows="2" placeholder="Explain basis for re-assignment (e.g. specialized docket request)..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="App.closeOverrideModal()" class="btn-ghost text-xs">Cancel</button>
+                    <button type="submit" class="btn-primary text-xs">Save Judicial Override</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- App Scripts -->
+    <script src="/static/js/visualizer.js"></script>
+    <script src="/static/js/simulator.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
