@@ -17,7 +17,7 @@ from backend.mcp_tools import MCP_TOOL_REGISTRY, execute_mcp_tool
 from backend.agents.precedent_agent import analyze_precedent
 from backend.agents.calendar_agent import select_optimal_schedule
 from backend.agents.judge_agent import match_judge
-from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio, dispatch_live_email
+from backend.agents.notice_agent import generate_notice_and_token, dispatch_live_sms_twilio, dispatch_live_email, generate_summons_email_html
 from backend.agents.safety_escalation_agent import generate_safety_separation_notice, compile_police_packet
 
 logging.basicConfig(level=logging.INFO)
@@ -45,11 +45,14 @@ class CaseIntakeRequest(BaseModel):
     case_type: str  # "Civil Infraction", "Traffic Violation", "Misdemeanor", "Criminal (Dual-Party)"
     respondent_name: str
     respondent_phone: str
+    respondent_email: Optional[str] = None
     respondent_national_id_last4: str
     charge_details: str
     is_dual_party: bool = False
     complainant_name: Optional[str] = None
     complainant_phone: Optional[str] = None
+    complainant_email: Optional[str] = None
+
 
 class OverrideJudgeRequest(BaseModel):
     judge_id: str
@@ -208,18 +211,20 @@ async def intake_case(payload: CaseIntakeRequest):
         id, case_type, title, respondent_name, respondent_phone, respondent_national_id_last4,
         charge_details, is_dual_party, complainant_name, complainant_phone, safety_buffer_applied,
         status, precedent_brief, recommended_judge_id, recommended_judge_name, reasoning_card,
-        hearing_date, courtroom, token, simulated_hours, clerk_notes, police_packet, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        hearing_date, courtroom, token, simulated_hours, clerk_notes, police_packet, respondent_email, complainant_email, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         case_id, payload.case_type, title, payload.respondent_name, payload.respondent_phone,
         payload.respondent_national_id_last4, payload.charge_details, 1 if payload.is_dual_party else 0,
         payload.complainant_name, payload.complainant_phone, 1 if payload.is_dual_party else 0,
         "PENDING_CLERK_APPROVAL", json.dumps(precedent_res), selected_judge["id"],
         selected_judge["name"], json.dumps(reasoning_card), hearing_date, courtroom,
-        prelim_token, 0, "Autonomous AI intake completed. Awaiting Clerk Gate 1 sign-off.", None, now, now
+        prelim_token, 0, "Autonomous AI intake completed. Awaiting Clerk Gate 1 sign-off.", None,
+        payload.respondent_email, payload.complainant_email, now, now
     ))
     conn.commit()
     conn.close()
+
 
     return {
         "status": "success",
@@ -276,9 +281,21 @@ async def approve_gate_1(case_id: str):
         case["respondent_phone"], sms_msg, v_link, "SUMMONS_DISPATCH", now, 0
     ))
 
+    # Generate rich HTML legal summons email
+    html_summons = generate_summons_email_html(
+        case["id"], case["respondent_name"], case["title"],
+        case["hearing_date"], case["courtroom"], case["charge_details"], v_link
+    )
+
     # Real-world Live SMS Dispatch (Twilio) & Email (Gmail / SMTP)
     await dispatch_live_sms_twilio(case["respondent_phone"], sms_msg)
-    await dispatch_live_email(None, f"Official Judicial Summons - {case['title']} ({case['id']})", sms_msg)
+    await dispatch_live_email(
+        case.get("respondent_email"),
+        f"Mandatory Court Appearance Summons: {case['title']} ({case['id']})",
+        sms_msg,
+        html_body=html_summons
+    )
+
 
     # If Dual Party: Agent 5 safety dispatch
     if case["is_dual_party"] and case.get("complainant_phone"):
@@ -381,7 +398,7 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
                 "POLICE_ESCALATION_WARNING", now, hours
             ))
             await dispatch_live_sms_twilio(case["respondent_phone"], msg_72)
-            await dispatch_live_email(None, f"🚨 FINAL NOTICE (72H DEFAULT) - Case {case_id}", msg_72)
+            await dispatch_live_email(case.get("respondent_email"), f"🚨 FINAL NOTICE (72H DEFAULT) - Case {case_id}", msg_72)
 
         elif hours >= 48:
             current_status = "NOTICE_RESENT_48H"
@@ -400,7 +417,8 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
                 "48H_REMINDER", now, hours
             ))
             await dispatch_live_sms_twilio(case["respondent_phone"], msg_48)
-            await dispatch_live_email(None, f"⚠️ URGENT REMINDER (48H) - Case {case_id}", msg_48)
+            await dispatch_live_email(case.get("respondent_email"), f"⚠️ URGENT REMINDER (48H) - Case {case_id}", msg_48)
+
 
         else:
             c.execute("UPDATE cases SET simulated_hours = ?, updated_at = ? WHERE id = ?", (hours, now, case_id))

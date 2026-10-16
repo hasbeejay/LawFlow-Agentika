@@ -28,6 +28,7 @@ def init_db():
         is_dual_party INTEGER DEFAULT 0,
         complainant_name TEXT,
         complainant_phone TEXT,
+        complainant_email TEXT,
         safety_buffer_applied INTEGER DEFAULT 0,
         status TEXT NOT NULL,
         precedent_brief TEXT,
@@ -40,10 +41,22 @@ def init_db():
         simulated_hours INTEGER DEFAULT 0,
         clerk_notes TEXT,
         police_packet TEXT,
+        respondent_email TEXT,
         created_at REAL,
         updated_at REAL
     )
     """)
+
+    # Safe Schema Migrations for existing databases
+    try:
+        cursor.execute("ALTER TABLE cases ADD COLUMN respondent_email TEXT")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE cases ADD COLUMN complainant_email TEXT")
+    except Exception:
+        pass
+
 
     # Judges Table
     cursor.execute("""

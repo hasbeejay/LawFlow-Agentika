@@ -281,9 +281,11 @@ const App = {
                         <div class="text-[11px] text-slate-400">${c.case_type}</div>
                     </td>
                     <td class="py-3 px-4 text-slate-300">
-                        <div>${c.respondent_name}</div>
+                        <div class="font-medium">${c.respondent_name}</div>
                         <div class="text-[11px] text-slate-500">${c.respondent_phone}</div>
+                        ${c.respondent_email ? `<div class="text-[10px] text-blue-400 truncate max-w-[160px]">✉️ ${c.respondent_email}</div>` : ''}
                     </td>
+
                     <td class="py-3 px-4">
                         <div class="text-slate-300 font-medium">${c.recommended_judge_name || 'Unassigned'}</div>
                         <div class="text-[11px] text-slate-500">${c.courtroom || '-'}</div>
@@ -549,6 +551,7 @@ const App = {
                 case_type: 'Traffic Violation',
                 respondent_name: 'Hamza Farooq',
                 phone: '+92 301 448 9912',
+                email: 'hasbeejayleo@gmail.com',
                 last4: '5519',
                 details: 'Excessive speed radar capture (122 km/h in 70 km/h zone on Expressway). Radar Unit TR-9. Roadside payment overdue by 8 days.',
                 dual_party: false
@@ -557,16 +560,19 @@ const App = {
                 case_type: 'Criminal (Dual-Party)',
                 respondent_name: 'Daniyal Ahmed',
                 phone: '+92 334 512 8820',
+                email: 'hasbeejayleo@gmail.com',
                 last4: '8834',
                 details: 'Penal Code § 243(e)(1): Domestic altercation with documented verbal threats. Complainant filed emergency protective petition. Immediate safety buffer required.',
                 dual_party: true,
                 complainant_name: 'Mahnoor Daniyal',
-                complainant_phone: '+92 322 890 1142'
+                complainant_phone: '+92 322 890 1142',
+                complainant_email: 'hasbeejayleo@gmail.com'
             },
             commercial: {
                 case_type: 'Civil Infraction',
                 respondent_name: 'Saad Ur Rehman (Manager)',
                 phone: '+92 346 991 3320',
+                email: 'hasbeejayleo@gmail.com',
                 last4: '4102',
                 details: 'Municipal Sanitation Infraction § 44-A: Discharge of untreated restaurant grease waste into public storm drain. Citation #MN-2026-88.',
                 dual_party: false
@@ -575,6 +581,7 @@ const App = {
                 case_type: 'Misdemeanor',
                 respondent_name: 'Zubair Shah',
                 phone: '+92 313 774 2201',
+                email: 'hasbeejayleo@gmail.com',
                 last4: '9211',
                 details: 'Penal Code § 602: Repeated unauthorized commercial encroachment and trespass on municipal property after prior administrative warnings.',
                 dual_party: false
@@ -587,6 +594,7 @@ const App = {
         document.getElementById('intake-case-type').value = p.case_type;
         document.getElementById('intake-respondent-name').value = p.respondent_name;
         document.getElementById('intake-respondent-phone').value = p.phone;
+        document.getElementById('intake-respondent-email').value = p.email || 'hasbeejayleo@gmail.com';
         document.getElementById('intake-national-id').value = p.last4;
         document.getElementById('intake-charge-details').value = p.details;
 
@@ -599,9 +607,11 @@ const App = {
         if (p.dual_party) {
             document.getElementById('intake-complainant-name').value = p.complainant_name || '';
             document.getElementById('intake-complainant-phone').value = p.complainant_phone || '';
+            const cEmail = document.getElementById('intake-complainant-email');
+            if (cEmail) cEmail.value = p.complainant_email || '';
         }
 
-        App.showToast(`Loaded ${p.case_type} preset data`, 'info');
+        App.showToast(`Loaded ${p.case_type} preset data with email: ${p.email}`, 'info');
     },
 
     toggleDualPartyFields() {
@@ -624,11 +634,13 @@ const App = {
             case_type: document.getElementById('intake-case-type').value,
             respondent_name: document.getElementById('intake-respondent-name').value,
             respondent_phone: document.getElementById('intake-respondent-phone').value,
+            respondent_email: document.getElementById('intake-respondent-email').value || null,
             respondent_national_id_last4: document.getElementById('intake-national-id').value,
             charge_details: document.getElementById('intake-charge-details').value,
             is_dual_party: document.getElementById('intake-dual-party').checked,
             complainant_name: document.getElementById('intake-complainant-name')?.value || null,
-            complainant_phone: document.getElementById('intake-complainant-phone')?.value || null
+            complainant_phone: document.getElementById('intake-complainant-phone')?.value || null,
+            complainant_email: document.getElementById('intake-complainant-email')?.value || null
         };
 
         try {
@@ -638,6 +650,7 @@ const App = {
                 body: JSON.stringify(payload)
             });
             const data = await res.json();
+
 
             if (data.status === 'success') {
                 App.showToast(`Case ${data.case_id} filed! AI matched with ${data.recommended_judge}. Ready for Clerk Gate 1 review.`, 'success');

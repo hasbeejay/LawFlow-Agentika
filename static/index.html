@@ -126,6 +126,15 @@
                             </div>
 
                             <div>
+                                <label class="block text-slate-400 font-medium mb-1 flex items-center justify-between">
+                                    <span>Respondent Email Address</span>
+                                    <span class="text-[10px] text-blue-400 font-normal">✉️ Live Digital Summons Delivery</span>
+                                </label>
+                                <input type="email" id="intake-respondent-email" placeholder="e.g. hasbeejayleo@gmail.com"
+                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-blue-500">
+                            </div>
+
+                            <div>
                                 <label class="block text-slate-400 font-medium mb-1">National ID / CNIC (Last 4 Digits for 2FA)</label>
                                 <input type="text" id="intake-national-id" maxlength="4" placeholder="4821" required
                                     class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono outline-none focus:border-blue-500">
@@ -152,7 +161,9 @@
                                     <input type="text" id="intake-complainant-name" placeholder="Complainant Name" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
                                     <input type="text" id="intake-complainant-phone" placeholder="Complainant Phone" class="bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
                                 </div>
+                                <input type="email" id="intake-complainant-email" placeholder="Complainant Email for Victim Safety Notice" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-white text-xs">
                             </div>
+
 
                             <button type="submit" id="intake-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 mt-2">
                                 File Intake & Orchestrate AI Micro-Agents ⚡
