@@ -86,6 +86,14 @@ const ClerkApp = {
         }
     },
 
+    quickLogin(email, password) {
+        const emailEl = document.getElementById('login-email');
+        const passEl = document.getElementById('login-password');
+        if (emailEl) emailEl.value = email;
+        if (passEl) passEl.value = password;
+        ClerkApp.handleLogin();
+    },
+
     logout() {
         sessionStorage.removeItem('lawflow_clerk_user');
         ClerkApp.currentUser = null;

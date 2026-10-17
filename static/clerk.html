@@ -11,16 +11,47 @@
 
     <!-- Auth Protection Overlay -->
     <div id="auth-modal" class="modal-overlay active">
-        <div class="modal-box max-w-md bg-slate-900 border border-slate-700/80 p-6 text-center">
+        <div class="modal-box max-w-lg bg-slate-900 border border-slate-700/80 p-6 text-center shadow-2xl relative">
             <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold shadow-lg shadow-blue-500/20">
                 ⚖️
             </div>
             <h2 class="text-xl font-bold text-white mb-1">Clerk Judicial Gateway</h2>
-            <p class="text-xs text-slate-400 mb-6">Restricted to authorized court clerks and registry personnel.</p>
+            <p class="text-xs text-slate-400 mb-5">Restricted to authorized court clerks and judicial registry personnel.</p>
 
-            <form onsubmit="ClerkApp.handleLogin(event)" class="space-y-3.5 text-left text-xs">
+            <!-- 1-Click Demo Clerk Account Selector -->
+            <div class="mb-5 bg-slate-950/80 p-3 rounded-2xl border border-slate-800 text-left">
+                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block mb-2">⚡ 1-Click Demo Clerk Quick Login:</span>
+                <div class="space-y-1.5 text-xs">
+                    <button type="button" onclick="ClerkApp.quickLogin('clerk@lawflow.court', 'clerk2026')"
+                        class="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500/40 text-left flex justify-between items-center transition group">
+                        <div>
+                            <span class="font-bold text-white block text-xs group-hover:text-blue-400 transition">Senior Clerk Tariq Mansoor</span>
+                            <span class="text-[10px] text-slate-400">clerk@lawflow.court &bull; Municipal & Traffic Intake</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 text-[10px] font-bold">Login &rarr;</span>
+                    </button>
+                    <button type="button" onclick="ClerkApp.quickLogin('ayesha.clerk@lawflow.court', 'clerk2026')"
+                        class="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-purple-500/40 text-left flex justify-between items-center transition group">
+                        <div>
+                            <span class="font-bold text-white block text-xs group-hover:text-purple-400 transition">Associate Clerk Ayesha Malik</span>
+                            <span class="text-[10px] text-slate-400">ayesha.clerk@lawflow.court &bull; High-Security Criminal Wing</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-purple-600/20 text-purple-300 text-[10px] font-bold">Login &rarr;</span>
+                    </button>
+                    <button type="button" onclick="ClerkApp.quickLogin('bilal.clerk@lawflow.court', 'clerk2026')"
+                        class="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/40 text-left flex justify-between items-center transition group">
+                        <div>
+                            <span class="font-bold text-white block text-xs group-hover:text-emerald-400 transition">Junior Clerk Bilal Ahmed</span>
+                            <span class="text-[10px] text-slate-400">bilal.clerk@lawflow.court &bull; Fastn Telemetry & Calendaring</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-emerald-600/20 text-emerald-300 text-[10px] font-bold">Login &rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <form onsubmit="ClerkApp.handleLogin(event)" class="space-y-3.5 text-left text-xs border-t border-slate-800 pt-3">
                 <div>
-                    <label class="block text-slate-400 font-semibold mb-1">Official Judicial Email</label>
+                    <label class="block text-slate-400 font-semibold mb-1">Or Enter Official Email</label>
                     <input type="email" id="login-email" value="clerk@lawflow.court" required
                         class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-blue-500 font-mono">
                 </div>
@@ -28,11 +59,6 @@
                     <label class="block text-slate-400 font-semibold mb-1">Password</label>
                     <input type="password" id="login-password" value="clerk2026" required
                         class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-blue-500 font-mono">
-                </div>
-
-                <div class="p-2.5 bg-blue-950/30 rounded-lg border border-blue-900/50 text-[11px] text-blue-300">
-                    <strong>Demo Credentials:</strong><br>
-                    Email: <span class="font-mono text-white">clerk@lawflow.court</span> &bull; Pass: <span class="font-mono text-white">clerk2026</span>
                 </div>
 
                 <button type="submit" id="login-submit-btn" class="w-full btn-primary justify-center text-xs py-2.5 font-bold">
@@ -46,7 +72,7 @@
     <header class="glass-nav sticky top-0 z-40 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center gap-3">
             <a href="/" class="flex items-center gap-2 text-decoration-none">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-md">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white shadow-md">
                     ⚖️
                 </div>
                 <div>
@@ -57,10 +83,28 @@
                     <span id="clerk-user-display" class="text-[11px] text-slate-400">Authenticated: Senior Clerk Tariq Mansoor</span>
                 </div>
             </a>
+
+            <!-- Fastn Live Resources Direct Links -->
+            <div class="hidden xl:flex items-center gap-2 text-xs ml-4 border-l border-slate-800 pl-4">
+                <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank"
+                   class="px-2.5 py-1 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-800/40 rounded-lg text-[11px] font-medium transition flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Google Sheets Docket ↗</span>
+                </a>
+                <a href="https://drive.google.com/drive/folders/1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS?usp=share_link" target="_blank"
+                   class="px-2.5 py-1 bg-blue-950/40 hover:bg-blue-900/60 text-blue-300 border border-blue-800/40 rounded-lg text-[11px] font-medium transition flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span>Google Drive Archive ↗</span>
+                </a>
+            </div>
         </div>
 
         <!-- Navigation Actions -->
         <div class="flex items-center gap-3">
+            <!-- Clerk Account Quick-Switch Button -->
+            <button onclick="ClerkApp.logout()" class="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5">
+                <span>🔄 Switch Clerk Profile</span>
+            </button>
             <button onclick="Simulator.toggleSmsDrawer()" class="btn-ghost text-xs flex items-center gap-2">
                 <span>💬 Notice Feed</span>
                 <span id="sms-unread-badge" class="px-1.5 py-0.2 bg-blue-500 text-white rounded-full text-[10px] font-mono">0</span>

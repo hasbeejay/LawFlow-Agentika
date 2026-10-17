@@ -220,9 +220,114 @@ const VerifyPortal = {
         VerifyPortal.applyTranslations();
     },
 
+    init3DShield() {
+        const canvas = document.getElementById('verify-3d-canvas');
+        if (!canvas || !window.THREE) return;
+
+        try {
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(112, 112);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            camera.position.z = 4.2;
+
+            // Outer Shield Wireframe Torus
+            const torusGeo = new THREE.TorusGeometry(1.4, 0.08, 16, 50);
+            const torusMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, wireframe: true, transparent: true, opacity: 0.6 });
+            const torus = new THREE.Mesh(torusGeo, torusMat);
+            scene.add(torus);
+
+            // Inner Core Icosahedron
+            const icoGeo = new THREE.IcosahedronGeometry(0.9, 1);
+            const icoMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, wireframe: true, transparent: true, opacity: 0.85 });
+            const ico = new THREE.Mesh(icoGeo, icoMat);
+            scene.add(ico);
+
+            // Orbiting Node Particles
+            const particleCount = 28;
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                const u = Math.random();
+                const v = Math.random();
+                const theta = u * 2.0 * Math.PI;
+                const phi = Math.acos(2.0 * v - 1.0);
+                const r = 1.6 + Math.random() * 0.4;
+                posArray[i] = r * Math.sin(phi) * Math.cos(theta);
+                posArray[i + 1] = r * Math.sin(phi) * Math.sin(theta);
+                posArray[i + 2] = r * Math.cos(phi);
+            }
+            const partGeo = new THREE.BufferGeometry();
+            partGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const partMat = new THREE.PointsMaterial({ size: 0.07, color: 0x60a5fa, transparent: true, opacity: 0.9 });
+            const particles = new THREE.Points(partGeo, partMat);
+            scene.add(particles);
+
+            let isVerified = false;
+            VerifyPortal.shieldTriggerVerified = () => {
+                isVerified = true;
+                icoMat.color.setHex(0x10b981);
+                torusMat.color.setHex(0x34d399);
+                partMat.color.setHex(0xa7f3d0);
+            };
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                const speed = isVerified ? 0.025 : 0.008;
+                torus.rotation.x += speed * 0.7;
+                torus.rotation.y += speed;
+                ico.rotation.x -= speed * 1.2;
+                ico.rotation.y += speed * 0.9;
+                particles.rotation.y += speed * 0.5;
+                renderer.render(scene, camera);
+            };
+            animate();
+        } catch (err) {
+            console.warn('Three.js canvas init failed:', err);
+        }
+    },
+
+    copyCaseId() {
+        const id = VerifyPortal.caseData ? VerifyPortal.caseData.case_id : '';
+        if (!id) return;
+        navigator.clipboard.writeText(id).then(() => {
+            alert(`Case ID ${id} copied to clipboard!`);
+        }).catch(() => {});
+    },
+
+    downloadCalendarReminder() {
+        const d = VerifyPortal.caseData;
+        if (!d) return;
+
+        const title = encodeURIComponent(`LawFlow Court Appearance: ${d.case_id}`);
+        const details = encodeURIComponent(`Official Judicial Hearing for ${d.respondent_name}\nCase: ${d.case_id}\nCourtroom: ${d.courtroom}\nOffense: ${d.charge_details}\nVerified via LawFlow Citizen Portal.`);
+        const location = encodeURIComponent(`${d.courtroom}, Main Judicial Complex, Sector G-10/4, Islamabad`);
+        
+        // Format Google Calendar URL
+        const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
+        window.open(googleCalUrl, '_blank');
+    },
+
     showConfirmedState() {
         document.getElementById('auth-form-card').classList.add('hidden');
         document.getElementById('confirmed-card').classList.remove('hidden');
+
+        if (typeof VerifyPortal.shieldTriggerVerified === 'function') {
+            VerifyPortal.shieldTriggerVerified();
+        }
+
+        // Trigger celebratory confetti burst
+        if (typeof window.confetti === 'function') {
+            try {
+                window.confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#3b82f6', '#10b981', '#06b6d4', '#8b5cf6']
+                });
+            } catch (e) {}
+        }
     },
 
     async confirmIdentity(e) {
@@ -273,9 +378,14 @@ const VerifyPortal = {
         const d = VerifyPortal.caseData;
         if (!d) return;
 
+        const eqEl = document.getElementById('audio-equalizer');
+        const iconEl = document.getElementById('tts-icon');
+
         let text = `Official Court Notice for ${d.respondent_name}. Case reference: ${d.case_id}. You are summoned to appear on ${d.hearing_date} in ${d.courtroom} regarding charges of ${d.charge_details}. Please verify your identity below.`;
         if (VerifyPortal.currentLang === 'ur') {
             text = `عدالتی نوٹس برائے ${d.respondent_name}۔ مقدمہ نمبر ${d.case_id}۔ آپ کی تاریخ پیشی ${d.hearing_date} ہے برائے کمرہ عدالت ${d.courtroom}۔`;
+        } else if (VerifyPortal.currentLang === 'es') {
+            text = `Aviso judicial para ${d.respondent_name}. Caso: ${d.case_id}. Comparezca el ${d.hearing_date} en ${d.courtroom}.`;
         }
 
         window.speechSynthesis.cancel();
@@ -284,6 +394,17 @@ const VerifyPortal = {
         if (VerifyPortal.currentLang === 'ur') utterance.lang = 'ur-PK';
         else if (VerifyPortal.currentLang === 'es') utterance.lang = 'es-ES';
         else utterance.lang = 'en-US';
+
+        if (eqEl) eqEl.classList.remove('hidden');
+        if (iconEl) iconEl.innerText = '⏸️';
+
+        const stopVisuals = () => {
+            if (eqEl) eqEl.classList.add('hidden');
+            if (iconEl) iconEl.innerText = '🔊';
+        };
+
+        utterance.onend = stopVisuals;
+        utterance.onerror = stopVisuals;
 
         window.speechSynthesis.speak(utterance);
     },
@@ -300,4 +421,7 @@ const VerifyPortal = {
 
 window.addEventListener('DOMContentLoaded', () => {
     VerifyPortal.init();
+    setTimeout(() => {
+        VerifyPortal.init3DShield();
+    }, 250);
 });

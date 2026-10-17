@@ -156,13 +156,24 @@ def seed_users(cursor):
             now
         ),
         (
+            "usr_clerk_3",
+            "bilal.clerk@lawflow.court",
+            "bilal.clerk@lawflow.court",
+            "clerk2026",
+            "CLERK",
+            "Junior Clerk Bilal Ahmed",
+            "Rapid Digital Intake & Fastn Telemetry",
+            1,
+            now
+        ),
+        (
             "usr_admin_1",
             "admin@lawflow.gov",
             "admin@lawflow.gov",
             "admin2026",
             "ADMIN",
-            "Superintendent & Judicial Enforcement Liaison",
-            "Police Headquarters & Judicial Administration",
+            "Superintendent Rashid Khan",
+            "Margalla Police Headquarters & Judicial Administration",
             1,
             now
         )

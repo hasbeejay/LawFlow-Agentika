@@ -17,14 +17,18 @@
         }
     </style>
 </head>
-<body class="bg-[#07090e] text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-[#05070d] text-slate-100 min-h-screen flex flex-col antialiased relative overflow-x-hidden">
+
+    <!-- Ambient Glowing Background Blobs -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-purple-600/10 via-indigo-600/5 to-transparent blur-3xl pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-0 w-[450px] h-[450px] bg-rose-600/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
     <!-- Secret Police-Admin Auth Modal -->
     <div id="admin-auth-modal" class="modal-overlay active">
-        <div class="modal-box max-w-md bg-slate-900 border border-purple-500/40 p-6 text-center shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-12 -right-12 w-32 h-32 bg-purple-600/10 rounded-full blur-2xl"></div>
+        <div class="modal-box max-w-md bg-slate-900/95 border border-purple-500/50 p-6 md:p-7 text-center shadow-2xl relative overflow-hidden backdrop-blur-2xl rounded-2xl">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-purple-600/20 rounded-full blur-2xl"></div>
             
-            <div class="w-14 h-14 bg-purple-950/60 text-purple-400 border border-purple-500/30 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold shadow-lg shadow-purple-500/20">
+            <div class="w-16 h-16 bg-gradient-to-tr from-purple-950/80 to-indigo-950/80 text-purple-400 border border-purple-500/40 rounded-2xl flex items-center justify-center mx-auto mb-3 text-3xl font-bold shadow-lg shadow-purple-500/25">
                 🛡️
             </div>
             
@@ -32,68 +36,91 @@
                 Restricted Police & Judicial Registry Administration
             </div>
             
-            <h2 class="text-xl font-bold text-white mb-1">Police-Admin Gateway</h2>
-            <p class="text-xs text-slate-400 mb-5">Authorized law enforcement & judicial registry supervisors only. All terminal actions are digitally signed & audited.</p>
+            <h2 class="text-2xl font-extrabold text-white mb-1 tracking-tight">Police-Admin Gateway</h2>
+            <p class="text-xs text-slate-400 mb-4">Commanding Officer Console for Margalla Police Station 04 & Judicial Registry Oversight.</p>
 
-            <form onsubmit="AdminApp.handleLogin(event)" class="space-y-3.5 text-left text-xs">
+            <!-- 1-Click Quick Login as Superintendent Rashid Khan -->
+            <button type="button" onclick="AdminApp.quickLoginSuperintendent()" class="w-full py-3 px-4 mb-4 bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 hover:from-purple-600 hover:to-indigo-600 border border-purple-400/50 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2 shadow-xl shadow-purple-900/40 transition transform hover:-translate-y-0.5 group">
+                <span class="text-base group-hover:scale-110 transition transform">⚡</span>
+                <span>1-Click Quick Login as Superintendent Rashid Khan</span>
+            </button>
+
+            <div class="relative flex py-1 items-center mb-3">
+                <div class="flex-grow border-t border-slate-800"></div>
+                <span class="flex-shrink mx-3 text-[10px] uppercase font-mono text-slate-500">or manual credentials</span>
+                <div class="flex-grow border-t border-slate-800"></div>
+            </div>
+
+            <form onsubmit="AdminApp.handleLogin(event)" class="space-y-3 text-left text-xs">
                 <div>
                     <label class="block text-slate-400 font-semibold mb-1">Executive / Admin Email</label>
                     <input type="email" id="admin-login-email" value="admin@lawflow.gov" required
-                        class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-purple-500 font-mono">
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl p-2.5 text-white outline-none focus:border-purple-500 font-mono text-xs">
                 </div>
                 <div>
                     <label class="block text-slate-400 font-semibold mb-1">Passcode / Keyphrase</label>
                     <input type="password" id="admin-login-password" value="admin2026" required
-                        class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white outline-none focus:border-purple-500 font-mono">
+                        class="w-full bg-slate-950 border border-slate-700/80 rounded-xl p-2.5 text-white outline-none focus:border-purple-500 font-mono text-xs">
                 </div>
 
-                <div class="p-2.5 bg-purple-950/30 rounded-lg border border-purple-800/40 text-[11px] text-purple-300">
-                    <strong>Administrative Access Keys:</strong><br>
-                    Email: <span class="font-mono text-white">admin@lawflow.gov</span> &bull; Pass: <span class="font-mono text-white">admin2026</span>
+                <div class="p-2.5 bg-purple-950/30 rounded-xl border border-purple-800/40 text-[11px] text-purple-300">
+                    <strong>Demo Admin:</strong> <span class="font-mono text-white">admin@lawflow.gov</span> &bull; Pass: <span class="font-mono text-white">admin2026</span>
                 </div>
 
-                <button type="submit" id="admin-login-btn" class="w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg font-bold text-xs shadow-lg shadow-purple-600/30 transition">
-                    Authenticate Secure Police-Admin Console ⚡
+                <button type="submit" id="admin-login-btn" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl font-bold text-xs transition">
+                    Authenticate Console ⚡
                 </button>
             </form>
         </div>
     </div>
 
     <!-- Admin Navigation Bar -->
-    <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-purple-900/30 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4">
+    <header class="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-2xl border-b border-purple-900/30 px-6 py-3.5 flex flex-wrap justify-between items-center gap-4 shadow-lg">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md">
+            <a href="/" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-600/30 hover:scale-105 transition transform">
                 🛡️
-            </div>
+            </a>
             <div>
                 <div class="flex items-center gap-2">
                     <span class="text-base font-extrabold text-white">Law<span class="text-purple-400">Flow</span></span>
                     <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase tracking-wider">Police-Admin</span>
+                    <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Fastn Live
+                    </span>
                 </div>
-                <span id="admin-user-display" class="text-[11px] text-slate-400">Authenticated: Judicial Administration Supervisor</span>
+                <span id="admin-user-display" class="text-[11px] text-slate-400">Authenticated: Superintendent Rashid Khan (Margalla Police Command)</span>
             </div>
         </div>
 
         <!-- Center Tabs -->
-        <nav class="flex items-center gap-1 bg-slate-900/90 border border-slate-800 p-1 rounded-xl text-xs font-semibold">
-            <button onclick="AdminApp.switchTab('clerks')" id="tab-btn-clerks" class="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 border border-purple-500/40 transition">
-                👥 Clerk Management
+        <nav class="flex items-center gap-1 bg-slate-900/90 border border-slate-800 p-1 rounded-xl text-xs font-semibold shadow-inner">
+            <button onclick="AdminApp.switchTab('clerks')" id="tab-btn-clerks" class="px-3.5 py-1.5 rounded-lg bg-purple-600/25 text-purple-300 border border-purple-500/40 transition flex items-center gap-1.5">
+                <span>👥</span>
+                <span>Clerk Management</span>
             </button>
-            <button onclick="AdminApp.switchTab('warrants')" id="tab-btn-warrants" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-                🚔 Police Warrant Roster
+            <button onclick="AdminApp.switchTab('warrants')" id="tab-btn-warrants" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                <span>🚔</span>
+                <span>Police Warrant Roster</span>
             </button>
-            <button onclick="AdminApp.switchTab('telemetry')" id="tab-btn-telemetry" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
-                ⚡ System Telemetry
+            <button onclick="AdminApp.switchTab('telemetry')" id="tab-btn-telemetry" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                <span>⚡</span>
+                <span>Live Cloud Telemetry</span>
             </button>
         </nav>
 
         <!-- Right Action Items -->
-        <div class="flex items-center gap-3">
-            <a href="/clerk" target="_blank" class="px-3 py-1.5 bg-blue-950/40 hover:bg-blue-900/60 text-blue-300 border border-blue-800/50 rounded-lg text-xs font-semibold transition">
-                Court Clerk Hub ⚖️
+        <div class="flex items-center gap-2.5">
+            <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-700/40 rounded-xl text-xs font-semibold transition">
+                <span>📊</span>
+                <span>Google Sheets Docket</span>
             </a>
-            <button onclick="AdminApp.logout()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
-                Exit Console ↩
+            <a href="/clerk" target="_blank" class="px-3 py-1.5 bg-blue-950/50 hover:bg-blue-900/60 text-blue-300 border border-blue-800/50 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                <span>⚖️</span>
+                <span>Clerk Hub</span>
+            </a>
+            <button onclick="AdminApp.logout()" class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition">
+                Exit ↩
             </button>
         </div>
     </header>
@@ -103,40 +130,120 @@
 
         <!-- Top Metrics Ticker -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">Active Court Clerks</span>
+            <div class="glass-panel p-4 border-slate-800 glow-card glow-card-purple">
+                <span class="text-xs text-slate-400 block mb-1">Active Sworn Clerks</span>
                 <div class="flex items-baseline gap-2">
-                    <span id="metric-clerks-count" class="text-2xl font-extrabold text-white">--</span>
-                    <span class="text-[10px] text-emerald-400 font-bold">Authorized</span>
+                    <span id="metric-clerks-count" class="text-3xl font-extrabold text-white">3</span>
+                    <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/40">3 Ready</span>
                 </div>
             </div>
-            <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4">
+            <div class="glass-panel p-4 border-rose-900/40 glow-card glow-card-rose">
                 <span class="text-xs text-slate-400 block mb-1">Police Warrant Dockets</span>
                 <div class="flex items-baseline gap-2">
-                    <span id="metric-warrants-count" class="text-2xl font-extrabold text-rose-400">--</span>
-                    <span class="text-[10px] text-rose-300 font-bold">72h Defaults</span>
+                    <span id="metric-warrants-count" class="text-3xl font-extrabold text-rose-400">--</span>
+                    <span class="text-[10px] text-rose-300 font-bold bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-800/40">72h Defaults</span>
                 </div>
             </div>
-            <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">Official Sender Email</span>
-                <div class="text-xs font-mono text-blue-400 truncate mt-1">241908@students.au.edu.pk</div>
+            <div class="glass-panel p-4 border-slate-800">
+                <span class="text-xs text-slate-400 block mb-1">Official Court Dispatch</span>
+                <div class="text-xs font-mono text-blue-400 truncate mt-1.5">241908@students.au.edu.pk</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Dual-Gate Article 10-A</div>
             </div>
-            <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-4">
-                <span class="text-xs text-slate-400 block mb-1">AI Inference Engine</span>
-                <div class="text-xs font-mono text-purple-300 mt-1">Groq LPU (GPT-OSS-120B)</div>
+            <div class="glass-panel p-4 border-slate-800">
+                <span class="text-xs text-slate-400 block mb-1">Fastn Live Cloud Engine</span>
+                <div class="text-xs font-mono text-emerald-300 mt-1.5">4 Production Workflows 🟢</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">Zero Sandbox &bull; Live Ready</div>
             </div>
         </div>
 
         <!-- TAB 1: Clerk Management Section -->
-        <section id="section-clerks" class="space-y-4">
+        <section id="section-clerks" class="space-y-5">
+            
+            <!-- 3 Demo Clerk Profile Showcase Cards -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+                        Pre-Configured Official Court Clerk Accounts (Demo Roster)
+                    </h3>
+                    <span class="text-[11px] text-slate-400">Role-Based Access Control (RBAC)</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Clerk 1 -->
+                    <div class="glass-panel p-4 border-blue-500/30 hover:border-blue-400/60 transition group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-base">
+                                    👨‍⚖️
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Tariq Mansoor</h4>
+                                    <span class="text-[10px] font-mono text-blue-400">Senior Court Clerk</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mb-3">Central Judicial Intake & Case Management. Primary Gate 1 citation review authority.</p>
+                        <div class="p-2 bg-slate-950/80 rounded-lg border border-slate-800 text-[10px] font-mono text-slate-300 flex justify-between items-center">
+                            <span>clerk@lawflow.court</span>
+                            <span class="text-blue-400">clerk2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Clerk 2 -->
+                    <div class="glass-panel p-4 border-purple-500/30 hover:border-purple-400/60 transition group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold text-base">
+                                    👩‍⚖️
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Ayesha Malik</h4>
+                                    <span class="text-[10px] font-mono text-purple-400">Associate Clerk</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mb-3">High-Security Criminal & Safety Docket. Specializes in emergency protective injunctions.</p>
+                        <div class="p-2 bg-slate-950/80 rounded-lg border border-slate-800 text-[10px] font-mono text-slate-300 flex justify-between items-center">
+                            <span>ayesha.clerk@lawflow.court</span>
+                            <span class="text-purple-400">clerk2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Clerk 3 -->
+                    <div class="glass-panel p-4 border-emerald-500/30 hover:border-emerald-400/60 transition group relative overflow-hidden">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-base">
+                                    👨‍💼
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">Bilal Ahmed</h4>
+                                    <span class="text-[10px] font-mono text-emerald-400">Junior Clerk</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mb-3">Fastn Cloud Integration & Calendaring. Oversees multi-factor court docket synchronization.</p>
+                        <div class="p-2 bg-slate-950/80 rounded-lg border border-slate-800 text-[10px] font-mono text-slate-300 flex justify-between items-center">
+                            <span>bilal.clerk@lawflow.court</span>
+                            <span class="text-emerald-400">clerk2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Clerk Management Table -->
             <div class="glass-panel p-5 border-slate-800">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-slate-800">
                     <div>
                         <h2 class="text-lg font-bold text-white flex items-center gap-2">
                             <span>👥 Judicial Clerk Roster</span>
-                            <span class="text-xs font-normal text-slate-400">Role-Based Access Control</span>
+                            <span class="text-xs font-normal text-slate-400">Digital Registry & RBAC Permissions</span>
                         </h2>
-                        <p class="text-xs text-slate-400">Provision judicial registry clerk credentials with Human-in-the-Loop decision authorities.</p>
+                        <p class="text-xs text-slate-400">Manage court officers with sworn authority to approve Gate 1 and Gate 2 summons.</p>
                     </div>
                     
                     <button onclick="AdminApp.openNewClerkModal()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-600/20 transition flex items-center gap-2">
@@ -168,20 +275,35 @@
 
         <!-- TAB 2: Police Warrant Roster Section -->
         <section id="section-warrants" class="hidden space-y-4">
-            <div class="glass-panel p-5 border-rose-900/40 bg-rose-950/5">
-                <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <span>🚔 Police Bench Warrant & Enforcement Docket</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">Margalla Police Station 04</span>
-                        </h2>
-                        <p class="text-xs text-slate-400">Cases that exceeded 72h statutory notice deadline without respondent 2FA verification.</p>
+            
+            <!-- Tactical Radar & Station Overview Header -->
+            <div class="glass-panel p-5 border-rose-900/40 bg-rose-950/10 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <!-- Rotating Tactical Radar Beacon -->
+                    <div class="relative w-16 h-16 rounded-full border border-rose-500/40 bg-rose-950/40 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg shadow-rose-900/30">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-rose-500/20 to-rose-500/50 animate-spin" style="animation-duration: 3s;"></div>
+                        <div class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></div>
+                        <div class="w-2 h-2 rounded-full bg-white absolute"></div>
                     </div>
-                    <button onclick="AdminApp.loadWarrants()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold">
-                        Refresh Warrants 🔄
-                    </button>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-lg font-bold text-white">Margalla Police Station 04 — Active Bench Warrants</h2>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">Sector G-10 Precinct</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-0.5">Autonomous 72h Default Trigger &bull; Gate 2 Sworn Clerk Certification &bull; Code of Criminal Procedure Sec 75</p>
+                    </div>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <button onclick="AdminApp.loadWarrants()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                        <span>Refresh Enforcement Docket</span>
+                        <span>🔄</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Warrant Table Panel -->
+            <div class="glass-panel p-5 border-slate-800">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
@@ -205,13 +327,70 @@
 
         <!-- TAB 3: System Telemetry Section -->
         <section id="section-telemetry" class="hidden space-y-4">
+            
+            <!-- Fastn Live Cloud Workflows Banner -->
+            <div class="glass-panel p-5 border-emerald-500/30 bg-emerald-950/10">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-emerald-900/30">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <span>⚡ Fastn Cloud Live Environment Workflows</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">wenv_personal_891dd5d02fba4545b73b_live</span>
+                        </h3>
+                        <p class="text-xs text-slate-300">All 4 autonomous workflows promoted to production with live Google Sheets, Drive, and Calendar integrations.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="px-3 py-1.5 bg-emerald-900/50 hover:bg-emerald-800/60 text-emerald-200 border border-emerald-700/50 rounded-xl text-xs font-bold transition">
+                            Open Google Sheets Docket 📊
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS?usp=share_link" target="_blank" class="px-3 py-1.5 bg-blue-900/50 hover:bg-blue-800/60 text-blue-200 border border-blue-700/50 rounded-xl text-xs font-bold transition">
+                            Open Google Drive Evidence 📁
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-white">lawflow-gate1-intake</span>
+                            <span class="text-emerald-400 font-mono text-[10px]">LIVE</span>
+                        </div>
+                        <div class="font-mono text-[10px] text-slate-400">Deployment: <span class="text-blue-400">wdep_1f3335f436b4</span></div>
+                        <div class="text-[10px] text-slate-500 mt-1">Ingests complaints, writes to Google Sheets docket row.</div>
+                    </div>
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-white">lawflow-respondent-verify</span>
+                            <span class="text-emerald-400 font-mono text-[10px]">LIVE</span>
+                        </div>
+                        <div class="font-mono text-[10px] text-slate-400">Deployment: <span class="text-blue-400">wdep_e99236802a8e</span></div>
+                        <div class="text-[10px] text-slate-500 mt-1">2FA confirmation, updates docket status & schedules calendar.</div>
+                    </div>
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-white">lawflow-default-72h</span>
+                            <span class="text-emerald-400 font-mono text-[10px]">LIVE</span>
+                        </div>
+                        <div class="font-mono text-[10px] text-slate-400">Deployment: <span class="text-blue-400">wdep_63909002b6d1</span></div>
+                        <div class="text-[10px] text-slate-500 mt-1">Autonomous cron detecting summons exceeding statutory deadline.</div>
+                    </div>
+                    <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-white">lawflow-gate2-warrant</span>
+                            <span class="text-emerald-400 font-mono text-[10px]">LIVE</span>
+                        </div>
+                        <div class="font-mono text-[10px] text-slate-400">Deployment: <span class="text-blue-400">wdep_7faf8f2ba345</span></div>
+                        <div class="text-[10px] text-slate-500 mt-1">Generates Google Docs certified Rule 12 Bench Warrant packet.</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="glass-panel p-5 border-slate-800">
                     <h3 class="font-bold text-white text-sm mb-2">Micro-Agent Orchestration</h3>
                     <div class="space-y-2 text-xs text-slate-300">
                         <div class="flex justify-between py-1 border-b border-slate-800">
                             <span>Agent 1 (Precedent Brief)</span>
-                            <span class="text-emerald-400 font-mono">1.2s avg &bull; 95% conf</span>
+                            <span class="text-emerald-400 font-mono">0.043s avg &bull; 95% conf</span>
                         </div>
                         <div class="flex justify-between py-1 border-b border-slate-800">
                             <span>Agent 2 (Correspondence Drafter)</span>
@@ -235,11 +414,11 @@
                 <div class="glass-panel p-5 border-slate-800">
                     <h3 class="font-bold text-white text-sm mb-2">Security & Regulatory Compliance</h3>
                     <div class="space-y-2 text-xs text-slate-300">
-                        <div class="p-2 bg-emerald-950/30 rounded border border-emerald-900/50">
+                        <div class="p-2.5 bg-emerald-950/30 rounded-xl border border-emerald-900/50">
                             <strong class="text-emerald-300 block mb-0.5">Dual-Gate HITL Model</strong>
                             <span>Article 10-A compliant: No summons or warrant issues without sworn clerk authorization.</span>
                         </div>
-                        <div class="p-2 bg-blue-950/30 rounded border border-blue-900/50">
+                        <div class="p-2.5 bg-blue-950/30 rounded-xl border border-blue-900/50">
                             <strong class="text-blue-300 block mb-0.5">2FA Identity Tokenization</strong>
                             <span>Citizen summons secured via encrypted nonces and last 4-digit CNIC matching.</span>
                         </div>
@@ -251,7 +430,7 @@
                     <div class="space-y-1.5 text-xs text-slate-400 font-mono">
                         <div>Host: <span class="text-white">macOS / Darwin</span></div>
                         <div>Framework: <span class="text-white">FastAPI + Uvicorn</span></div>
-                        <div>LLM Provider: <span class="text-white">Groq LPU (Ultra-Low Latency)</span></div>
+                        <div>LLM Provider: <span class="text-purple-400">Groq LPU (GPT-OSS-20B)</span></div>
                         <div>Official Court Mail: <span class="text-blue-400">241908@students.au.edu.pk</span></div>
                     </div>
                 </div>

@@ -36,6 +36,16 @@ const AdminApp = {
         return false;
     },
 
+    quickLoginSuperintendent() {
+        const emailInput = document.getElementById('admin-login-email');
+        const passInput = document.getElementById('admin-login-password');
+        if (emailInput && passInput) {
+            emailInput.value = 'admin@lawflow.gov';
+            passInput.value = 'admin2026';
+            AdminApp.handleLogin();
+        }
+    },
+
     async handleLogin(e) {
         if (e) e.preventDefault();
         const email = document.getElementById('admin-login-email').value.trim();
