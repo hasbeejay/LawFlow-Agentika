@@ -79,7 +79,7 @@ All 4 autonomous Fastn workflows are promoted and live in environment `wenv_pers
 
 ## 🚀 Deployment on Alternate Clouds (`clouds.alternatefutures.ai`)
 
-* **Live Production URL:** [https://lawflow-docker-app.alternatefutures.ai](https://lawflow-docker-app.alternatefutures.ai)
+* **Live Production URL:** [https://lawflow-app-app.alternatefutures.ai](https://lawflow-app-app.alternatefutures.ai)
 * **Status:** `● Running (Akash Network / Containerized)`
 * **Image Registry:** `ghcr.io/hasbeejay/lawflow-agentika:latest`
 
