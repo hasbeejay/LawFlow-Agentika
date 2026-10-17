@@ -41,7 +41,7 @@
 ## Section 3: Official Required Links
 
 * **GitHub Repository Link:** [https://github.com/hasbeejay/LawFlow-Agentika](https://github.com/hasbeejay/LawFlow-Agentika)
-* **Live Alternate Clouds Deployment Link:** `https://[your-subdomain].clouds.alternatefutures.ai` *(Publish via Alternate Clouds dashboard in 1 click)*
+* **Live Alternate Clouds Deployment Link:** [https://lawflow-docker-app.alternatefutures.ai](https://lawflow-docker-app.alternatefutures.ai)
 * **Fastn Master Google Sheets Docket:** [LawFlow Master Docket Ledger](https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0)
 * **Fastn Google Drive Case Dossier Archive:** [LawFlow Case Dossier Folder](https://drive.google.com/drive/folders/1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS?usp=share_link)
 * **Demo Video Link (2–3 minutes):** *(Insert unlisted YouTube or Google Drive link)*

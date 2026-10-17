@@ -79,6 +79,10 @@ All 4 autonomous Fastn workflows are promoted and live in environment `wenv_pers
 
 ## 🚀 Deployment on Alternate Clouds (`clouds.alternatefutures.ai`)
 
+* **Live Production URL:** [https://lawflow-docker-app.alternatefutures.ai](https://lawflow-docker-app.alternatefutures.ai)
+* **Status:** `● Running (Akash Network / Containerized)`
+* **Image Registry:** `ghcr.io/hasbeejay/lawflow-agentika:latest`
+
 LawFlow is built as a **Single-Container Unified Web Application** to eliminate reverse proxy errors, CORS failures, and Cloudflare 502 Bad Gateway timeouts.
 
 ### Alternate Clouds Steps:
