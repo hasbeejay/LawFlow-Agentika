@@ -11,65 +11,57 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Three.js for Interactive 3D Judicial Visualizer -->
+    <!-- Three.js for Interactive 3D Visualizer -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="/static/js/theme.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .hero-glow {
-            background: radial-gradient(circle 800px at 50% 10%, rgba(59, 130, 246, 0.15), transparent 70%);
-        }
     </style>
 </head>
-<body class="bg-[#05070d] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white hero-glow">
+<body class="bg-[#100b08] text-[#fbf8f3] min-h-screen flex flex-col antialiased selection:bg-[#2d6a4f] selection:text-white">
 
-    <!-- Ambient Background Lighting Orbs -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-blue-600/10 blur-[150px] rounded-full animate-float"></div>
-        <div class="absolute top-[800px] -left-40 w-[600px] h-[600px] bg-purple-600/5 blur-[160px] rounded-full"></div>
-        <div class="absolute top-[1600px] -right-40 w-[600px] h-[600px] bg-emerald-600/5 blur-[160px] rounded-full"></div>
-    </div>
-
-    <!-- Apple-Style Global Glass Navigation -->
-    <header class="glass-nav sticky top-0 z-50 px-6 py-3.5 transition">
+    <!-- Global Glass Navigation (Apple Style) -->
+    <header class="glass-nav sticky top-0 z-50 px-6 py-4 transition">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             
             <!-- Brand Glyph -->
             <a href="/" class="flex items-center gap-3 group text-decoration-none">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#1b4332] to-[#2d6a4f] flex items-center justify-center font-bold text-white shadow-lg shadow-[#1b4332]/30 group-hover:scale-105 transition transform">
                     ⚖️
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="text-base font-extrabold tracking-tight text-white">Law<span class="text-blue-500">Flow</span></span>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30">Agentika 2.0</span>
+                        <span class="text-base font-extrabold tracking-tight text-white">Law<span class="text-[#52b788]">Flow</span></span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#2d6a4f]/20 text-[#74c69d] border border-[#2d6a4f]/40">Agentika 2.0</span>
                     </div>
                     <span class="text-[10px] text-slate-400 block -mt-0.5 font-medium">Judicial Intake & HITL Case Management</span>
                 </div>
             </a>
 
             <!-- Center Navigation Links -->
-            <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-400">
-                <a href="#showcase" class="hover:text-white transition">Case Showcase</a>
-                <a href="#fastn-connectors" class="hover:text-white transition">Fastn SaaS Connectors</a>
-                <a href="#architecture" class="hover:text-white transition">AI Micro-Agents</a>
-                <a href="#visualizer" class="hover:text-white transition">Live Telemetry</a>
-                <a href="#gateways" class="hover:text-white transition">Judicial Gateways</a>
+            <nav class="hidden md:flex items-center gap-7 text-xs font-semibold text-slate-400">
+                <a href="#pipeline" class="hover:text-white transition">Judge Pipeline</a>
+                <a href="#pillars" class="hover:text-white transition">Architecture</a>
+                <a href="#gateways" class="hover:text-white transition">Judicial Portals</a>
+                <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="hover:text-[#c59b6d] transition flex items-center gap-1">
+                    <span>Master Docket</span>
+                    <span class="text-[10px]">↗</span>
+                </a>
             </nav>
 
             <!-- Right Actions: Quick Access Docks & Theme Toggle -->
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-3">
                 <!-- Theme Switcher Button -->
                 <button type="button" class="theme-toggle-btn" onclick="LawFlowTheme.toggle()" title="Toggle Light / Dark Mode">
                     <span>☀️</span>
                     <span class="hidden sm:inline">Light Mode</span>
                 </button>
-                <a href="/clerk" class="hidden sm:flex px-3.5 py-2 bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-700/80 rounded-xl text-xs font-bold transition items-center gap-1.5">
+                <a href="/clerk" class="hidden sm:flex px-4 py-2 bg-slate-900/90 dark:bg-[#1a120c] hover:bg-[#2a1d15] text-[#f5eedf] border border-slate-700/80 rounded-xl text-xs font-bold transition items-center gap-1.5 shadow-sm">
                     <span>Clerk Gateway</span>
                     <span class="text-[10px]">🔒</span>
                 </a>
-                <a href="/verify" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 transition flex items-center gap-2">
+                <a href="/verify" class="px-4 py-2 bg-gradient-to-r from-[#1b4332] to-[#2d6a4f] hover:from-[#2d6a4f] hover:to-[#1b4332] text-white rounded-xl text-xs font-bold shadow-md shadow-[#1b4332]/30 transition flex items-center gap-2">
                     <span>Citizen Portal</span>
                     <span class="text-[10px]">📱</span>
                 </a>
@@ -78,477 +70,244 @@
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main Container (Apple Minimalist Aesthetics) -->
     <main class="flex-1 z-10 space-y-24 pb-20">
 
         <!-- ================= SECTION 1: APPLE-STYLE HERO ================= -->
-        <section class="relative pt-16 pb-12 px-6 text-center max-w-5xl mx-auto">
+        <section class="relative pt-16 pb-8 px-6 text-center max-w-5xl mx-auto">
             
-            <!-- Hackathon Badge -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-semibold mb-6 animate-pulse">
-                <span>🏆</span>
-                <span>NaSCon 2026 &bull; Agentika 2.0 Theme: Human + AI: Better Together</span>
+            <!-- Category Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#2d6a4f]/15 border border-[#40916c]/40 text-[#74c69d] text-xs font-semibold mb-6">
+                <span>🏛️</span>
+                <span>NaSCon 2026 &bull; Theme: Human + AI: Better Together</span>
             </div>
 
-            <!-- Main Headline -->
+            <!-- Apple-Style Bold Typography Headline -->
             <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
-                Autonomous Justice.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">
-                    Human + AI: Better Together.
+                Justice at the speed of thought.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#c59b6d] via-[#f5eedf] to-[#52b788]">
+                    Protected by human judgment.
                 </span>
             </h1>
 
-            <!-- Subtitle -->
-            <p class="text-base sm:text-xl text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed mb-8">
-                LawFlow eliminates 72-hour judicial notice backlogs with five coordinated Groq LPU micro-agents, dual-gate clerk oversight, and official court summons delivery from <span class="font-mono text-blue-400">241908@students.au.edu.pk</span>.
+            <!-- Concise Subtitle -->
+            <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed mb-8">
+                LawFlow collapses routine court scheduling from 5 days to 12 seconds with Fastn autonomous MCP tools — while strictly preventing default arrest warrants through sworn clerk approvals.
             </p>
 
-            <!-- 3D Interactive WebGL Hero Canvas Container -->
-            <div class="relative w-full max-w-md h-56 mx-auto mb-8 rounded-3xl overflow-hidden glass-panel border border-blue-500/20 shadow-2xl shadow-blue-900/20 glow-card">
+            <!-- Primary CTAs -->
+            <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
+                <a href="/clerk" class="btn-primary text-sm shadow-xl">
+                    <span>⚖️ Launch Clerk Gateway</span>
+                    <span class="text-xs opacity-75 font-mono">🔒</span>
+                </a>
+                <a href="/verify" class="btn-creme text-sm shadow-md">
+                    <span>📱 Verify Legal Summons</span>
+                    <span class="text-xs opacity-75 font-mono">2FA</span>
+                </a>
+            </div>
+
+            <!-- 3D Interactive WebGL Hero Canvas Container (Smooth Scales of Justice) -->
+            <div class="relative w-full max-w-sm h-48 mx-auto mb-8 rounded-3xl overflow-hidden glass-panel border border-[#8a5731]/30 shadow-2xl">
                 <canvas id="three-hero-canvas" class="w-full h-full block"></canvas>
-                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-slate-950/70 border border-blue-500/30 text-[10px] text-blue-300 font-mono flex items-center gap-1.5 backdrop-blur-md">
-                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>
-                    <span>Interactive 3D Judicial Core &bull; Mouse Tilt Enabled</span>
+                <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-slate-950/70 dark:bg-[#120d0a]/80 border border-[#8a5731]/30 text-[10px] text-[#c59b6d] font-mono flex items-center gap-1.5 backdrop-blur-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#52b788] animate-pulse"></span>
+                    <span>Judicial Scales &bull; 60 FPS Gyro Tilt</span>
                 </div>
             </div>
 
-            <!-- Hero Interactive Case Lookup Card -->
-            <div class="max-w-xl mx-auto bg-slate-900/80 backdrop-blur-xl border border-slate-700/60 rounded-2xl p-3 shadow-2xl shadow-blue-900/10 mb-8 glow-card">
+            <!-- Hero Minimalist Case Lookup Pill -->
+            <div class="max-w-xl mx-auto bg-slate-900/80 dark:bg-[#1a120c]/90 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-2.5 shadow-2xl mb-4">
                 <form onsubmit="HomeApp.handleLookup(event)" class="flex flex-col sm:flex-row items-center gap-2">
                     <div class="relative w-full">
-                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
-                        <input type="text" id="hero-lookup-input" placeholder="Enter Case ID (e.g. LF-2026-1042) or Summons Token"
-                            class="w-full bg-slate-950/80 border border-slate-700/80 rounded-xl pl-10 pr-4 py-3 text-white text-xs font-mono outline-none focus:border-blue-500 placeholder:text-slate-500 transition">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs">🔍</span>
+                        <input type="text" id="hero-lookup-input" placeholder="Enter Docket ID (e.g. LF-2026-EE25) or Summons Token"
+                            class="w-full bg-slate-950/80 dark:bg-[#100b08]/90 border border-slate-700/60 rounded-xl pl-9 pr-4 py-2.5 text-white text-xs font-mono outline-none focus:border-[#2d6a4f] placeholder:text-slate-500 transition">
                     </div>
-                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-md transition">
-                        Track Summons ⚡
+                    <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-[#1b4332] hover:bg-[#2d6a4f] text-white rounded-xl text-xs font-bold whitespace-nowrap shadow transition">
+                        Verify Summons ⚡
                     </button>
                 </form>
 
                 <!-- Quick Clickable Chips -->
-                <div class="flex flex-wrap items-center justify-center gap-2 pt-3 mt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-                    <span>Try Demo Cases:</span>
-                    <button onclick="HomeApp.fillCase('LF-2026-1042')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-blue-400 font-mono transition">LF-2026-1042 (Traffic)</button>
-                    <button onclick="HomeApp.fillCase('LF-2026-2095')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-purple-400 font-mono transition">LF-2026-2095 (Domestic)</button>
-                    <button onclick="HomeApp.fillCase('LF-2026-3180')" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 font-mono transition">LF-2026-3180 (Sanitation)</button>
-                </div>
-            </div>
-
-            <!-- Stat Strip -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 text-left">
-                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 glow-card">
-                    <span class="text-xs text-slate-400 block mb-1">Average Notice Speed</span>
-                    <div class="text-2xl font-extrabold text-white">1.2s <span class="text-xs font-normal text-emerald-400">vs 72h baseline</span></div>
-                </div>
-                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 glow-card">
-                    <span class="text-xs text-slate-400 block mb-1">Article 10-A Oversight</span>
-                    <div class="text-2xl font-extrabold text-white">100% <span class="text-xs font-normal text-blue-400">HITL Sworn Clerk</span></div>
-                </div>
-                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 glow-card">
-                    <span class="text-xs text-slate-400 block mb-1">Appearance Confirmation</span>
-                    <div class="text-2xl font-extrabold text-white">88.4% <span class="text-xs font-normal text-emerald-400">+56% uplift</span></div>
-                </div>
-                <div class="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 glow-card">
-                    <span class="text-xs text-slate-400 block mb-1">Official Court Sender</span>
-                    <div class="text-xs font-mono text-blue-400 truncate mt-1">241908@students.au.edu.pk</div>
+                <div class="flex flex-wrap items-center justify-center gap-2 pt-2.5 mt-2 border-t border-slate-800/60 text-[11px] text-slate-400">
+                    <span class="text-slate-500">Quick Test Cases:</span>
+                    <button onclick="HomeApp.fillCase('LF-2026-EE25')" class="px-2 py-0.5 rounded bg-slate-800/60 dark:bg-[#2a1d15] hover:bg-[#3d2b1f] text-[#74c69d] font-mono transition">LF-2026-EE25 (Speeding)</button>
+                    <button onclick="HomeApp.fillCase('LF-2026-0E9D')" class="px-2 py-0.5 rounded bg-slate-800/60 dark:bg-[#2a1d15] hover:bg-[#3d2b1f] text-[#c59b6d] font-mono transition">LF-2026-0E9D (Citation)</button>
+                    <button onclick="HomeApp.fillCase('LF-2026-2095')" class="px-2 py-0.5 rounded bg-slate-800/60 dark:bg-[#2a1d15] hover:bg-[#3d2b1f] text-[#d4a373] font-mono transition">LF-2026-2095 (Family)</button>
                 </div>
             </div>
 
         </section>
 
-        <!-- ================= SECTION 2: FASTN LIVE COMPOSABLE CONNECTORS ================= -->
-        <section id="fastn-connectors" class="max-w-7xl mx-auto px-6 space-y-6">
+        <!-- ================= SECTION 2: POPULATED REAL-TIME JUDICIAL PIPELINE ================= -->
+        <section id="pipeline" class="max-w-7xl mx-auto px-6 space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-800/80 pb-4">
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Fastn Model Context Protocol (MCP)</span>
-                    </div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Live Composable SaaS Connectors</h2>
-                    <p class="text-xs text-slate-400 mt-1">Autonomous workflows actively synchronized with Google Workspace, calendar schedules, and cloud document storage.</p>
+                    <span class="text-xs font-bold text-[#52b788] uppercase tracking-wider">Live Courtroom Docket Engine</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Real-Time Judicial Pipeline</h2>
+                    <p class="text-xs text-slate-400 mt-1">Live tracking of FIR dossiers, magistrate workload matching, clerk approvals, and summons delivery.</p>
                 </div>
-                <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="px-4 py-2 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-800/50 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                    <span>View Live Google Sheet Ledger</span>
-                    <span>↗</span>
-                </a>
+                <div class="flex items-center gap-2 text-xs font-mono text-[#c59b6d]">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#52b788] animate-ping"></span>
+                    <span>Synchronized with Google Sheets Docket</span>
+                </div>
             </div>
 
-            <!-- Fastn 4-Connector Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Dynamic Populated Judge Pipeline Board -->
+            <div id="judge-pipeline-container">
+                <!-- Dynamically rendered by judge_pipeline.js -->
+            </div>
+
+            <!-- Hardware-Accelerated 60FPS Neural Canvas Telemetry -->
+            <div class="glass-panel p-4 md:p-6 rounded-3xl border-slate-800 bg-slate-950/60 shadow-2xl relative overflow-hidden">
+                <div class="flex justify-between items-center mb-3 px-2">
+                    <span class="text-xs font-mono text-slate-400">Autonomous Micro-Agent Graph Architecture</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#1b4332]/30 text-[#74c69d] border border-[#2d6a4f]/40">60 FPS Hardware Accelerated</span>
+                </div>
+                <canvas id="judicial-canvas" class="w-full rounded-2xl block" style="height: 320px;"></canvas>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: APPLE-STYLE 3 CORE PILLARS ================= -->
+        <section id="pillars" class="max-w-7xl mx-auto px-6 space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-[#c59b6d] uppercase tracking-wider">Enterprise Judicial Infrastructure</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Engineered for absolute trust.</h2>
+                <p class="text-xs text-slate-400">Three pillars bridging autonomous AI efficiency with constitutional human rights safeguards.</p>
+            </div>
+
+            <!-- Bento Grid in Brown, Creme & Green -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <!-- Connector 1: Google Sheets Telemetry -->
-                <div class="glass-panel p-5 glow-card glow-card-emerald flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-2xl">📊</span>
-                            <span class="badge badge-confirmed">ACTIVE &bull; SYNCED</span>
-                        </div>
-                        <h4 class="font-bold text-white text-base">Google Sheets Telemetry</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Every summons dispatch, 2FA confirmation, and 72h default escalation is recorded in real-time in the master judicial ledger.
-                        </p>
+                <!-- Pillar 1: Fastn MCP -->
+                <div class="glass-panel p-7 rounded-3xl border-slate-800 relative overflow-hidden glow-card">
+                    <div class="w-12 h-12 rounded-2xl bg-[#1b4332]/30 text-[#74c69d] border border-[#2d6a4f]/40 flex items-center justify-center text-2xl font-bold mb-5 shadow-sm">
+                        ⚡
                     </div>
-                    <div class="pt-4 mt-3 border-t border-slate-800/80 text-[11px] font-mono text-emerald-400 truncate">
-                        ID: 1nWJj4TawBA4...Znw
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[#c59b6d] block mb-1">Pillar 01</span>
+                    <h3 class="text-xl font-bold text-white mb-2.5">Autonomous Fastn MCP Tools</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                        Replaces days of manual clerical data entry. Asynchronously connects to Google Sheets (Master Docket), Google Drive (Case Dossiers), Google Calendar (Hearing Slot Locks), and Google Docs.
+                    </p>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-[#52b788]">
+                        <span>✓ Zero-Copy Live Ledger Sync</span>
                     </div>
                 </div>
 
-                <!-- Connector 2: Google Calendar Scheduling -->
-                <div class="glass-panel p-5 glow-card flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-2xl">📅</span>
-                            <span class="badge badge-approved">ACTIVE &bull; PRIMARY</span>
-                        </div>
-                        <h4 class="font-bold text-white text-base">Google Calendar Engine</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Magistrate hearing blocks, courtroom allocations, and buffer corridors booked automatically upon Gate 1 clerk sign-off.
-                        </p>
+                <!-- Pillar 2: Dual-Gate HITL -->
+                <div class="glass-panel p-7 rounded-3xl border-slate-800 relative overflow-hidden glow-card">
+                    <div class="w-12 h-12 rounded-2xl bg-[#8a5731]/30 text-[#d4a373] border border-[#8a5731]/40 flex items-center justify-center text-2xl font-bold mb-5 shadow-sm">
+                        🛡️
                     </div>
-                    <div class="pt-4 mt-3 border-t border-slate-800/80 text-[11px] font-mono text-blue-400 truncate">
-                        Target: hasbeejayleo@gmail.com
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[#c59b6d] block mb-1">Pillar 02</span>
+                    <h3 class="text-xl font-bold text-white mb-2.5">Dual-Gate Human Guardrail</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                        <strong>Gate 1:</strong> Court clerk reviews and signs off on judge assignment before any summons leaves the registry. <strong>Gate 2:</strong> No bench warrant or police referral is ever dispatched without explicit human clerk authorization.
+                    </p>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-[#d4a373]">
+                        <span>✓ Constitutional Due Process Guard</span>
                     </div>
                 </div>
 
-                <!-- Connector 3: Google Drive Dossier Archive -->
-                <div class="glass-panel p-5 glow-card glow-card-amber flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-2xl">📁</span>
-                            <span class="badge badge-pending">ACTIVE &bull; ARCHIVE</span>
-                        </div>
-                        <h4 class="font-bold text-white text-base">Google Drive Archive</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Gate 2 Bench Warrant dossiers and certified case audit records archived directly into secure cloud drive folders.
-                        </p>
+                <!-- Pillar 3: Plain-Language Multilingual Transparency -->
+                <div class="glass-panel p-7 rounded-3xl border-slate-800 relative overflow-hidden glow-card">
+                    <div class="w-12 h-12 rounded-2xl bg-[#2d6a4f]/30 text-[#52b788] border border-[#2d6a4f]/40 flex items-center justify-center text-2xl font-bold mb-5 shadow-sm">
+                        🌐
                     </div>
-                    <div class="pt-4 mt-3 border-t border-slate-800/80 text-[11px] font-mono text-amber-300 truncate">
-                        Folder: 1IDfiawCj8u...S
-                    </div>
-                </div>
-
-                <!-- Connector 4: Google Docs Affidavit Engine -->
-                <div class="glass-panel p-5 glow-card glow-card-purple flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-2xl">📄</span>
-                            <span class="badge badge-police">ACTIVE &bull; RULE 12</span>
-                        </div>
-                        <h4 class="font-bold text-white text-base">Google Docs Legal Engine</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Auto-generates Human-Reviewable Rule 12 Bench Warrant drafts stamped with statutory warning banners.
-                        </p>
-                    </div>
-                    <div class="pt-4 mt-3 border-t border-slate-800/80 text-[11px] font-mono text-purple-300 truncate">
-                        Status: Human-in-the-Loop Locked
+                    <span class="text-[10px] font-mono uppercase tracking-widest text-[#c59b6d] block mb-1">Pillar 03</span>
+                    <h3 class="text-xl font-bold text-white mb-2.5">Bilingual Citizen Transparency</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                        Eliminates the 39% failure-to-appear rate caused by confusing legalese. Citizens receive plain-language summaries in English and Urdu Nastaliq with 2FA one-click attendance confirmation.
+                    </p>
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-[#74c69d]">
+                        <span>✓ Urdu Nastaliq & English Verification</span>
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <!-- ================= SECTION 3: CASE SHOWCASING CAROUSEL ================= -->
-        <section id="showcase" class="max-w-7xl mx-auto px-6 space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-800/80 pb-4">
-                <div>
-                    <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Real-World Case Dockets</span>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Live Judicial Intake Showcase</h2>
-                    <p class="text-xs text-slate-400 mt-1">Experience how LawFlow handles diverse case categories with automated micro-agents and 2FA citizen portals.</p>
-                </div>
-                <a href="/verify" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                    Open Full Citizen Portal &rarr;
-                </a>
+        <!-- ================= SECTION 4: JUDICIAL ACCESS GATEWAYS ================= -->
+        <section id="gateways" class="max-w-7xl mx-auto px-6 space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-[#52b788] uppercase tracking-wider">Access Docks</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Three dedicated judicial gateways.</h2>
+                <p class="text-xs text-slate-400">Tailored consoles for court officers, citizens, and law enforcement.</p>
             </div>
 
-            <!-- Case Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="showcase-cards-container">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <!-- Card 1: Traffic Radar Capture -->
-                <div class="glass-panel p-5 glow-card flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">Traffic Citation</span>
-                            <span class="text-[10px] font-mono text-emerald-400">Notice Dispatched</span>
-                        </div>
-                        <h3 class="text-base font-bold text-white leading-tight">State v. Hamza Farooq</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2">Automated speed radar capture: 122 km/h in 70 km/h zone on Expressway. Citation #TR-2026-991.</p>
-                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
-                            <div>Magistrate: <span class="text-white">Hon. Justice Aftab</span></div>
-                            <div>Courtroom: <span class="text-blue-400">Room 204</span></div>
-                            <div>Hearing: <span class="text-amber-300">2026-10-24 09:30</span></div>
-                        </div>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-mono text-slate-500">LF-2026-1042</span>
-                        <a href="/verify?token=tok_lf_2026_1042_188896abdd0c" target="_blank" class="px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 rounded-lg text-xs font-semibold transition">
-                            Verify Notice 📱
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 2: Dual-Party Criminal Domestic -->
-                <div class="glass-panel p-5 glow-card glow-card-purple flex flex-col justify-between border-purple-500/30">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">Dual-Party Criminal</span>
-                            <span class="text-[10px] font-mono text-purple-300">Safety Buffer 08:30</span>
-                        </div>
-                        <h3 class="text-base font-bold text-white leading-tight">State v. Kamran Sheikh</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2">Penal Code § 243: Emergency protective petition filed. Automated 30-min staggered arrival safety corridor active.</p>
-                        <div class="bg-purple-950/20 p-2.5 rounded-xl border border-purple-800/40 text-[11px] font-mono space-y-1 text-purple-200">
-                            <div>Complainant: <span class="text-white">Zoya Sheikh (East Gate)</span></div>
-                            <div>Respondent: <span class="text-white">Kamran Sheikh (Main Gate)</span></div>
-                            <div>Corridor: <span class="text-emerald-400">Physical Buffer 30m</span></div>
-                        </div>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-mono text-purple-400">LF-2026-2095</span>
-                        <a href="/verify?token=tok_sheikh_2095" target="_blank" class="px-3 py-1.5 bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 border border-purple-500/30 rounded-lg text-xs font-semibold transition">
-                            Verify Notice 📱
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 3: Municipal Sanitation -->
-                <div class="glass-panel p-5 glow-card glow-card-amber flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">Civil Infraction</span>
-                            <span class="text-[10px] font-mono text-amber-400">Gate 1 Pending</span>
-                        </div>
-                        <h3 class="text-base font-bold text-white leading-tight">Municipal Corp v. Apex Freight</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2">Sanitation Infraction § 44-A: Commercial grease discharge into public storm drains. Overdue inspection citation.</p>
-                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
-                            <div>Magistrate: <span class="text-white">Hon. Justice Bilal</span></div>
-                            <div>Courtroom: <span class="text-blue-400">Room 102</span></div>
-                            <div>Hearing: <span class="text-amber-300">2026-10-25 11:00</span></div>
-                        </div>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-mono text-slate-500">LF-2026-3180</span>
-                        <a href="/verify?token=tok_lf_2026_3180_da0855cf72a4" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition">
-                            Verify Notice 📱
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card 4: Misdemeanor Trespass -->
-                <div class="glass-panel p-5 glow-card glow-card-rose flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">Misdemeanor</span>
-                            <span class="text-[10px] font-mono text-rose-400">Police Escalation</span>
-                        </div>
-                        <h3 class="text-base font-bold text-white leading-tight">City Admin v. Bilal Qureshi</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2">Penal Code § 602: Repeated unauthorized commercial encroachment and trespass on municipal property.</p>
-                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
-                            <div>Magistrate: <span class="text-white">Hon. Justice Vance</span></div>
-                            <div>Courtroom: <span class="text-blue-400">Room 2D</span></div>
-                            <div>Status: <span class="text-rose-400">Gate 2 Warrant Ready</span></div>
-                        </div>
-                    </div>
-                    <div class="pt-4 mt-4 border-t border-slate-800 flex justify-between items-center">
-                        <span class="text-[10px] font-mono text-slate-500">LF-2026-4412</span>
-                        <a href="/verify?token=tok_qureshi_4412" target="_blank" class="px-3 py-1.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 rounded-lg text-xs font-semibold transition">
-                            Verify Notice 📱
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ================= SECTION 4: JUDICIAL GATEWAYS (CLERK + ADMIN + CITIZEN) ================= -->
-        <section id="gateways" class="max-w-7xl mx-auto px-6 space-y-6">
-            <div class="text-center max-w-3xl mx-auto space-y-2">
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Judicial Access Gateways</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Three Distinct Operational Consoles</h2>
-                <p class="text-sm text-slate-400">Role-isolated gateways ensuring zero citizen leakage into administrative or police dispatch surfaces.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                
-                <!-- Gateway 1: Citizen Verification -->
-                <div class="glass-panel p-6 glow-card flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">
-                            📱
-                        </div>
-                        <h3 class="text-xl font-bold text-white">Citizen Portal</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Open access for summons respondents. Features CNIC 2FA verification, AI plain-language case breakdowns, statutory rights checklists, Urdu/Spanish audio, and G-10/4 transit routing.
-                        </p>
-                    </div>
-                    <div class="pt-6">
-                        <a href="/verify" class="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
-                            <span>Open Citizen Portal</span>
-                            <span>&rarr;</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Gateway 2: Court Clerk Hub (3 Demo Accounts) -->
-                <div class="glass-panel p-6 glow-card glow-card-amber flex flex-col justify-between border-amber-500/30">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 bg-amber-600/20 text-amber-400 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">
+                <!-- Clerk Gateway -->
+                <a href="/clerk" class="glass-panel p-6 rounded-3xl border-slate-800 hover:border-[#2d6a4f] transition block group glow-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-[#1b4332]/30 text-[#74c69d] flex items-center justify-center text-xl">
                             ⚖️
                         </div>
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-white">Court Clerk Hub</h3>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400">3 Demo Clerks</span>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Command terminal for intake filing, magistrate matching, Fastn calendar bookings, Gate 1 sign-offs, and +72h time-travel simulation.
-                        </p>
-                        <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono space-y-1 text-slate-300">
-                            <div>Clerk 1: <span class="text-white">clerk@lawflow.court</span></div>
-                            <div>Clerk 2: <span class="text-white">ayesha.clerk@lawflow.court</span></div>
-                            <div>Clerk 3: <span class="text-white">bilal.clerk@lawflow.court</span></div>
-                        </div>
+                        <span class="text-xs font-mono text-slate-400 group-hover:text-white transition">Enter 🔒 →</span>
                     </div>
-                    <div class="pt-6">
-                        <a href="/clerk" class="w-full py-2.5 px-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
-                            <span>Access Clerk Gateway</span>
-                            <span>&rarr;</span>
-                        </a>
-                    </div>
-                </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Court Clerk Hub</h3>
+                    <p class="text-xs text-slate-400 mb-3">Sworn registrar console for Gate 1 hearing approvals, calendar overrides, and dossier inspection.</p>
+                    <span class="text-[10px] font-mono text-[#c59b6d]">Demo: 3 Sworn Clerks Configured</span>
+                </a>
 
-                <!-- Gateway 3: Police-Admin Console -->
-                <div class="glass-panel p-6 glow-card glow-card-purple flex flex-col justify-between border-purple-500/30">
-                    <div class="space-y-4">
-                        <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg">
+                <!-- Citizen Portal -->
+                <a href="/verify" class="glass-panel p-6 rounded-3xl border-slate-800 hover:border-[#52b788] transition block group glow-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-[#2d6a4f]/30 text-[#52b788] flex items-center justify-center text-xl">
+                            📱
+                        </div>
+                        <span class="text-xs font-mono text-slate-400 group-hover:text-white transition">Enter 📱 →</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Citizen Summons Portal</h3>
+                    <p class="text-xs text-slate-400 mb-3">Secure 2FA summons verification, plain-language legal explanation, and reschedule requests.</p>
+                    <span class="text-[10px] font-mono text-[#74c69d]">Multilingual: English & Urdu Nastaliq</span>
+                </a>
+
+                <!-- Police-Admin Gateway -->
+                <a href="/admin" class="glass-panel p-6 rounded-3xl border-slate-800 hover:border-[#8a5731] transition block group glow-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-[#8a5731]/30 text-[#d4a373] flex items-center justify-center text-xl">
                             🛡️
                         </div>
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-white">Police-Admin Console</h3>
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400">Superintendent</span>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Restricted to law enforcement leadership and court superintendents. Manage clerk accounts, review police warrant referrals, and inspect live dispatch feeds.
-                        </p>
-                        <div class="bg-purple-950/30 p-2.5 rounded-xl border border-purple-800/40 text-[11px] font-mono text-purple-200">
-                            Admin: <span class="text-white">admin@lawflow.gov</span> &bull; Pass: <span class="text-white">admin2026</span>
-                        </div>
+                        <span class="text-xs font-mono text-slate-400 group-hover:text-white transition">Enter 🛡️ →</span>
                     </div>
-                    <div class="pt-6">
-                        <a href="/admin" class="w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
-                            <span>Open Police-Admin</span>
-                            <span>&rarr;</span>
-                        </a>
-                    </div>
-                </div>
+                    <h3 class="text-lg font-bold text-white mb-1">Police-Admin Gateway</h3>
+                    <p class="text-xs text-slate-400 mb-3">Command console for Margalla Police Station 04, warrant rosters, and clerk administration.</p>
+                    <span class="text-[10px] font-mono text-[#d4a373]">Demo: Superintendent Rashid Khan</span>
+                </a>
 
-            </div>
-        </section>
-
-        <!-- ================= SECTION 5: 60FPS CANVAS VISUALIZER ================= -->
-        <section id="visualizer" class="max-w-7xl mx-auto px-6 space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 border-b border-slate-800/80 pb-4">
-                <div>
-                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Live Neural Canvas Telemetry</span>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Real-Time Judicial Pipeline</h2>
-                    <p class="text-xs text-slate-400 mt-1">Interactive 60fps graph visualizer tracking tokens from intake through micro-agents to citizen confirmation or police precinct.</p>
-                </div>
-                <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span>60 FPS Hardware Accelerated</span>
-                </div>
-            </div>
-
-            <!-- Canvas Container -->
-            <div class="glass-panel p-4 md:p-6 rounded-3xl border-slate-800 bg-slate-950/60 shadow-2xl relative overflow-hidden glow-card">
-                <canvas id="judicial-canvas" class="w-full rounded-2xl block" style="height: 380px;"></canvas>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 6: OFFICIAL COURT EMAIL CORRESPONDENCE ================= -->
-        <section id="correspondence" class="max-w-7xl mx-auto px-6 space-y-6">
-            <div class="text-center max-w-3xl mx-auto space-y-2">
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Official Court Registry Communication</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Live Dispatched Judicial Notice</h2>
-                <p class="text-xs text-slate-400">All respondent correspondence originates strictly from <span class="font-mono text-blue-400">241908@students.au.edu.pk</span>.</p>
-            </div>
-
-            <!-- Email Mockup Container -->
-            <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-700/80 rounded-2xl overflow-hidden shadow-2xl glow-card">
-                <!-- Email Window Bar -->
-                <div class="bg-slate-950 p-3.5 border-b border-slate-800 flex justify-between items-center text-xs">
-                    <div class="flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
-                        <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
-                        <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-                        <span class="ml-2 font-mono text-slate-400 text-[11px]">Official Court Registry Notice Feed</span>
-                    </div>
-                    <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-[10px]">DKIM VERIFIED</span>
-                </div>
-
-                <!-- Email Header Meta -->
-                <div class="p-4 bg-slate-950/60 border-b border-slate-800/80 text-xs font-mono space-y-1.5">
-                    <div class="flex justify-between items-center text-blue-400">
-                        <span><strong>From:</strong> 241908@students.au.edu.pk (Capital Territory Judicial Registry)</span>
-                    </div>
-                    <div class="text-slate-300"><strong>To:</strong> respondent@domain.com (Verified Citizen)</div>
-                    <div class="text-slate-400"><strong>Subject:</strong> ⚖️ OFFICIAL JUDICIAL SUMMONS: State v. Respondent (CASE-2026-0001)</div>
-                </div>
-
-                <!-- Rendered Email Body -->
-                <div class="p-6 text-xs text-slate-200 space-y-4 leading-relaxed">
-                    <div class="p-4 bg-blue-950/20 rounded-xl border border-blue-900/40">
-                        <h4 class="font-bold text-white text-sm mb-1">MANDATORY APPEARANCE SUMMONS</h4>
-                        <p class="text-slate-300 text-xs">
-                            Formal judicial proceedings have been docketed regarding Traffic Citation #TR-2026-991. You are required by law to appear before the presiding magistrate in Room 204.
-                        </p>
-                    </div>
-
-                    <div class="p-3 bg-rose-950/20 border-l-4 border-rose-500 rounded text-rose-200 text-xs">
-                        <strong>Statutory Warning:</strong> Failure to confirm receipt within 72 hours triggers automated Bench Warrant generation and referral to police enforcement units under Contempt of Summons Rule 12.
-                    </div>
-
-                    <div class="text-center pt-2">
-                        <a href="/verify" class="inline-block px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-xs shadow-md">
-                            Confirm Court Appearance (2FA) ⚡
-                        </a>
-                    </div>
-                </div>
             </div>
         </section>
 
     </main>
 
     <!-- Apple-Style Minimalist Footer -->
-    <footer class="bg-[#05070a] border-t border-slate-800/80 py-12 px-6 text-xs text-slate-400 z-10">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer class="border-t border-slate-800/80 py-10 px-6 text-xs text-slate-400 z-10 bg-[#100b08]/80 dark:bg-[#100b08]">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-xs shadow-md">
-                    ⚖️
-                </div>
-                <div>
-                    <span class="font-bold text-white">LawFlow Judicial System</span>
-                    <span class="text-slate-500 block text-[11px]">Capital Territory Judicial Registry &bull; NaSCon 2026 Agentika 2.0</span>
-                </div>
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-white">LawFlow</span>
+                <span class="text-slate-500">&bull;</span>
+                <span>Autonomous Judicial Intake & HITL Case Management</span>
             </div>
 
-            <div class="text-center text-slate-500 text-[11px] space-y-0.5">
-                <div>Team <strong class="text-slate-300">Ctrl Alt Elite</strong> &bull; Haseeb Jalil & Ansab saddique</div>
-                <div>Official Court Dispatch: <span class="font-mono text-blue-400">241908@students.au.edu.pk</span></div>
-            </div>
-
-            <!-- Discreet Staff Link (Strict isolation for respondent) -->
-            <div class="flex items-center gap-3 text-slate-500 text-[11px]">
-                <a href="/verify" class="hover:text-blue-400 transition">Citizen Portal</a>
+            <div class="flex items-center gap-5 text-slate-400 text-xs">
+                <a href="https://github.com/hasbeejay/LawFlow-Agentika" target="_blank" class="hover:text-white transition">GitHub Repo</a>
                 <span>&bull;</span>
-                <a href="/clerk" class="hover:text-slate-300 transition">Clerk Gateway 🔒</a>
+                <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="hover:text-white transition">Google Sheets Docket</a>
                 <span>&bull;</span>
-                <a href="/admin" class="hover:text-slate-300 transition">Police-Admin 🛡️</a>
+                <a href="/verify" class="hover:text-white transition">Citizen Portal</a>
+                <span>&bull;</span>
+                <a href="/clerk" class="hover:text-white transition">Clerk Gateway</a>
             </div>
 
         </div>
     </footer>
 
-    <!-- Interactive Script for Homepage & 3D Three.js Visualizer -->
+    <!-- Interactive Scripts for Homepage, Judge Pipeline & Smooth 3D Hero -->
     <script src="/static/js/visualizer.js"></script>
+    <script src="/static/js/judge_pipeline.js"></script>
     <script>
         const HomeApp = {
             init() {
@@ -557,9 +316,9 @@
                     if (window.JudicialVisualizer) {
                         new JudicialVisualizer('judicial-canvas');
                     }
-                }, 150);
+                }, 100);
 
-                // Initialize 3D Three.js Hero Visualizer
+                // Initialize smooth 3D Scales of Justice
                 HomeApp.init3DHero();
             },
 
@@ -568,91 +327,89 @@
                 if (!canvas || !window.THREE) return;
 
                 const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-                camera.position.z = 5;
+                const camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+                camera.position.z = 4.8;
 
-                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
                 renderer.setSize(canvas.clientWidth, canvas.clientHeight);
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-                // 3D Scales of Justice / Judicial Core Geometry
                 const group = new THREE.Group();
                 scene.add(group);
 
-                // Central Octahedron Core (Symbolizing Balance & Justice)
-                const coreGeo = new THREE.OctahedronGeometry(1.2, 0);
-                const coreMat = new THREE.MeshPhongMaterial({
-                    color: 0x3b82f6,
-                    emissive: 0x1d4ed8,
-                    wireframe: true,
-                    wireframeLinewidth: 2,
-                    transparent: true,
-                    opacity: 0.85
+                // Elegant Judicial Scales Geometry in Warm Antique Gold & Forest Laurel
+                const goldMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xc59b6d,
+                    roughness: 0.35,
+                    metalness: 0.8
                 });
-                const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-                group.add(coreMesh);
 
-                // Outer Glass Torus Ring
-                const torusGeo = new THREE.TorusGeometry(1.7, 0.04, 16, 100);
-                const torusMat = new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.6 });
-                const torus = new THREE.Mesh(torusGeo, torusMat);
-                torus.rotation.x = Math.PI / 3;
-                group.add(torus);
+                const greenMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x2d6a4f,
+                    roughness: 0.4,
+                    metalness: 0.6
+                });
 
-                // Floating Orbital Particles
-                const particleCount = 200;
-                const particleGeo = new THREE.BufferGeometry();
-                const positions = new Float32Array(particleCount * 3);
-                for (let i = 0; i < particleCount * 3; i += 3) {
-                    const radius = 2.0 + Math.random() * 1.5;
-                    const theta = Math.random() * Math.PI * 2;
-                    const phi = Math.random() * Math.PI;
-                    positions[i] = radius * Math.sin(phi) * Math.cos(theta);
-                    positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-                    positions[i + 2] = radius * Math.cos(phi);
-                }
-                particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                const particleMat = new THREE.PointsMaterial({ color: 0x93c5fd, size: 0.04, transparent: true, opacity: 0.7 });
-                const particles = new THREE.Points(particleGeo, particleMat);
-                scene.add(particles);
+                // Central Pillar
+                const pillarGeo = new THREE.CylinderGeometry(0.04, 0.06, 1.8, 16);
+                const pillar = new THREE.Mesh(pillarGeo, goldMaterial);
+                group.add(pillar);
 
-                // Lights
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                // Base
+                const baseGeo = new THREE.CylinderGeometry(0.3, 0.35, 0.08, 24);
+                const base = new THREE.Mesh(baseGeo, goldMaterial);
+                base.position.y = -0.9;
+                group.add(base);
+
+                // Crossbeam (Scales Arm)
+                const beamGeo = new THREE.CylinderGeometry(0.025, 0.025, 1.9, 16);
+                const beam = new THREE.Mesh(beamGeo, goldMaterial);
+                beam.rotation.z = Math.PI / 2;
+                beam.position.y = 0.8;
+                group.add(beam);
+
+                // Left Scale Pan
+                const panGeo = new THREE.SphereGeometry(0.24, 16, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2);
+                const panLeft = new THREE.Mesh(panGeo, greenMaterial);
+                panLeft.position.set(-0.85, 0.35, 0);
+                panLeft.rotation.x = Math.PI;
+                group.add(panLeft);
+
+                // Right Scale Pan
+                const panRight = new THREE.Mesh(panGeo, greenMaterial);
+                panRight.position.set(0.85, 0.35, 0);
+                panRight.rotation.x = Math.PI;
+                group.add(panRight);
+
+                // Elegant ambient & directional lighting
+                const ambientLight = new THREE.AmbientLight(0xffeedd, 1.2);
                 scene.add(ambientLight);
-                const pointLight = new THREE.PointLight(0x60a5fa, 2, 50);
-                pointLight.position.set(5, 5, 5);
-                scene.add(pointLight);
 
-                // Mouse Tracking
-                let mouseX = 0;
-                let mouseY = 0;
+                const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.8);
+                dirLight.position.set(2, 4, 3);
+                scene.add(dirLight);
+
+                // Gyro Mouse Tilt
+                let mouseX = 0, mouseY = 0;
                 window.addEventListener('mousemove', (e) => {
                     const rect = canvas.getBoundingClientRect();
-                    mouseX = ((e.clientX - rect.left) / canvas.clientWidth) * 2 - 1;
-                    mouseY = -(((e.clientY - rect.top) / canvas.clientHeight) * 2 - 1);
+                    mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
                 });
 
-                // Resize handler
-                window.addEventListener('resize', () => {
-                    if (!canvas.parentElement) return;
-                    const w = canvas.parentElement.clientWidth;
-                    const h = canvas.parentElement.clientHeight;
-                    camera.aspect = w / h;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(w, h);
-                });
-
-                // Animation loop
+                let clock = 0;
                 function animate() {
                     requestAnimationFrame(animate);
-                    group.rotation.y += 0.008;
-                    group.rotation.x += 0.004;
-                    torus.rotation.z += 0.01;
-                    particles.rotation.y -= 0.002;
+                    clock += 0.015;
 
-                    // Smooth mouse tilt
-                    group.rotation.y += (mouseX * 0.5 - group.rotation.y * 0.1) * 0.05;
-                    group.rotation.x += (-mouseY * 0.5 - group.rotation.x * 0.1) * 0.05;
+                    // Subtle, buttery scale balance oscillation
+                    beam.rotation.z = (Math.PI / 2) + Math.sin(clock) * 0.08;
+                    panLeft.position.y = 0.35 - Math.sin(clock) * 0.08;
+                    panRight.position.y = 0.35 + Math.sin(clock) * 0.08;
+
+                    // Smooth slow group rotation
+                    group.rotation.y = Math.sin(clock * 0.5) * 0.25 + (mouseX * 0.4);
+                    group.rotation.x = (mouseY * 0.2);
 
                     renderer.render(scene, camera);
                 }
