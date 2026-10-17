@@ -17,7 +17,7 @@ async def call_llm(system_prompt: str, user_prompt: str, temperature: float = 0.
 
     # --- Tier 1: Groq Cloud API ---
     if GROQ_API_KEY:
-        models_to_try = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "allam-2-7b"]
+        models_to_try = ["openai/gpt-oss-20b", "openai/gpt-oss-120b", "qwen/qwen3.8-27b", "allam-2-7b"]
         for model in models_to_try:
             try:
                 async with httpx.AsyncClient(timeout=10.0) as client:
