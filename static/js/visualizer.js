@@ -1,6 +1,5 @@
-// LawFlow Live Judicial Neural Visualizer & Real-Time Judge Pipeline
-// Hardware-accelerated 60fps canvas + dynamic case pipeline state
-
+// LawFlow Live Judicial Neural Visualizer (Canvas 60fps engine)
+// Rich Brown, Creme, and Forest Judicial Green styling
 class JudicialVisualizer {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
@@ -19,42 +18,42 @@ class JudicialVisualizer {
     }
 
     initDimensions() {
+        if (!this.canvas || !this.canvas.parentElement) return;
         const rect = this.canvas.parentElement.getBoundingClientRect();
-        this.width = rect.width || 800;
-        this.height = Math.max(340, rect.height || 340);
+        this.width = rect.width > 50 ? rect.width : (this.canvas.parentElement.clientWidth || 920);
+        this.height = 360;
         
-        // Crisp Retina scaling without transform resets
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         this.canvas.width = this.width * dpr;
         this.canvas.height = this.height * dpr;
         this.canvas.style.width = `${this.width}px`;
         this.canvas.style.height = `${this.height}px`;
-        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        
+        this.ctx.resetTransform?.();
+        this.ctx.scale(dpr, dpr);
     }
 
     initGraph() {
         const w = this.width;
         const h = this.height;
+        const isLight = document.documentElement.classList.contains('theme-light');
 
-        // Elegant Brown, Creme & Forest Green judicial nodes
+        // 6 Core Stages in the End-to-End Autonomous & HITL Pipeline
         this.nodes = [
-            { id: 'intake', label: 'FIR / E-Filing Intake', x: w * 0.10, y: h * 0.50, color: '#c59b6d', bg: '#2a1d15', pulse: 0, type: 'source' },
-            { id: 'agent_precedent', label: 'Agent 1: Precedents', x: w * 0.30, y: h * 0.22, color: '#40916c', bg: '#1c140e', pulse: 0, type: 'agent' },
-            { id: 'agent_calendar', label: 'Agent 2: Calendar Slot', x: w * 0.30, y: h * 0.50, color: '#40916c', bg: '#1c140e', pulse: 0, type: 'agent' },
-            { id: 'agent_judge', label: 'Agent 3: Judge Matcher', x: w * 0.30, y: h * 0.78, color: '#40916c', bg: '#1c140e', pulse: 0, type: 'agent' },
-            { id: 'gate1', label: 'HITL Gate 1: Clerk Approval', x: w * 0.52, y: h * 0.50, color: '#d4a373', bg: '#332318', pulse: 0, type: 'gate' },
-            { id: 'agent_notice', label: 'Agent 4: Summons Dispatch', x: w * 0.72, y: h * 0.28, color: '#52b788', bg: '#1c140e', pulse: 0, type: 'agent' },
-            { id: 'portal', label: 'Citizen Verified (2FA)', x: w * 0.90, y: h * 0.28, color: '#2d6a4f', bg: '#132a13', pulse: 0, type: 'portal' },
-            { id: 'gate2', label: 'HITL Gate 2: Police Escrow', x: w * 0.72, y: h * 0.72, color: '#be123c', bg: '#2a1217', pulse: 0, type: 'gate' },
-            { id: 'police', label: 'Margalla Police Precinct', x: w * 0.90, y: h * 0.72, color: '#8a5731', bg: '#2a1d15', pulse: 0, type: 'enforcement' }
+            { id: 'intake', label: 'E-Filing Intake', sub: 'FIR / Citations', x: w * 0.10, y: h * 0.50, color: '#c5a059', type: 'source' },
+            { id: 'agent_precedent', label: 'Agent 1: Precedent', sub: 'Groq LPU 0.04s', x: w * 0.28, y: h * 0.24, color: '#40916c', type: 'agent' },
+            { id: 'agent_judge', label: 'Agent 2: Judge Matcher', sub: 'Workload & Quota', x: w * 0.28, y: h * 0.76, color: '#40916c', type: 'agent' },
+            { id: 'gate1', label: 'HITL Gate 1', sub: 'Clerk Sign-Off', x: w * 0.48, y: h * 0.50, color: '#d4af37', type: 'gate' },
+            { id: 'agent_notice', label: 'Fastn Multi-Channel', sub: 'Sheets & Drive Sync', x: w * 0.68, y: h * 0.26, color: '#2d6a4f', type: 'agent' },
+            { id: 'portal', label: 'Citizen Portal', sub: '2FA Verification', x: w * 0.88, y: h * 0.26, color: '#52b788', type: 'portal' },
+            { id: 'gate2', label: 'HITL Gate 2', sub: 'Warrant Authorization', x: w * 0.68, y: h * 0.74, color: '#be123c', type: 'gate' },
+            { id: 'police', label: 'Police Escrow', sub: 'Margalla Precinct 04', x: w * 0.88, y: h * 0.74, color: '#9f1239', type: 'enforcement' }
         ];
 
         this.connections = [
             ['intake', 'agent_precedent'],
-            ['intake', 'agent_calendar'],
             ['intake', 'agent_judge'],
             ['agent_precedent', 'gate1'],
-            ['agent_calendar', 'gate1'],
             ['agent_judge', 'gate1'],
             ['gate1', 'agent_notice'],
             ['agent_notice', 'portal'],
@@ -62,17 +61,17 @@ class JudicialVisualizer {
             ['gate2', 'police']
         ];
 
-        // Smooth traveling data tokens (Brown, Gold & Forest Green)
+        // Traveling judicial token particles (Gold & Forest Green)
         this.particles = [];
-        const tokenColors = ['#52b788', '#c59b6d', '#74c69d', '#d4a373'];
-        for (let i = 0; i < 20; i++) {
+        const colors = ['#c5a059', '#52b788', '#d4af37', '#40916c'];
+        for (let i = 0; i < 28; i++) {
             const conn = this.connections[Math.floor(Math.random() * this.connections.length)];
             this.particles.push({
                 from: conn[0],
                 to: conn[1],
                 t: Math.random(),
-                speed: 0.0035 + Math.random() * 0.005,
-                color: tokenColors[i % tokenColors.length]
+                speed: 0.0035 + Math.random() * 0.0055,
+                color: colors[i % colors.length]
             });
         }
     }
@@ -85,6 +84,10 @@ class JudicialVisualizer {
             }
         });
 
+        window.addEventListener('lawflow-theme-changed', () => {
+            this.initGraph();
+        });
+
         this.canvas.addEventListener('mousemove', (e) => {
             const rect = this.canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -93,7 +96,7 @@ class JudicialVisualizer {
             let hit = null;
             for (const n of this.nodes) {
                 const dist = Math.hypot(n.x - mouseX, n.y - mouseY);
-                if (dist < 26) {
+                if (dist < 32) {
                     hit = n;
                     break;
                 }
@@ -113,17 +116,28 @@ class JudicialVisualizer {
             const to = this.nodes.find(n => n.id === toId);
             if (!from || !to) continue;
 
+            const grad = this.ctx.createLinearGradient(from.x, from.y, to.x, to.y);
+            if (isLight) {
+                grad.addColorStop(0, 'rgba(45, 106, 79, 0.20)');
+                grad.addColorStop(0.5, 'rgba(197, 160, 89, 0.35)');
+                grad.addColorStop(1, 'rgba(45, 106, 79, 0.20)');
+            } else {
+                grad.addColorStop(0, 'rgba(45, 106, 79, 0.25)');
+                grad.addColorStop(0.5, 'rgba(197, 160, 89, 0.40)');
+                grad.addColorStop(1, 'rgba(45, 106, 79, 0.25)');
+            }
+
             this.ctx.beginPath();
             this.ctx.moveTo(from.x, from.y);
             this.ctx.lineTo(to.x, to.y);
-            this.ctx.strokeStyle = isLight ? 'rgba(74, 56, 44, 0.18)' : 'rgba(217, 180, 145, 0.18)';
-            this.ctx.lineWidth = 1.5;
-            this.ctx.setLineDash([4, 4]);
+            this.ctx.strokeStyle = grad;
+            this.ctx.lineWidth = 1.8;
+            this.ctx.setLineDash([5, 5]);
             this.ctx.stroke();
             this.ctx.setLineDash([]);
         }
 
-        // 2. Animate and Draw Traveling Data Particles (Silky 60fps, no heavy shadowBlur)
+        // 2. Animate Traveling Data Particles
         for (const p of this.particles) {
             p.t += p.speed;
             if (p.t > 1) {
@@ -142,41 +156,59 @@ class JudicialVisualizer {
             this.ctx.beginPath();
             this.ctx.arc(px, py, 3.5, 0, Math.PI * 2);
             this.ctx.fillStyle = p.color;
+            this.ctx.shadowColor = p.color;
+            this.ctx.shadowBlur = 8;
             this.ctx.fill();
+            this.ctx.shadowBlur = 0;
         }
 
-        // 3. Draw Nodes (Hardware-accelerated rendering)
+        // 3. Draw Nodes
         const now = Date.now();
         for (const n of this.nodes) {
             const isHovered = this.hoveredNode && this.hoveredNode.id === n.id;
-            const radius = isHovered ? 22 : 17;
-            const pulse = (Math.sin(now * 0.003 + n.x * 0.01) + 1) * 0.5;
+            const radius = isHovered ? 26 : 20;
+            const pulse = (Math.sin(now * 0.003 + n.x * 0.1) + 1) * 0.5;
 
-            // Halo ring
+            // Halo pulse ring
             this.ctx.beginPath();
-            this.ctx.arc(n.x, n.y, radius + 5 * pulse, 0, Math.PI * 2);
-            this.ctx.strokeStyle = isLight ? 'rgba(45, 106, 79, 0.25)' : 'rgba(197, 155, 109, 0.3)';
-            this.ctx.lineWidth = 1;
+            this.ctx.arc(n.x, n.y, radius + 6 * pulse, 0, Math.PI * 2);
+            this.ctx.strokeStyle = n.color;
+            this.ctx.lineWidth = 1.2;
             this.ctx.stroke();
 
-            // Inner body
+            // Inner Node Body
             this.ctx.beginPath();
             this.ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = isLight ? '#ffffff' : n.bg;
+            this.ctx.fillStyle = isLight ? '#ffffff' : '#1c140f';
             this.ctx.fill();
             this.ctx.strokeStyle = n.color;
-            this.ctx.lineWidth = isHovered ? 3 : 2;
+            this.ctx.lineWidth = 2.5;
+            this.ctx.shadowColor = n.color;
+            this.ctx.shadowBlur = isHovered ? 16 : 8;
             this.ctx.stroke();
+            this.ctx.shadowBlur = 0;
 
-            // Node Label
-            this.ctx.font = isHovered ? '700 11px Plus Jakarta Sans, sans-serif' : '600 10.5px Plus Jakarta Sans, sans-serif';
-            this.ctx.fillStyle = isLight ? '#231812' : '#f5eedf';
+            // Node Center Icon / Indicator
+            this.ctx.beginPath();
+            this.ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+            this.ctx.fillStyle = n.color;
+            this.ctx.fill();
+
+            // Node Main Title
+            this.ctx.font = isHovered ? '700 12px "Plus Jakarta Sans", sans-serif' : '600 11px "Plus Jakarta Sans", sans-serif';
+            this.ctx.fillStyle = isLight ? '#20130b' : '#fcfbf7';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText(n.label, n.x, n.y + radius + 15);
+            this.ctx.fillText(n.label, n.x, n.y + radius + 16);
+
+            // Node Subtitle / Metric
+            this.ctx.font = '500 9px "JetBrains Mono", monospace';
+            this.ctx.fillStyle = isLight ? '#7a6352' : '#c5a059';
+            this.ctx.fillText(n.sub, n.x, n.y + radius + 29);
         }
 
         this.animationId = requestAnimationFrame(() => this.animate());
     }
 }
 
+// Global expose
 window.JudicialVisualizer = JudicialVisualizer;

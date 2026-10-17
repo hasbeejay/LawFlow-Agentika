@@ -1,63 +1,63 @@
-/* LawFlow Design System - Enterprise Judicial & Constitutional Legal Theme */
-/* Color Palette: Warm Saddle Brown, Parchment Creme & British Racing / Judicial Green */
+/* LawFlow Design System - Supreme Court & Judicial Enterprise Theme */
+/* Prestige Palette: Deep Walnut Brown, Warm Court Creme, & Forest Judicial Green */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
 
 :root {
-    /* Executive Dark Mode Palette: Walnut, Deep Cedar & Forest Laurel */
-    --bg-dark: #100b08;
+    /* Executive Judicial Dark Mode Palette (Rich Mahogany Walnut & Forest Green) */
+    --bg-dark: #120c08;
     --bg-surface: #1a120c;
-    --bg-card: rgba(26, 18, 12, 0.88);
-    --bg-card-hover: rgba(38, 27, 18, 0.95);
-    --border-glass: rgba(217, 180, 145, 0.14);
-    --border-subtle: rgba(217, 180, 145, 0.08);
+    --bg-card: rgba(28, 20, 14, 0.90);
+    --bg-card-hover: rgba(38, 28, 20, 0.98);
+    --border-glass: rgba(197, 160, 89, 0.18);
+    --border-subtle: rgba(255, 255, 255, 0.07);
     
     /* Judicial Accents */
     --primary: #2d6a4f;
-    --primary-hover: #1b4332;
-    --primary-soft: rgba(45, 106, 79, 0.2);
-    --judicial-brown: #8a5731;
-    --judicial-creme: #f5eedf;
-    --judicial-gold: #c59b6d;
-    --judicial-gold-soft: rgba(197, 155, 109, 0.16);
-    --judicial-emerald: #40916c;
+    --primary-hover: #40916c;
+    --primary-soft: rgba(45, 106, 79, 0.22);
+    --forest-green: #1b4332;
+    --forest-green-light: #52b788;
+    --judicial-gold: #c5a059;
+    --judicial-gold-soft: rgba(197, 160, 89, 0.16);
     --judicial-rose: #be123c;
-    --judicial-walnut: #2a1d15;
+    --judicial-amber: #d97706;
     
-    --text-main: #fbf8f3;
-    --text-muted: #c4b5a5;
-    --text-dim: #8c7a6b;
+    /* Typography */
+    --text-main: #fcfbf7;
+    --text-muted: #d4c7b4;
+    --text-dim: #998774;
     
     --glass-blur: blur(20px);
-    --transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    --card-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.65);
+    --transition-smooth: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, background-color 0.22s ease, border-color 0.22s ease;
+    --card-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.65);
 }
 
-/* Institutional Clean Light Mode Palette: Parchment Creme, Warm Linen & Racing Green */
+/* Institutional Clean Light Mode Palette (Warm Parchment Creme & Deep Forest Green) */
 .theme-light {
-    --bg-dark: #fbf8f3;
+    --bg-dark: #faf7f0;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
-    --bg-card-hover: #f7f2e9;
-    --border-glass: #e5dccb;
-    --border-subtle: #f0e9dc;
+    --bg-card-hover: #f7f2e7;
+    --border-glass: #e5d8c3;
+    --border-subtle: #f0e6d5;
     
     --primary: #1b4332;
-    --primary-hover: #081c15;
-    --primary-soft: rgba(27, 67, 50, 0.08);
-    --judicial-brown: #6b4226;
-    --judicial-creme: #fdfbf7;
-    --judicial-gold: #996515;
-    --judicial-gold-soft: rgba(153, 101, 21, 0.12);
-    --judicial-emerald: #2d6a4f;
-    --judicial-rose: #9f1239;
-    --judicial-walnut: #3a281e;
+    --primary-hover: #2d6a4f;
+    --primary-soft: rgba(27, 67, 50, 0.10);
+    --forest-green: #1b4332;
+    --forest-green-light: #2d6a4f;
+    --judicial-gold: #9c6f19;
+    --judicial-gold-soft: rgba(156, 111, 25, 0.12);
+    --judicial-rose: #be123c;
+    --judicial-amber: #b45309;
     
-    --text-main: #231812;
-    --text-muted: #4a382c;
-    --text-dim: #7a6657;
+    /* Deep crisp walnut typography for maximum contrast and readability */
+    --text-main: #20130b;
+    --text-muted: #4a3629;
+    --text-dim: #7a6352;
     
     --glass-blur: blur(16px);
-    --card-shadow: 0 10px 30px -5px rgba(35, 24, 18, 0.08), 0 2px 6px -1px rgba(35, 24, 18, 0.04);
+    --card-shadow: 0 10px 30px -5px rgba(32, 19, 11, 0.08), 0 2px 8px -1px rgba(32, 19, 11, 0.04);
 }
 
 * {
@@ -75,21 +75,21 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Dark Mode Ambient Radial Mesh (Polished Walnut & Subtle Forest Green) */
+/* Dark Mode Background: Warm Mahogany Radial Ambient Glow */
 body:not(.theme-light) {
     background-image: 
-        radial-gradient(circle at 14% 12%, rgba(45, 106, 79, 0.15) 0%, transparent 45%),
-        radial-gradient(circle at 86% 88%, rgba(138, 87, 49, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 35%, rgba(26, 18, 12, 0.5) 0%, transparent 70%);
+        radial-gradient(circle at 15% 15%, rgba(45, 106, 79, 0.12) 0%, transparent 48%),
+        radial-gradient(circle at 85% 85%, rgba(197, 160, 89, 0.09) 0%, transparent 45%),
+        radial-gradient(circle at 50% 40%, rgba(20, 14, 10, 0.5) 0%, transparent 70%);
     background-attachment: fixed;
 }
 
-/* Light Mode Ambient Radial Mesh (Warm Parchment Creme & Soft Sage/Linen) */
+/* Light Mode Background: Warm Legal Parchment Linen with Forest Green Tint */
 body.theme-light {
     background-image: 
-        radial-gradient(circle at 12% 12%, rgba(235, 227, 214, 0.7) 0%, transparent 50%),
-        radial-gradient(circle at 88% 85%, rgba(220, 235, 225, 0.6) 0%, transparent 50%),
-        radial-gradient(circle at 50% 40%, rgba(255, 253, 249, 0.5) 0%, transparent 70%);
+        radial-gradient(circle at 12% 12%, rgba(27, 67, 50, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 88% 88%, rgba(197, 160, 89, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(250, 247, 240, 0.8) 0%, transparent 70%);
     background-attachment: fixed;
 }
 
@@ -99,24 +99,24 @@ body.theme-light {
     backdrop-filter: var(--glass-blur);
     -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--border-glass);
-    border-radius: 20px;
+    border-radius: 18px;
     box-shadow: var(--card-shadow);
     transition: var(--transition-smooth);
+    will-change: transform;
 }
 
 .theme-light .glass-panel {
-    background: #ffffff !important;
-    border-color: #e5dccb !important;
-    box-shadow: 0 10px 30px -5px rgba(35, 24, 18, 0.08) !important;
+    background: #ffffff;
+    border-color: #e5d8c3;
 }
 
 .glass-panel:hover {
-    border-color: rgba(45, 106, 79, 0.35);
+    border-color: rgba(197, 160, 89, 0.35);
 }
 
 .theme-light .glass-panel:hover {
-    border-color: #2d6a4f !important;
-    box-shadow: 0 16px 35px -8px rgba(35, 24, 18, 0.12) !important;
+    border-color: #d1bfa5;
+    box-shadow: 0 16px 36px -8px rgba(32, 19, 11, 0.10);
 }
 
 /* Judicial Navigation Header */
@@ -125,44 +125,49 @@ body.theme-light {
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid var(--border-glass);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .theme-light .glass-nav {
-    background: rgba(251, 248, 243, 0.94) !important;
-    border-bottom-color: #e5dccb !important;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom-color: #e5d8c3;
 }
 
-/* Refined Hover Cards (Subdued, Dignified Elevation) */
+/* Hardware-Accelerated Smooth Hover Elevation */
 .glow-card {
     position: relative;
     transition: var(--transition-smooth);
+    will-change: transform;
 }
 
 .glow-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6), 0 0 16px -4px rgba(45, 106, 79, 0.25);
-    border-color: rgba(45, 106, 79, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px -10px rgba(0, 0, 0, 0.55), 0 0 16px -4px rgba(45, 106, 79, 0.25);
+    border-color: rgba(45, 106, 79, 0.45);
 }
 
 .theme-light .glow-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px -8px rgba(35, 24, 18, 0.12);
-    border-color: #2d6a4f !important;
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px -8px rgba(32, 19, 11, 0.12);
+    border-color: #2d6a4f;
 }
 
+/* Specialized Glow Accents (Subtle, Dignified) */
+.glow-card-green:hover,
 .glow-card-emerald:hover {
-    border-color: rgba(64, 145, 108, 0.5);
-    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6), 0 0 16px -4px rgba(64, 145, 108, 0.25);
+    border-color: rgba(45, 106, 79, 0.5);
+    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.5), 0 0 18px -4px rgba(45, 106, 79, 0.22);
 }
 
-.glow-card-brown:hover {
-    border-color: rgba(138, 87, 49, 0.5);
-    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6), 0 0 16px -4px rgba(138, 87, 49, 0.25);
+.glow-card-gold:hover,
+.glow-card-amber:hover {
+    border-color: rgba(197, 160, 89, 0.5);
+    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.5), 0 0 18px -4px rgba(197, 160, 89, 0.22);
 }
 
 .glow-card-rose:hover {
-    border-color: rgba(190, 18, 60, 0.5);
-    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6), 0 0 16px -4px rgba(190, 18, 60, 0.25);
+    border-color: rgba(190, 18, 60, 0.45);
+    box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.5), 0 0 16px -4px rgba(190, 18, 60, 0.2);
 }
 
 /* Light / Dark Mode Toggle Button */
@@ -170,38 +175,39 @@ body.theme-light {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 14px;
+    padding: 6px 12px;
     border-radius: 12px;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    background: rgba(38, 27, 18, 0.7);
-    color: #f5eedf;
+    background: rgba(38, 28, 20, 0.8);
+    color: #fcfbf7;
     border: 1px solid var(--border-glass);
     transition: var(--transition-smooth);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    will-change: transform;
 }
 
 .theme-toggle-btn:hover {
-    background: rgba(58, 40, 28, 0.95);
-    border-color: rgba(217, 180, 145, 0.35);
+    background: rgba(50, 36, 26, 0.95);
+    border-color: var(--judicial-gold);
     color: #ffffff;
+    transform: translateY(-1px);
 }
 
 .theme-light .theme-toggle-btn {
-    background: #ffffff !important;
-    color: #231812 !important;
-    border-color: #d9ceba !important;
-    box-shadow: 0 2px 6px rgba(35, 24, 18, 0.08) !important;
+    background: #ffffff;
+    color: #20130b;
+    border-color: #d1bfa5;
+    box-shadow: 0 2px 8px rgba(32, 19, 11, 0.08);
 }
 
 .theme-light .theme-toggle-btn:hover {
-    background: #f7f2e9 !important;
-    border-color: #2d6a4f !important;
-    color: #1b4332 !important;
+    background: #f7f2e7;
+    border-color: #9c6f19;
 }
 
-/* Institutional Status Badges */
+/* Judicial Badges */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -216,197 +222,128 @@ body.theme-light {
 }
 
 .badge-pending {
-    background: rgba(197, 155, 109, 0.14);
-    color: #d4a373;
-    border: 1px solid rgba(197, 155, 109, 0.4);
+    background: rgba(197, 160, 89, 0.15);
+    color: #e5c07b;
+    border: 1px solid rgba(197, 160, 89, 0.35);
 }
 
 .theme-light .badge-pending {
-    background: #fef7ed !important;
-    color: #9a5b13 !important;
-    border-color: #fed7aa !important;
+    background: #fef7e6;
+    color: #8c5d08;
+    border-color: #e5c78a;
 }
 
 .badge-approved {
-    background: rgba(45, 106, 79, 0.16);
+    background: rgba(45, 106, 79, 0.18);
     color: #52b788;
     border: 1px solid rgba(45, 106, 79, 0.4);
 }
 
 .theme-light .badge-approved {
-    background: #ecfdf5 !important;
-    color: #1b4332 !important;
-    border-color: #a7f3d0 !important;
+    background: #e8f5ee;
+    color: #1b4332;
+    border-color: #a3d9b8;
 }
 
 .badge-confirmed {
-    background: rgba(64, 145, 108, 0.2);
-    color: #74c69d;
-    border: 1px solid rgba(64, 145, 108, 0.45);
+    background: rgba(5, 150, 105, 0.16);
+    color: #34d399;
+    border: 1px solid rgba(5, 150, 105, 0.4);
 }
 
 .theme-light .badge-confirmed {
-    background: #e8f5e9 !important;
-    color: #1e4620 !important;
-    border-color: #a5d6a7 !important;
+    background: #e6f9f0;
+    color: #065f46;
+    border-color: #86efac;
 }
 
 .badge-force {
-    background: rgba(190, 18, 60, 0.16);
+    background: rgba(190, 18, 60, 0.18);
     color: #fda4af;
     border: 1px solid rgba(190, 18, 60, 0.45);
 }
 
 .theme-light .badge-force {
-    background: #fff1f2 !important;
-    color: #9f1239 !important;
-    border-color: #fecdd3 !important;
+    background: #fdf2f2;
+    color: #9f1239;
+    border-color: #fca5a5;
 }
 
 /* Professional Legal Buttons */
 .btn-primary {
     background: linear-gradient(135deg, #1b4332, #2d6a4f);
-    color: #fbf8f3;
-    font-weight: 700;
-    padding: 10px 20px;
+    color: #ffffff !important;
+    border: 1px solid rgba(197, 160, 89, 0.35);
     border-radius: 12px;
-    border: 1px solid rgba(82, 183, 136, 0.35);
-    cursor: pointer;
+    padding: 8px 18px;
+    font-weight: 700;
+    font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(27, 67, 50, 0.35);
     transition: var(--transition-smooth);
-    box-shadow: 0 4px 14px rgba(27, 67, 50, 0.35);
+    will-change: transform;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #2d6a4f, #1b4332);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #2d6a4f, #40916c);
+    border-color: var(--judicial-gold);
     box-shadow: 0 6px 20px rgba(45, 106, 79, 0.45);
+    transform: translateY(-2px);
 }
 
 .theme-light .btn-primary {
-    background: linear-gradient(135deg, #1b4332, #2d6a4f) !important;
-    color: #ffffff !important;
-}
-
-.btn-brown {
-    background: linear-gradient(135deg, #5c381e, #7a4b27);
-    color: #fbf8f3;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(217, 180, 145, 0.3);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-smooth);
-    box-shadow: 0 4px 14px rgba(92, 56, 30, 0.35);
-}
-
-.btn-brown:hover {
-    background: linear-gradient(135deg, #7a4b27, #5c381e);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(122, 75, 39, 0.45);
-}
-
-.btn-creme {
-    background: #f7f2e9;
-    color: #231812;
-    border: 1px solid #d9ceba;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-smooth);
-}
-
-.btn-creme:hover {
-    background: #ffffff;
-    border-color: #2d6a4f;
-    color: #1b4332;
-    transform: translateY(-1px);
-}
-
-.btn-success {
     background: linear-gradient(135deg, #1b4332, #2d6a4f);
-    color: #ffffff;
-    font-weight: 700;
-    padding: 9px 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(82, 183, 136, 0.3);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-smooth);
-    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.3);
+    color: #ffffff !important;
+    border-color: #9c6f19;
+    box-shadow: 0 4px 14px rgba(27, 67, 50, 0.25);
 }
 
-.btn-success:hover {
-    background: linear-gradient(135deg, #2d6a4f, #1b4332);
-    transform: translateY(-1px);
+.theme-light .btn-primary:hover {
+    background: linear-gradient(135deg, #245641, #357c5d);
+    box-shadow: 0 6px 18px rgba(27, 67, 50, 0.35);
 }
 
-.btn-danger {
-    background: linear-gradient(135deg, #9f1239, #be123c);
-    color: #ffffff;
-    font-weight: 700;
-    padding: 9px 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition-smooth);
-    box-shadow: 0 4px 12px rgba(159, 18, 57, 0.3);
-}
-
-.btn-danger:hover {
-    background: linear-gradient(135deg, #be123c, #9f1239);
-    transform: translateY(-1px);
-}
-
-.btn-ghost {
-    background: rgba(255, 255, 255, 0.05);
+/* Secondary Button */
+.btn-secondary {
+    background: rgba(38, 28, 20, 0.7);
     color: var(--text-main);
     border: 1px solid var(--border-glass);
-    padding: 8px 16px;
     border-radius: 12px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
     transition: var(--transition-smooth);
-    font-weight: 600;
 }
 
-.btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border-color: rgba(217, 180, 145, 0.3);
+.btn-secondary:hover {
+    background: rgba(50, 36, 26, 0.9);
+    border-color: var(--judicial-gold);
     transform: translateY(-1px);
 }
 
-.theme-light .btn-ghost {
-    background: #f7f2e9 !important;
-    color: #231812 !important;
-    border-color: #d9ceba !important;
+.theme-light .btn-secondary {
+    background: #ffffff;
+    color: #20130b;
+    border-color: #d1bfa5;
 }
 
-.theme-light .btn-ghost:hover {
-    background: #ede4d3 !important;
-    color: #1b4332 !important;
-    border-color: #2d6a4f !important;
+.theme-light .btn-secondary:hover {
+    background: #f7f2e7;
+    border-color: #9c6f19;
 }
 
 /* Modals */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(16, 11, 8, 0.82);
+    background: rgba(14, 9, 6, 0.82);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     display: flex;
@@ -415,11 +352,11 @@ body.theme-light {
     z-index: 100;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .theme-light .modal-overlay {
-    background: rgba(35, 24, 18, 0.45) !important;
+    background: rgba(32, 19, 11, 0.50);
 }
 
 .modal-overlay.active {
@@ -430,7 +367,7 @@ body.theme-light {
 .modal-box {
     background: var(--bg-card);
     border: 1px solid var(--border-glass);
-    border-radius: 22px;
+    border-radius: 20px;
     max-width: 650px;
     width: 92%;
     max-height: 85vh;
@@ -438,14 +375,13 @@ body.theme-light {
     padding: 28px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
     transform: translateY(16px) scale(0.98);
-    transition: var(--transition-smooth);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .theme-light .modal-box {
-    background: #ffffff !important;
-    border-color: #e5dccb !important;
-    box-shadow: 0 25px 50px -12px rgba(35, 24, 18, 0.18) !important;
-    color: #231812 !important;
+    background: #ffffff;
+    border-color: #e5d8c3;
+    box-shadow: 0 25px 50px -12px rgba(32, 19, 11, 0.20);
 }
 
 .modal-overlay.active .modal-box {
@@ -462,8 +398,8 @@ body.theme-light {
     background: var(--bg-card);
     backdrop-filter: blur(24px);
     border: 1px solid var(--border-glass);
-    border-radius: 20px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
     z-index: 90;
     display: flex;
     flex-direction: column;
@@ -473,9 +409,9 @@ body.theme-light {
 }
 
 .theme-light .sms-drawer {
-    background: #ffffff !important;
-    border-color: #e5dccb !important;
-    box-shadow: 0 20px 40px rgba(35, 24, 18, 0.14) !important;
+    background: #ffffff;
+    border-color: #e5d8c3;
+    box-shadow: 0 20px 40px rgba(32, 19, 11, 0.15);
 }
 
 .sms-drawer.open {
@@ -483,9 +419,9 @@ body.theme-light {
 }
 
 .sms-bubble {
-    background: rgba(38, 27, 18, 0.6);
+    background: rgba(38, 28, 20, 0.7);
     border: 1px solid var(--border-glass);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 12px;
     font-size: 0.85rem;
     position: relative;
@@ -493,9 +429,9 @@ body.theme-light {
 }
 
 .theme-light .sms-bubble {
-    background: #f7f2e9 !important;
-    border-color: #e5dccb !important;
-    color: #231812 !important;
+    background: #faf7f0;
+    border-color: #e5d8c3;
+    color: #20130b;
 }
 
 /* Audio Equalizer Bars */
@@ -517,172 +453,140 @@ body.theme-light {
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(16, 11, 8, 0.2);
+    background: rgba(0, 0, 0, 0.15);
 }
 .theme-light ::-webkit-scrollbar-track {
-    background: #f7f2e9;
+    background: #f4eee2;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(138, 87, 49, 0.35);
+    background: rgba(197, 160, 89, 0.3);
     border-radius: 999px;
 }
 .theme-light ::-webkit-scrollbar-thumb {
-    background: #d9ceba;
+    background: #c5a059;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #2d6a4f;
 }
 
-/* ======================================================== */
-/* COMPREHENSIVE LIGHT THEME OVERRIDES (CRISP & BUG-FREE)  */
-/* ======================================================== */
-
+/* ================= COMPREHENSIVE LIGHT THEME RULES & CONTRAST FIXES ================= */
 .theme-light h1,
 .theme-light h2,
 .theme-light h3,
 .theme-light h4,
 .theme-light .text-white {
-    color: #231812 !important;
+    color: #20130b !important;
 }
 
 .theme-light p,
 .theme-light span.text-slate-300,
 .theme-light span.text-slate-200,
-.theme-light div.text-slate-300,
-.theme-light div.text-slate-200 {
-    color: #4a382c !important;
+.theme-light span.text-slate-100 {
+    color: #4a3629 !important;
 }
 
 .theme-light .text-slate-400 {
-    color: #634f40 !important;
+    color: #7a6352 !important;
 }
 
 .theme-light .text-slate-500 {
-    color: #7a6657 !important;
+    color: #8c7361 !important;
 }
 
-.theme-light .text-blue-400,
-.theme-light .text-indigo-400,
-.theme-light .text-blue-300 {
-    color: #1b4332 !important;
-}
-
-.theme-light .text-emerald-400,
-.theme-light .text-emerald-300 {
-    color: #1b4332 !important;
-}
-
-.theme-light .text-amber-400,
-.theme-light .text-amber-300 {
-    color: #9a5b13 !important;
-}
-
-.theme-light .text-purple-400,
-.theme-light .text-purple-300 {
-    color: #6b4226 !important;
-}
-
-/* Light Background Overrides */
 .theme-light .bg-slate-900,
 .theme-light .bg-slate-950,
-.theme-light .bg-\[\#07090e\],
 .theme-light .bg-\[\#05070d\],
-.theme-light .bg-\[\#05070a\] {
+.theme-light .bg-\[\#07090e\],
+.theme-light .bg-\[\#05070a\],
+.theme-light .bg-\[\#080c16\] {
     background-color: #ffffff !important;
 }
 
-.theme-light .bg-slate-900\/30,
-.theme-light .bg-slate-900\/40,
 .theme-light .bg-slate-900\/50,
 .theme-light .bg-slate-900\/60,
 .theme-light .bg-slate-900\/70,
 .theme-light .bg-slate-900\/80,
 .theme-light .bg-slate-900\/90,
 .theme-light .bg-slate-950\/60,
-.theme-light .bg-slate-950\/70,
 .theme-light .bg-slate-950\/80,
-.theme-light .bg-slate-950\/90,
-.theme-light .bg-blue-950\/20,
-.theme-light .bg-purple-950\/20,
-.theme-light .bg-emerald-950\/20 {
-    background-color: #f7f2e9 !important;
+.theme-light .bg-slate-950\/90 {
+    background-color: #fbf8f2 !important;
 }
 
-/* Light Border Overrides */
 .theme-light .border-slate-800,
-.theme-light .border-slate-800\/80,
 .theme-light .border-slate-700,
-.theme-light .border-slate-700\/80,
-.theme-light .border-slate-700\/60,
-.theme-light .border-blue-900\/40,
-.theme-light .border-purple-900\/30 {
-    border-color: #e5dccb !important;
+.theme-light .border-slate-800\/80,
+.theme-light .border-slate-800\/90 {
+    border-color: #e5d8c3 !important;
 }
 
-/* Light Form Input Overrides */
 .theme-light input,
 .theme-light select,
 .theme-light textarea {
     background-color: #ffffff !important;
-    color: #231812 !important;
-    border-color: #d9ceba !important;
+    color: #20130b !important;
+    border-color: #d1bfa5 !important;
 }
 
 .theme-light input::placeholder,
 .theme-light textarea::placeholder {
-    color: #9c8b7c !important;
+    color: #a38f7d !important;
 }
 
 .theme-light input:focus,
 .theme-light select:focus,
 .theme-light textarea:focus {
-    border-color: #2d6a4f !important;
-    box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15) !important;
+    border-color: #1b4332 !important;
+    box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.12) !important;
 }
 
-/* Tables in Light Mode */
 .theme-light table thead tr {
-    background-color: #f7f2e9 !important;
-    border-color: #e5dccb !important;
+    background-color: #f7f2e7 !important;
+    border-color: #e5d8c3 !important;
 }
 
 .theme-light table thead th {
-    color: #4a382c !important;
-    font-weight: 700;
+    color: #4a3629 !important;
 }
 
 .theme-light table tbody tr {
-    border-color: #f0e9dc !important;
+    border-color: #f0e6d5 !important;
 }
 
 .theme-light table tbody tr:hover {
-    background-color: #fcf9f4 !important;
+    background-color: #faf6ee !important;
 }
 
-/* Code & Monospace in Light Mode */
 .theme-light code,
 .theme-light pre,
 .theme-light .font-mono {
-    color: #231812 !important;
+    color: #20130b;
 }
 
 .theme-light .modal-box label {
-    color: #4a382c !important;
+    color: #4a3629 !important;
 }
 
 .theme-light .lang-btn {
-    color: #5c4a3d !important;
+    color: #5c4535;
 }
 
 .theme-light .lang-btn:hover {
-    color: #1b4332 !important;
+    color: #20130b;
 }
 
-/* Clean Apple-style Pipeline & Stepper in Brown, Creme & Green */
-.pipeline-step {
-    transition: var(--transition-smooth);
+/* Judicial Green Accents */
+.text-forest-green {
+    color: #2d6a4f;
 }
-.pipeline-step.active {
-    border-color: #2d6a4f;
-    box-shadow: 0 0 0 2px rgba(45, 106, 79, 0.2);
+.theme-light .text-forest-green {
+    color: #1b4332;
+}
+
+/* Judicial Gold Accents */
+.text-judicial-gold {
+    color: #c5a059;
+}
+.theme-light .text-judicial-gold {
+    color: #9c6f19;
 }
