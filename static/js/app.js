@@ -263,8 +263,10 @@ const App = {
                 statusBadge = `<span class="badge badge-pending">48h Resent</span>`;
             } else if (c.status === 'FORCE_ACTION_PENDING_CLERK') {
                 statusBadge = `<span class="badge badge-force">Gate 2 Action</span>`;
+            } else if (c.status === 'POLICE_REFERRAL_AUTHORIZED') {
+                statusBadge = `<span class="badge badge-police">Gate 2 Authorized</span>`;
             } else if (c.status === 'POLICE_REFERRAL_DISPATCHED') {
-                statusBadge = `<span class="badge badge-police">Police Dispatched</span>`;
+                statusBadge = `<span class="badge badge-police">Police Handoff Confirmed</span>`;
             } else if (c.status === 'SCHEDULED_CONFIRMED') {
                 statusBadge = `<span class="badge badge-confirmed">Confirmed</span>`;
             } else {

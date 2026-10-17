@@ -42,6 +42,23 @@ LawFlow implements **6 codified Model Context Protocol (MCP) tools** accessible 
 5. `generate_secure_token`: Cryptographic 2FA tokens and one-touch respondent verification URLs.
 6. `dispatch_police_packet`: Digital bench warrant generation for police enforcement after 72-hour default.
 
+### Fastn workflow bridge
+
+LawFlow can POST events to provisioned Fastn workflow webhook URLs. Set
+`FASTN_GATE1_WEBHOOK_URL`, `FASTN_VERIFY_WEBHOOK_URL`, and
+`FASTN_GATE2_WEBHOOK_URL` in the deployment environment after creating the
+workflows in Fastn. Optionally set `FASTN_WEBHOOK_SECRET` when the receiving
+webhooks are configured to validate the matching HMAC signature. The example
+environment leaves these values blank; blank values mean the Fastn workflows
+are **not configured**. The status endpoint reports endpoint configuration,
+not the health of downstream Google or Slack connectors.
+
+The Fastn bridge does not use a guessed Fastn REST execution URL. Gate 1 keeps
+the existing application notice dispatch path; configure its Fastn workflow
+for calendar and ledger work so it does not send a duplicate summons. Gate 2
+must remain a human clerk action after the 72-hour case reaches
+`FORCE_ACTION_PENDING_CLERK`.
+
 ---
 
 ## 📱 4 Interactive UI Views

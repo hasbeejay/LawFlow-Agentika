@@ -21,7 +21,7 @@ from backend.agents.notice_agent import generate_notice_and_token, dispatch_live
 from backend.agents.safety_escalation_agent import generate_safety_separation_notice, compile_police_packet
 from backend.agents.correspondence_agent import draft_official_court_email
 from backend.agents.respondent_summary_agent import summarize_case_for_respondent
-from backend.fastn_client import trigger_fastn_workflow
+from backend.fastn_client import fastn_status, trigger_fastn_workflow
 
 
 logging.basicConfig(level=logging.INFO)
@@ -269,6 +269,9 @@ async def approve_gate_1(case_id: str):
         raise HTTPException(status_code=404, detail="Case not found")
 
     case = dict(row)
+    if case["status"] != "PENDING_CLERK_APPROVAL":
+        conn.close()
+        raise HTTPException(status_code=409, detail="Gate 1 approval is only available for cases pending clerk review.")
     now = time.time()
 
     # Agent 4: Generate formal token & summons
@@ -331,7 +334,17 @@ async def approve_gate_1(case_id: str):
     conn.close()
 
     # Trigger Fastn MCP Composable Workflow: Gate 1 Summons Dispatch (Google Calendar + Gmail + Sheets)
-    fastn_res = await trigger_fastn_workflow("lawflow.workflow.gate1_summons_dispatch", case)
+    fastn_payload = {
+        "event": "case.gate1_approved",
+        "case_id": case["id"],
+        "title": case["title"],
+        "respondent_name": case["respondent_name"],
+        "respondent_email": case.get("respondent_email"),
+        "hearing_date": case["hearing_date"],
+        "courtroom": case["courtroom"],
+        "judge_name": case.get("recommended_judge_name"),
+    }
+    fastn_res = await trigger_fastn_workflow("lawflow.workflow.gate1_summons_dispatch", fastn_payload)
 
     return {
         "status": "success",
@@ -339,7 +352,7 @@ async def approve_gate_1(case_id: str):
         "new_status": "NOTICE_SENT",
         "verification_link": v_link,
         "fastn_workflow": fastn_res,
-        "message": "Gate 1 approved! Encrypted summons and calendar reservation dispatched."
+        "message": "Gate 1 approved. LawFlow handled notice dispatch; the Fastn webhook result is reported separately."
     }
 
 @app.post("/api/cases/{case_id}/override-judge")
@@ -392,7 +405,7 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
     current_status = case["status"]
 
     # Only escalate if not acknowledged/scheduled or concluded
-    if current_status not in ["SCHEDULED_CONFIRMED", "RESOLVED_DISMISSED", "RESOLVED_PENALTY_PAID", "POLICE_REFERRAL_DISPATCHED"]:
+    if current_status not in ["SCHEDULED_CONFIRMED", "RESOLVED_DISMISSED", "RESOLVED_PENALTY_PAID", "POLICE_REFERRAL_AUTHORIZED", "POLICE_REFERRAL_DISPATCHED"]:
         if hours >= 72:
             current_status = "FORCE_ACTION_PENDING_CLERK"
             police_packet = compile_police_packet(
@@ -417,6 +430,9 @@ async def simulate_time(case_id: str, hours: int = Query(..., description="Simul
             ))
             await dispatch_live_sms_twilio(case["respondent_phone"], msg_72)
             await dispatch_live_email(case.get("respondent_email"), f"🚨 FINAL NOTICE (72H DEFAULT) - Case {case_id}", msg_72)
+
+            # Trigger Fastn MCP Workflow: 72h Default Escalation Review
+            await trigger_fastn_workflow("lawflow.workflow.72h_default_escalation", case)
 
         elif hours >= 48:
             current_status = "NOTICE_RESENT_48H"
@@ -468,36 +484,48 @@ async def confirm_police_referral(case_id: str):
         raise HTTPException(status_code=404, detail="Case not found")
 
     case = dict(row)
+    if case["status"] != "FORCE_ACTION_PENDING_CLERK":
+        conn.close()
+        raise HTTPException(status_code=409, detail="Gate 2 referral requires a 72-hour case pending clerk review.")
     now = time.time()
     c.execute("""
-    UPDATE cases SET status = 'POLICE_REFERRAL_DISPATCHED', updated_at = ?,
-    clerk_notes = 'Clerk Gate 2 Confirmed. Warrant Packet transferred to Margalla Police Judicial Enforcement Unit.'
+    UPDATE cases SET status = 'POLICE_REFERRAL_AUTHORIZED', updated_at = ?,
+    clerk_notes = 'Clerk Gate 2 authorized. External police handoff is not confirmed by this action.'
     WHERE id = ?
     """, (now, case_id))
 
-    # Log police dispatch notification
+    # Record the clerk authorization; this local record is not a police dispatch.
     c.execute("""
     INSERT INTO sms_logs (id, case_id, recipient, phone, message, token_link, dispatch_type, timestamp, simulated_hour)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        str(uuid.uuid4())[:8], case_id, "Margalla Police Division Unit 04",
-        "POLICE-DISPATCH-LINE",
-        f"CERTIFIED BENCH WARRANT DISPATCH: Case {case_id}. Warrant docket transferred for execution.",
-        None, "POLICE_WARRANT_DISPATCH", now, 72
+        str(uuid.uuid4())[:8], case_id, "Clerk Gate 2 Authorization",
+        "NOT_DISPATCHED",
+        f"Clerk authorized Gate 2 referral for Case {case_id}; external handoff status requires confirmation.",
+        None, "POLICE_REFERRAL_AUTHORIZATION", now, 72
     ))
 
     conn.commit()
     conn.close()
 
     # Trigger Fastn MCP Composable Workflow: Gate 2 Bench Warrant & Police Alert (Google Docs + Drive + Slack)
-    fastn_res = await trigger_fastn_workflow("lawflow.workflow.gate2_bench_warrant_authorized", case)
+    fastn_payload = {
+        "event": "case.gate2_warrant_authorized",
+        "case_id": case["id"],
+        "title": case["title"],
+        "respondent_name": case["respondent_name"],
+        "hearing_date": case["hearing_date"],
+        "courtroom": case["courtroom"],
+        "police_packet": json.loads(case["police_packet"]) if case.get("police_packet") else None,
+    }
+    fastn_res = await trigger_fastn_workflow("lawflow.workflow.gate2_bench_warrant_authorized", fastn_payload)
 
     return {
         "status": "success",
         "case_id": case_id,
-        "new_status": "POLICE_REFERRAL_DISPATCHED",
+        "new_status": "POLICE_REFERRAL_AUTHORIZED",
         "fastn_workflow": fastn_res,
-        "message": "Gate 2 authorized! Bench Warrant and Police Referral successfully dispatched via Fastn."
+        "message": "Gate 2 authorized. Fastn workflow result is reported separately; police handoff is not confirmed by this response."
     }
 
 @app.post("/api/cases/{case_id}/conclude")
@@ -573,6 +601,9 @@ async def confirm_appearance(payload: VerifyIdentityRequest):
         raise HTTPException(status_code=404, detail="Summons token invalid.")
 
     case = dict(row)
+    if case["status"] not in ("NOTICE_SENT", "NOTICE_RESENT_48H"):
+        conn.close()
+        raise HTTPException(status_code=409, detail="This summons is not awaiting appearance confirmation.")
     if case["respondent_national_id_last4"] != payload.national_id_last4.strip():
         conn.close()
         raise HTTPException(status_code=400, detail="Authentication failed: Last 4 digits do not match judicial records.")
@@ -598,7 +629,15 @@ async def confirm_appearance(payload: VerifyIdentityRequest):
     conn.close()
 
     # Trigger Fastn MCP Composable Workflow: Respondent 2FA Acknowledged (Google Calendar RSVP + Google Maps Transit + Sheets)
-    fastn_res = await trigger_fastn_workflow("lawflow.workflow.respondent_2fa_acknowledged", case)
+    fastn_payload = {
+        "event": "case.respondent_confirmed",
+        "case_id": case["id"],
+        "title": case["title"],
+        "respondent_email": case.get("respondent_email"),
+        "hearing_date": case["hearing_date"],
+        "courtroom": case["courtroom"],
+    }
+    fastn_res = await trigger_fastn_workflow("lawflow.workflow.respondent_2fa_acknowledged", fastn_payload)
 
     return {
         "status": "confirmed",
@@ -722,7 +761,7 @@ def toggle_clerk_status(clerk_id: str):
 def list_police_warrants():
     conn = get_connection()
     c = conn.cursor()
-    c.execute("SELECT * FROM cases WHERE status IN ('FORCE_ACTION_PENDING_CLERK', 'POLICE_REFERRAL_DISPATCHED') ORDER BY updated_at DESC")
+    c.execute("SELECT * FROM cases WHERE status IN ('FORCE_ACTION_PENDING_CLERK', 'POLICE_REFERRAL_AUTHORIZED', 'POLICE_REFERRAL_DISPATCHED') ORDER BY updated_at DESC")
     cases = [dict(r) for r in c.fetchall()]
     conn.close()
     for item in cases:
@@ -770,57 +809,59 @@ async def get_respondent_summary(case_id: str):
 @app.get("/api/fastn/connectors")
 def get_fastn_connectors():
     """
-    Exposes active Fastn MCP SaaS connectors status for Codex and the Frontend.
+    Exposes configured workflow webhook status. Connector health is not checked here.
     """
-    fastn_configured = bool(os.getenv("FASTN_API_KEY"))
+    integration = fastn_status()
     return {
         "status": "success",
         "mcp_server": "fastn-codex",
-        "mode": "live" if fastn_configured else "simulated_active",
+        "mode": integration["mode"],
         "court_sender": COURT_EMAIL,
-        "connectors_count": 6,
+        "connector_health": integration["connector_health"],
+        "configured_workflows": integration["configured_workflows"],
+        "workflows": integration["workflows"],
         "connectors": [
             {
                 "name": "Google Calendar",
                 "identifier": "fastn/google-calendar",
-                "status": "connected",
-                "auth": "Chamber OAuth2",
+                "status": "unknown",
                 "role": "Magistrate Hearing Block Scheduling & Calendar Invites"
             },
             {
                 "name": "Google Maps & Routes",
                 "identifier": "fastn/google-maps",
-                "status": "connected",
-                "auth": "Geocoding API Key",
+                "status": "unknown",
                 "role": "Sector G-10/4 Islamabad Judicial Complex Transit & Gate Assignment"
             },
             {
                 "name": "Google Docs Engine",
                 "identifier": "fastn/google-docs",
-                "status": "connected",
-                "auth": "Service Account",
+                "status": "unknown",
                 "role": "Certified Rule 12 Bench Warrant Affidavit Document Generation"
             },
             {
                 "name": "Google Sheets Telemetry",
                 "identifier": "fastn/google-sheets",
-                "status": "connected",
-                "auth": "Service Account",
+                "status": "unknown",
                 "role": "Real-Time Master Judicial Docket Audit Ledger & KPI Sync"
             },
             {
                 "name": "Gmail Service",
                 "identifier": "fastn/gmail",
-                "status": "connected",
-                "auth": "Google Workspace API",
+                "status": "unknown",
                 "role": "Official Summons Dispatch from 241908@students.au.edu.pk"
             },
             {
                 "name": "Margalla Police Slack",
                 "identifier": "fastn/slack",
-                "status": "connected",
-                "auth": "Bot Token / Webhook",
+                "status": "unknown",
                 "role": "Station 04 Dispatch Channel Emergency Arrest Alerting"
+            },
+            {
+                "name": "Google Drive Archive",
+                "identifier": "fastn/google-drive",
+                "status": "unknown",
+                "role": "Case dossier and warrant document archival"
             }
         ]
     }

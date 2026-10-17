@@ -292,8 +292,10 @@ const AdminApp = {
             const bail = packet.bail_set || 'PKR 50,000';
 
             const statusBadge = w.status === 'POLICE_REFERRAL_DISPATCHED'
-                ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">Physical Arrest Warrant Issued</span>`
-                : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">72h Default (Awaiting Gate 2)</span>`;
+                ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">Police Handoff Confirmed</span>`
+                : w.status === 'POLICE_REFERRAL_AUTHORIZED'
+                    ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">Gate 2 Authorized</span>`
+                    : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">72h Default (Awaiting Gate 2)</span>`;
 
             return `
                 <tr class="border-b border-slate-800 hover:bg-slate-900/50 transition">

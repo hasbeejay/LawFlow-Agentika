@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary & Codex Role
 
-The objective of this implementation plan is to provide **Codex** with an exact, production-ready blueprint to integrate the **Fastn Model Context Protocol (MCP) Server** with **LawFlow**.
+This document is a workflow design draft for integrating Fastn with LawFlow. Connector availability, authentication, legal templates, and webhook behavior must be verified in the target Fastn workspace before production use.
 
 Fastn bridges LawFlow’s 5 Groq-powered micro-agents with external SaaS tools using standardized MCP JSON-RPC protocols. Instead of maintaining disjointed OAuth2 code, Codex will use Fastn's composable connectors to execute real-world judicial operations across:
 - **Google Calendar** (Hearing slot reservations & chamber buffers)
@@ -23,6 +23,8 @@ Fastn bridges LawFlow’s 5 Groq-powered micro-agents with external SaaS tools u
 ---
 
 ## 2. Fastn MCP Server Configuration
+
+> **Implementation note:** The manifest below is a proposal, not a verified Fastn package configuration. The current LawFlow code does not launch this MCP server or use `FASTN_API_KEY`; it posts to workflow webhook URLs supplied by the Fastn workspace. Keep these setup paths distinct. The sample identifiers and secret-like values in this design are placeholders and must not be copied as credentials.
 
 ### 2.1 Codex / MCP Client Manifest (`mcp_config.json`)
 Place this configuration in your root MCP client or Codex settings:
@@ -322,6 +324,10 @@ Clerk Approves Intake        Citizen Verifies via 2FA        72h Default Warrant
 ---
 
 ## 5. FastAPI Python Webhook Bridge (`backend/fastn_client.py`)
+
+> **Repository alignment:** LawFlow currently runs a FastAPI application and sends events to provisioned workflow webhooks. This is an HTTP webhook bridge, not a local stdio MCP server. Do not assume that `https://api.fastn.ai/v1/workflows/{id}/execute` is a supported execution endpoint. Configure the actual webhook URLs created by the Fastn workspace as `FASTN_GATE1_WEBHOOK_URL`, `FASTN_VERIFY_WEBHOOK_URL`, and `FASTN_GATE2_WEBHOOK_URL`; optionally configure `FASTN_WEBHOOK_SECRET` when the receiving side validates the HMAC header. See `.env.example`. The application reports webhook configuration separately from downstream connector health.
+
+Gate 1 already dispatches notices through LawFlow's existing SMTP/Twilio path. Its Fastn workflow should therefore handle calendar and ledger actions without sending a duplicate summons. Gate 2 is available only after the case reaches `FORCE_ACTION_PENDING_CLERK`; connector actions and any police handoff must remain subject to the clerk's explicit approval. The app's existing simulation is not evidence that external Fastn connectors ran.
 
 Codex must generate the backend bridge file [backend/fastn_client.py](file:///Users/hasbeejay/Desktop/Agentika%202.0/LawFlow-Agentika/backend/fastn_client.py) to trigger Fastn workflows asynchronously without blocking FastAPI:
 
