@@ -404,6 +404,34 @@ When prompting Codex to build or extend this integration:
 5. **Step 5:** Hook `trigger_fastn_workflow("lawflow.workflow.gate2_bench_warrant_authorized", case_dict)` inside `/api/cases/{case_id}/confirm-police-referral`.
 6. **Step 6:** Run `pytest` or verify with `./auto_commit_push.sh` to stream commits to GitHub.
 
+
+---
+
+## 8. Live Provisioned Workflows & Google Workspace Resources
+
+The first 4 Fastn connectors have been provisioned, tested, and published live in the Fastn workspace:
+
+### 8.1 Active Google Workspace Target Resources
+- **Google Sheets Audit Ledger:** [LawFlow Master Docket](https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0)
+  - `spreadsheetId`: `1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw`
+  - Range: `Sheet1!A:G`
+  - Columns: `[CASE_ID, CASE_TITLE, RESPONDENT_NAME, RESPONDENT_EMAIL, HEARING_DATE, STATUS, LAST_UPDATED]`
+- **Google Drive Case Dossier Archive:** [LawFlow Drive Archive](https://drive.google.com/drive/folders/1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS?usp=share_link)
+  - `folderId`: `1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS`
+- **Google Calendar Hearing Schedule:**
+  - `calendarId`: `primary` (`hasbeejayleo@gmail.com`)
+- **Google Docs Legal Affidavit Engine:**
+  - Dynamic Rule 12 Bench Warrant creation with human review banner.
+
+### 8.2 Published Fastn Workflows & Webhooks
+
+| Workflow Slug | Workflow ID | Trigger Webhook URL | Actions Called |
+| :--- | :--- | :--- | :--- |
+| **`lawflow-gate1-intake`** | `wf_a92217501bf6` | `https://webhooks.fastn.dev/prod/triggers/personal_891dd5d02fba4545b73b/webhooks/41b25bc0-f6a5-428d-9a3c-d11f16d3c38a` | `googleCalendar.createEvent`, `googleSheets.appendValues` |
+| **`lawflow-respondent-verify`** | `wf_7c406ddcd7b6` | `https://webhooks.fastn.dev/prod/triggers/personal_891dd5d02fba4545b73b/webhooks/61407206-aa29-4e57-9ada-224bc0b56054` | `googleSheets.appendValues` |
+| **`lawflow-default-72h`** | `wf_97de36fc863f` | `https://webhooks.fastn.dev/prod/triggers/personal_891dd5d02fba4545b73b/webhooks/2743a58f-b71d-4fb9-a148-d1292258e032` | `googleSheets.appendValues` |
+| **`lawflow-gate2-warrant`** | `wf_58420df40956` | `https://webhooks.fastn.dev/prod/triggers/personal_891dd5d02fba4545b73b/webhooks/8ec3eea2-ab16-4b5b-960d-4c63519d8a14` | `googleDocs.createDocument`, `googleDocs.appendText`, `googleDrive.uploadFile`, `googleSheets.appendValues` |
+
 ---
 
 ### Hackathon Theme Alignment Verification

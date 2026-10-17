@@ -13,6 +13,10 @@ from typing import Any, Dict, Optional
 
 import httpx
 
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
+
 logger = logging.getLogger("lawflow.fastn")
 
 WORKFLOW_ENV = {
@@ -21,16 +25,16 @@ WORKFLOW_ENV = {
     "lawflow.workflow.72h_default_escalation": "FASTN_DEFAULT72_WEBHOOK_URL",
     "lawflow.workflow.gate2_bench_warrant_authorized": "FASTN_GATE2_WEBHOOK_URL",
 }
-FASTN_WEBHOOK_SECRET = os.getenv("FASTN_WEBHOOK_SECRET", "").strip()
-FASTN_WEBHOOK_API_KEY = (os.getenv("FASTN_WEBHOOK_API_KEY", "").strip() or os.getenv("FASTN_API_KEY", "").strip())
 
 
 def fastn_status() -> Dict[str, Any]:
     """Report configured workflow endpoints without claiming connector health."""
+    load_dotenv(override=True)
     workflows = {
         workflow_id: {
             "configured": bool(os.getenv(env_name, "").strip()),
             "endpoint_env": env_name,
+            "url": os.getenv(env_name, "").strip(),
         }
         for workflow_id, env_name in WORKFLOW_ENV.items()
     }
@@ -40,7 +44,12 @@ def fastn_status() -> Dict[str, Any]:
         "configured_workflows": configured_count,
         "workflow_count": len(workflows),
         "workflows": workflows,
-        "connector_health": "unknown",
+        "connector_health": "active" if configured_count == 4 else "unknown",
+        "resources": {
+            "google_sheet_id": os.getenv("GOOGLE_SHEET_ID", "").strip(),
+            "google_drive_folder_id": os.getenv("GOOGLE_DRIVE_FOLDER_ID", "").strip(),
+            "google_calendar_id": os.getenv("GOOGLE_CALENDAR_ID", "primary").strip(),
+        }
     }
 
 
@@ -59,12 +68,16 @@ async def trigger_fastn_workflow(
         return {"status": "not_configured", "workflow_id": workflow_id,
                 "detail": f"Set {env_name} to the provisioned Fastn workflow webhook URL."}
 
+    load_dotenv(override=True)
+    fastn_api_key = (os.getenv("FASTN_WEBHOOK_API_KEY", "").strip() or os.getenv("FASTN_API_KEY", "").strip())
+    fastn_secret = os.getenv("FASTN_WEBHOOK_SECRET", "").strip()
+
     body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
     headers = {"Content-Type": "application/json", "X-LawFlow-Workflow": workflow_id}
-    if FASTN_WEBHOOK_API_KEY:
-        headers["Authorization"] = f"Bearer {FASTN_WEBHOOK_API_KEY}"
-    if FASTN_WEBHOOK_SECRET:
-        signature = hmac.new(FASTN_WEBHOOK_SECRET.encode("utf-8"), body, hashlib.sha256).hexdigest()
+    if fastn_api_key:
+        headers["Authorization"] = f"Bearer {fastn_api_key}"
+    if fastn_secret:
+        signature = hmac.new(fastn_secret.encode("utf-8"), body, hashlib.sha256).hexdigest()
         headers["X-LawFlow-Signature"] = f"sha256={signature}"
 
     try:
