@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/theme.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
@@ -60,6 +61,10 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     Fastn Live Cloud 🟢
                 </span>
+
+                <button type="button" class="theme-toggle-btn" onclick="LawFlowTheme.toggle()" aria-label="Toggle theme">
+                    <span>☀️</span> <span class="hidden sm:inline">Light Mode</span>
+                </button>
 
                 <div class="flex items-center bg-slate-900/90 border border-slate-800 rounded-xl p-0.5 text-xs backdrop-blur-md shadow-inner">
                     <button id="lang-btn-en" onclick="VerifyPortal.setLanguage('en')" class="lang-btn px-2.5 py-1 rounded-lg bg-blue-600 text-white font-semibold transition shadow-sm">EN</button>

@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Three.js for Interactive 3D Judicial Visualizer -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="/static/js/theme.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -57,8 +58,13 @@
                 <a href="#gateways" class="hover:text-white transition">Judicial Gateways</a>
             </nav>
 
-            <!-- Right Actions: Quick Access Docks -->
+            <!-- Right Actions: Quick Access Docks & Theme Toggle -->
             <div class="flex items-center gap-2.5">
+                <!-- Theme Switcher Button -->
+                <button type="button" class="theme-toggle-btn" onclick="LawFlowTheme.toggle()" title="Toggle Light / Dark Mode">
+                    <span>☀️</span>
+                    <span class="hidden sm:inline">Light Mode</span>
+                </button>
                 <a href="/clerk" class="hidden sm:flex px-3.5 py-2 bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-700/80 rounded-xl text-xs font-bold transition items-center gap-1.5">
                     <span>Clerk Gateway</span>
                     <span class="text-[10px]">🔒</span>

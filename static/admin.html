@@ -6,6 +6,7 @@
     <title>LawFlow — Police-Admin Command & Clerk Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/theme.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -111,6 +112,9 @@
 
         <!-- Right Action Items -->
         <div class="flex items-center gap-2.5">
+            <button type="button" class="theme-toggle-btn" onclick="LawFlowTheme.toggle()" aria-label="Toggle theme">
+                <span>☀️</span> <span class="hidden sm:inline">Light Mode</span>
+            </button>
             <a href="https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0" target="_blank" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-700/40 rounded-xl text-xs font-semibold transition">
                 <span>📊</span>
                 <span>Google Sheets Docket</span>
