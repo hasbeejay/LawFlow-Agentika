@@ -42,30 +42,38 @@ LawFlow implements **6 codified Model Context Protocol (MCP) tools** accessible 
 5. `generate_secure_token`: Cryptographic 2FA tokens and one-touch respondent verification URLs.
 6. `dispatch_police_packet`: Digital bench warrant generation for police enforcement after 72-hour default.
 
-### Fastn workflow bridge
+### Fastn Production Cloud Workflows (100% Live)
 
-LawFlow can POST events to provisioned Fastn workflow webhook URLs. Set
-`FASTN_GATE1_WEBHOOK_URL`, `FASTN_VERIFY_WEBHOOK_URL`, and
-`FASTN_GATE2_WEBHOOK_URL` in the deployment environment after creating the
-workflows in Fastn. Optionally set `FASTN_WEBHOOK_SECRET` when the receiving
-webhooks are configured to validate the matching HMAC signature. The example
-environment leaves these values blank; blank values mean the Fastn workflows
-are **not configured**. The status endpoint reports endpoint configuration,
-not the health of downstream Google or Slack connectors.
+All 4 autonomous Fastn workflows are promoted and live in environment `wenv_personal_891dd5d02fba4545b73b_live`:
+1. `wdep_1f3335f436b4` — `lawflow-gate1-intake`: Ingests citations, writes docket rows to Google Sheets.
+2. `wdep_e99236802a8e` — `lawflow-respondent-verify`: 2FA confirmation, updates docket status, books Google Calendar.
+3. `wdep_63909002b6d1` — `lawflow-default-72h`: Autonomous cron detecting citations exceeding 72h statutory notice.
+4. `wdep_7faf8f2ba345` — `lawflow-gate2-warrant`: Generates certified Rule 12 Bench Warrant drafts in Google Docs.
 
-The Fastn bridge does not use a guessed Fastn REST execution URL. Gate 1 keeps
-the existing application notice dispatch path; configure its Fastn workflow
-for calendar and ledger work so it does not send a duplicate summons. Gate 2
-must remain a human clerk action after the 72-hour case reaches
-`FORCE_ACTION_PENDING_CLERK`.
+**Connected Live Cloud Resources:**
+* **Official Google Sheets Docket:** [Live Court Docket Spreadsheet](https://docs.google.com/spreadsheets/d/1nWJj4TawBA4NO0TvzyRt6GB-g-xJh7YsPccQCg1WZnw/edit?gid=0#gid=0)
+* **Google Drive Certified Evidence:** [Live Court Evidence Folder](https://drive.google.com/drive/folders/1IDfiawCj8uAIIc-hs1tdZOK_5DMSD-tS?usp=share_link)
+* **Official Court Dispatch Email:** `241908@students.au.edu.pk`
 
 ---
 
-## 📱 4 Interactive UI Views
-* **View 1: Executive Command & Analytics Dashboard (`/analytics`):** Real-time KPI metrics, case categorization, and an interactive 60fps canvas visualizer showing data packet flow through the micro-agent neural network.
-* **View 2: Clerk Intake & HITL Hub (`/clerk`):** One-click demo presets (Radar speed, Dual-party domestic violence, Sanitation infraction, Trespass misdemeanor), Gate 1 and Gate 2 action banners, and an active docket management queue with inline fast-forward time simulation buttons (`0h`, `48h`, `72h`).
-* **View 3: Judicial Hearing Calendar (`/judge`):** Chamber docket view showing active caseloads, courtroom locations, and safety separation buffers.
-* **View 4: Respondent Secure Portal (`/verify?token=...`):** Mobile-optimized 2FA identity verification (last 4 digits of CNIC/SSN), multilingual engine (**English**, **اردو Urdu**, **Español Spanish**), browser Text-to-Speech audio reader, and one-click appearance confirmation.
+## 📱 4 Interactive UI Portals (Hot Aesthetic + 3D WebGL)
+
+* **View 1: Main Homepage (`/`):** Three.js interactive 3D Judicial Core (scales + octahedron with orbiting particle constellation and cursor tilt tracking), Fastn SaaS live cloud telemetry grid, and instant gateway dock.
+* **View 2: Court Clerk Hub (`/clerk`):** 1-Click Quick Login cards for all 3 demo clerks, dynamic clerk profile switcher dropdown in header, Gate 1 & 2 human review cards, and direct links to live Google Sheets/Drive.
+* **View 3: Secure Respondent Portal (`/verify?token=...`):** Three.js 3D Holographic Biometric Emblem, Groq LPU plain-language citizen rights summarizer, real-time audio soundwave equalizer bars (`.eq-bar`), 2FA CNIC input (`1042`), celebratory confetti burst, and Google Calendar / Directions integration.
+* **View 4: Police-Admin Command Console (`/admin`):** 1-Click Quick Login as Superintendent Rashid Khan, rotating tactical radar sweep beacon for Margalla Station 04, demo clerk roster with RBAC permissions, and active Rule 12 warrant dispatch tracking.
+
+---
+
+## 👥 Demo Accounts (1-Click Quick Login Available)
+
+| Portal | Role | Email | Password | Full Name & Department |
+| :--- | :--- | :--- | :--- | :--- |
+| **Clerk Hub** | CLERK | `clerk@lawflow.court` | `clerk2026` | Senior Clerk Tariq Mansoor (Central Intake) |
+| **Clerk Hub** | CLERK | `ayesha.clerk@lawflow.court` | `clerk2026` | Associate Clerk Ayesha Malik (High-Security) |
+| **Clerk Hub** | CLERK | `bilal.clerk@lawflow.court` | `clerk2026` | Junior Clerk Bilal Ahmed (Fastn Telemetry) |
+| **Police Admin** | ADMIN | `admin@lawflow.gov` | `admin2026` | Superintendent Rashid Khan (Margalla Police 04) |
 
 ---
 
@@ -74,13 +82,13 @@ must remain a human clerk action after the 72-hour case reaches
 LawFlow is built as a **Single-Container Unified Web Application** to eliminate reverse proxy errors, CORS failures, and Cloudflare 502 Bad Gateway timeouts.
 
 ### Alternate Clouds Steps:
-1. Push this repository to GitHub.
+1. Push this repository to GitHub (`hasbeejay/LawFlow-Agentika`).
 2. Log in to [clouds.alternatefutures.ai](https://clouds.alternatefutures.ai).
 3. Select **Add Service** &rarr; **Alternate Agent** (or Docker Service).
-4. Connect your GitHub repository.
+4. Connect GitHub repository `hasbeejay/LawFlow-Agentika`.
 5. Set environment variable: `PORT=8000`.
-6. (Optional) Set `GROQ_API_KEY` and `GEMINI_API_KEY`. If omitted, LawFlow automatically falls back to its deterministic judicial reasoning engine without crashing.
-7. Click **Deploy**. The container will build and expose the application on Port 8000.
+6. Set variables: `GROQ_API_KEY`, `FASTN_ENVIRONMENT_ID=wenv_personal_891dd5d02fba4545b73b_live`.
+7. Click **Deploy**. The container exposes the application on Port 8000.
 
 ---
 
